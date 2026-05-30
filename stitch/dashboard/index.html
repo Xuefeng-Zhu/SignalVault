@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SignalVault | Market Intelligence Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#faf8ff",
+                        "on-secondary-fixed": "#00174b",
+                        "surface-container-high": "#e3e7ff",
+                        "on-error-container": "#93000a",
+                        "primary": "#4212de",
+                        "on-surface": "#151b2d",
+                        "inverse-surface": "#2a3043",
+                        "surface-bright": "#faf8ff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#c7bfff",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#e0daff",
+                        "surface-variant": "#dce1fb",
+                        "primary-fixed-dim": "#c7bfff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "tertiary": "#822f00",
+                        "surface-container": "#eaedff",
+                        "surface": "#faf8ff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c8c4d9",
+                        "secondary": "#0051d5",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#5738f1",
+                        "tertiary-container": "#a94000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#474556",
+                        "outline": "#787588",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-primary-fixed": "#170065",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#151b2d",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-dim": "#d4d9f2",
+                        "on-tertiary-fixed": "#360f00",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#ffd5c4",
+                        "secondary-container": "#316bf3",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-highest": "#dce1fb",
+                        "surface-container-low": "#f2f3ff",
+                        "primary-fixed": "#e4dfff",
+                        "on-primary-fixed-variant": "#3e04db",
+                        "primary-container": "#5b3df5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sm": "8px",
+                        "sidebar-width": "280px",
+                        "unit": "8px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-margin": "40px"
+                    },
+                    "fontFamily": {
+                        "section-title": ["Geist"],
+                        "mono-data": ["Geist"],
+                        "body-md": ["Inter"],
+                        "page-title": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "section-title": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "page-title": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-item-active { background: rgba(255, 255, 255, 0.1); }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-[#020617] flex flex-col h-full py-lg px-md transition-all duration-200 ease-in-out">
+<div class="mb-xl px-sm">
+<h1 class="font-page-title text-page-title text-white tracking-tight">SignalVault</h1>
+<p class="text-white opacity-60 text-body-sm font-label-caps uppercase tracking-widest mt-xs">Market Intelligence</p>
+</div>
+<nav class="flex-1 space-y-sm">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-white font-bold sidebar-item-active transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">business</span>
+<span class="font-label-caps text-label-caps">Companies</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">radar</span>
+<span class="font-label-caps text-label-caps">Scans</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label-caps text-label-caps">Claims</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-caps text-label-caps">Evidence Vault</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-caps text-label-caps">Integrations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/10 pt-lg">
+<div class="flex items-center gap-md px-md py-sm text-white opacity-60 hover:opacity-100 transition-all cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span class="font-label-caps text-label-caps">Alex Morgan</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-xl py-md bg-background border-b border-outline-variant sticky top-0 z-10">
+<div class="flex items-center gap-xl">
+<div class="flex items-center gap-md bg-surface-container-low px-md py-xs rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-64" placeholder="Search companies or data..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-sm px-md py-sm rounded-lg bg-surface hover:bg-surface-container-high border border-outline-variant text-body-sm font-medium transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    Add company
+                </button>
+<button class="flex items-center gap-sm px-md py-sm rounded-lg bg-primary text-white hover:opacity-90 text-body-sm font-medium transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+                    Run scan
+                </button>
+<div class="h-8 w-px bg-outline-variant mx-xs"></div>
+<button class="p-sm rounded-full hover:bg-surface-variant text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm rounded-full hover:bg-surface-variant text-on-surface-variant">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-xl space-y-xl">
+<!-- Dashboard Header Section -->
+<div class="flex justify-between items-end">
+<div class="space-y-xs">
+<h2 class="font-page-title text-page-title text-on-surface">Dashboard</h2>
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="text-body-sm">Oct 12, 2023 - Oct 19, 2023</span>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface-container-high px-md py-sm rounded-lg font-label-caps text-label-caps text-primary hover:bg-surface-container-highest transition-colors">Run demo scan</button>
+</div>
+</div>
+<!-- Top Metrics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider mb-sm">Monitored companies</p>
+<div class="flex items-end justify-between">
+<span class="text-[32px] font-bold text-on-surface">12</span>
+<span class="text-emerald-600 bg-emerald-50 px-xs py-px rounded text-[12px] font-bold flex items-center">+2</span>
+</div>
+</div>
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider mb-sm">Scans this week</p>
+<div class="flex items-end justify-between">
+<span class="text-[32px] font-bold text-on-surface">28</span>
+<span class="text-primary bg-primary-container/10 px-xs py-px rounded text-[12px] font-bold flex items-center">On track</span>
+</div>
+</div>
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider mb-sm">High-risk changes</p>
+<div class="flex items-end justify-between">
+<span class="text-[32px] font-bold text-error">7</span>
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+</div>
+<div class="bg-white p-lg rounded-xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+<p class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider mb-sm">Claims changed</p>
+<div class="flex items-end justify-between">
+<span class="text-[32px] font-bold text-on-surface">42</span>
+<span class="text-on-surface-variant/60 text-body-sm font-medium">Across all sets</span>
+</div>
+</div>
+</div>
+<!-- Main Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Latest Signals (Large Card) -->
+<div class="lg:col-span-2 bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h3 class="font-section-title text-section-title">Latest Signals</h3>
+<button class="text-primary text-label-caps font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low/50">
+<tr>
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest border-b border-outline-variant">Company</th>
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest border-b border-outline-variant">Verdict</th>
+<th class="px-lg py-sm font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest border-b border-outline-variant text-right">Confidence</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]">rocket_launch</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-on-surface">Acme AI</p>
+<p class="text-body-sm text-on-surface-variant/70">San Francisco, CA</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="px-sm py-xs rounded-full bg-emerald-50 text-emerald-700 font-label-caps text-[11px] font-bold uppercase">Moving upmarket</span>
+</td>
+<td class="px-lg py-md text-right">
+<span class="font-mono-data text-mono-data text-on-surface">94%</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded bg-secondary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-[20px]">analytics</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-on-surface">Beta Analytics</p>
+<p class="text-body-sm text-on-surface-variant/70">London, UK</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="px-sm py-xs rounded-full bg-primary-container/10 text-primary font-label-caps text-[11px] font-bold uppercase">Enterprise readiness</span>
+</td>
+<td class="px-lg py-md text-right">
+<span class="font-mono-data text-mono-data text-on-surface">88%</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded bg-error-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-[20px]">security</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-on-surface">Gamma Security</p>
+<p class="text-body-sm text-on-surface-variant/70">Berlin, DE</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="px-sm py-xs rounded-full bg-surface-variant text-on-surface-variant font-label-caps text-[11px] font-bold uppercase">Consolidation risk</span>
+</td>
+<td class="px-lg py-md text-right">
+<span class="font-mono-data text-mono-data text-on-surface">72%</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary text-[20px]">cloud</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-on-surface">DataCloud</p>
+<p class="text-body-sm text-on-surface-variant/70">Austin, TX</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="px-sm py-xs rounded-full bg-emerald-50 text-emerald-700 font-label-caps text-[11px] font-bold uppercase">Moving upmarket</span>
+</td>
+<td class="px-lg py-md text-right">
+<span class="font-mono-data text-mono-data text-on-surface">91%</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Right Column Widgets -->
+<div class="space-y-xl">
+<!-- Integration Health -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-section-title text-section-title">Integration Health</h3>
+<span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+</div>
+<div class="p-lg space-y-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+<span class="text-body-md font-medium">Apify</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface-variant opacity-60 uppercase">Healthy</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+<span class="text-body-md font-medium">Box</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface-variant opacity-60 uppercase">Healthy</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+<span class="text-body-md font-medium">Mastra</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface-variant opacity-60 uppercase">Healthy</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+<span class="text-body-md font-medium">InsForge</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface-variant opacity-60 uppercase">Healthy</span>
+</div>
+</div>
+</div>
+<!-- Recent Scans -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant bg-surface-container-low">
+<h3 class="font-section-title text-section-title">Recent Scans</h3>
+</div>
+<div class="divide-y divide-outline-variant">
+<div class="p-lg hover:bg-surface-container-low/30 transition-colors">
+<div class="flex justify-between items-start mb-sm">
+<p class="font-semibold text-body-md">Acme AI Global Sweep</p>
+<span class="text-emerald-600 bg-emerald-50 px-xs py-px rounded text-[10px] font-bold uppercase">Completed</span>
+</div>
+<div class="flex items-center gap-sm text-body-sm text-on-surface-variant/60">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>24 mins ago</span>
+</div>
+</div>
+<div class="p-lg hover:bg-surface-container-low/30 transition-colors">
+<div class="flex justify-between items-start mb-sm">
+<p class="font-semibold text-body-md">DataCloud Financial Scan</p>
+<span class="text-primary bg-primary-container/10 px-xs py-px rounded text-[10px] font-bold uppercase animate-pulse">In progress</span>
+</div>
+<div class="flex items-center gap-sm text-body-sm text-on-surface-variant/60">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>Started 3 mins ago</span>
+</div>
+</div>
+<div class="p-lg hover:bg-surface-container-low/30 transition-colors">
+<div class="flex justify-between items-start mb-sm">
+<p class="font-semibold text-body-md">General Portfolio Audit</p>
+<span class="text-emerald-600 bg-emerald-50 px-xs py-px rounded text-[10px] font-bold uppercase">Completed</span>
+</div>
+<div class="flex items-center gap-sm text-body-sm text-on-surface-variant/60">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>2 hours ago</span>
+</div>
+</div>
+</div>
+<button class="w-full py-md text-label-caps font-bold text-on-surface-variant/60 hover:text-primary transition-colors border-t border-outline-variant">
+                            SEE SCAN HISTORY
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('opacity-80'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('opacity-80'));
+        });
+    </script>
+</body></html>

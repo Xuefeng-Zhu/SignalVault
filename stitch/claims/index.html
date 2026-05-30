@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+            font-size: 20px;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #faf8ff;
+            color: #151b2d;
+        }
+        .sidebar-active {
+            color: #ffffff !important;
+            font-weight: 700;
+            opacity: 1 !important;
+        }
+        /* Custom scrollbar for data density */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#faf8ff",
+                      "on-secondary-fixed": "#00174b",
+                      "surface-container-high": "#e3e7ff",
+                      "on-error-container": "#93000a",
+                      "primary": "#4212de",
+                      "on-surface": "#151b2d",
+                      "inverse-surface": "#2a3043",
+                      "surface-bright": "#faf8ff",
+                      "error": "#ba1a1a",
+                      "secondary-fixed-dim": "#b4c5ff",
+                      "inverse-primary": "#c7bfff",
+                      "on-error": "#ffffff",
+                      "on-primary-container": "#e0daff",
+                      "surface-variant": "#dce1fb",
+                      "primary-fixed-dim": "#c7bfff",
+                      "on-tertiary-fixed-variant": "#7d2d00",
+                      "tertiary": "#822f00",
+                      "surface-container": "#eaedff",
+                      "surface": "#faf8ff",
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#c8c4d9",
+                      "secondary": "#0051d5",
+                      "on-secondary": "#ffffff",
+                      "surface-tint": "#5738f1",
+                      "tertiary-container": "#a94000",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface-variant": "#474556",
+                      "outline": "#787588",
+                      "inverse-on-surface": "#eef0ff",
+                      "on-primary-fixed": "#170065",
+                      "secondary-fixed": "#dbe1ff",
+                      "on-secondary-fixed-variant": "#003ea8",
+                      "on-tertiary": "#ffffff",
+                      "on-background": "#151b2d",
+                      "tertiary-fixed": "#ffdbcd",
+                      "surface-dim": "#d4d9f2",
+                      "on-tertiary-fixed": "#360f00",
+                      "tertiary-fixed-dim": "#ffb596",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-container": "#ffd5c4",
+                      "secondary-container": "#316bf3",
+                      "on-secondary-container": "#fefcff",
+                      "surface-container-highest": "#dce1fb",
+                      "surface-container-low": "#f2f3ff",
+                      "primary-fixed": "#e4dfff",
+                      "on-primary-fixed-variant": "#3e04db",
+                      "primary-container": "#5b3df5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "sm": "8px",
+                      "sidebar-width": "280px",
+                      "unit": "8px",
+                      "xl": "32px",
+                      "xs": "4px",
+                      "lg": "24px",
+                      "container-margin": "40px"
+              },
+              "fontFamily": {
+                      "section-title": ["Geist"],
+                      "mono-data": ["Geist"],
+                      "body-md": ["Inter"],
+                      "page-title": ["Geist"],
+                      "label-caps": ["Geist"],
+                      "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "section-title": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "page-title": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Sidebar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-[#020617] flex flex-col h-full py-lg px-md z-50">
+<div class="mb-xl px-sm">
+<h1 class="font-page-title text-page-title text-white">SignalVault</h1>
+<p class="font-label-caps text-label-caps text-white opacity-40 uppercase tracking-widest mt-xs">Market Intelligence</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-md px-sm py-sm rounded-lg transition-all duration-200 ease-in-out text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg transition-all duration-200 ease-in-out text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined" data-icon="business">business</span>
+<span class="font-label-caps text-label-caps uppercase">Companies</span>
+</a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg transition-all duration-200 ease-in-out text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined" data-icon="radar">radar</span>
+<span class="font-label-caps text-label-caps uppercase">Scans</span>
+</a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg transition-all duration-200 ease-in-out sidebar-active" href="#">
+<span class="material-symbols-outlined" data-icon="gavel" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span class="font-label-caps text-label-caps uppercase">Claims</span>
+</a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg transition-all duration-200 ease-in-out text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label-caps text-label-caps uppercase">Evidence Vault</span>
+</a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg transition-all duration-200 ease-in-out text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span class="font-label-caps text-label-caps uppercase">Integrations</span>
+</a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg transition-all duration-200 ease-in-out text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps uppercase">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/10 pt-lg">
+<div class="flex items-center gap-md px-sm py-sm rounded-lg text-white">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs">AM</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps uppercase">Alex Morgan</span>
+<span class="text-[10px] opacity-40 uppercase tracking-tighter">Enterprise Plan</span>
+</div>
+<span class="material-symbols-outlined ml-auto opacity-40" data-icon="unfold_more">unfold_more</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- Top Navigation (Shared Component) -->
+<header class="flex justify-between items-center w-full px-xl py-md border-b border-outline-variant bg-background sticky top-0 z-40">
+<div class="flex items-center gap-xl w-1/2">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-[48px] pr-md py-sm bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/20 focus:outline-none text-body-sm transition-all" placeholder="Quick search claims, companies, or evidence..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-background"></span>
+</button>
+<div class="h-6 w-[1px] bg-outline-variant mx-sm"></div>
+<button class="px-md py-sm border border-outline-variant rounded-lg text-label-caps uppercase font-bold hover:bg-surface-container-high transition-colors">
+                    Add company
+                </button>
+<button class="px-md py-sm bg-primary text-white rounded-lg text-label-caps uppercase font-bold hover:opacity-90 shadow-sm transition-all">
+                    Run scan
+                </button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-xl space-y-lg">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div class="space-y-xs">
+<h2 class="font-page-title text-page-title text-on-surface">Claims</h2>
+<p class="text-on-surface-variant text-body-md">Manage and verify marketing and compliance claims across identified entities.</p>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs px-md py-sm border border-outline-variant rounded-lg text-label-caps uppercase font-bold text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="ios_share">ios_share</span>
+                        Export filters
+                    </button>
+<button class="flex items-center gap-xs px-md py-sm bg-secondary text-white rounded-lg text-label-caps uppercase font-bold hover:opacity-90 shadow-sm transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                        New claim
+                    </button>
+</div>
+</div>
+<!-- Advanced Filter Row -->
+<div class="grid grid-cols-7 gap-sm bg-surface-container-low p-sm rounded-xl border border-outline-variant">
+<div class="relative col-span-1">
+<select class="w-full bg-white border border-outline-variant rounded-lg px-md py-sm text-body-sm appearance-none focus:ring-1 focus:ring-primary">
+<option>Company: All</option>
+<option>TechFlow Inc.</option>
+<option>DataNexus</option>
+</select>
+</div>
+<div class="relative col-span-1">
+<select class="w-full bg-white border border-outline-variant rounded-lg px-md py-sm text-body-sm appearance-none focus:ring-1 focus:ring-primary">
+<option>Type: All</option>
+<option>Security</option>
+<option>Platform</option>
+<option>Compliance</option>
+</select>
+</div>
+<div class="relative col-span-1">
+<select class="w-full bg-white border border-outline-variant rounded-lg px-md py-sm text-body-sm appearance-none focus:ring-1 focus:ring-primary">
+<option>Status: All</option>
+<option>Verified</option>
+<option>Pending</option>
+<option>Disputed</option>
+</select>
+</div>
+<div class="relative col-span-1">
+<select class="w-full bg-white border border-outline-variant rounded-lg px-md py-sm text-body-sm appearance-none focus:ring-1 focus:ring-primary">
+<option>Risk: Any</option>
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+</div>
+<div class="relative col-span-1">
+<select class="w-full bg-white border border-outline-variant rounded-lg px-md py-sm text-body-sm appearance-none focus:ring-1 focus:ring-primary">
+<option>Confidence: 80%+</option>
+<option>95%+</option>
+<option>50%+</option>
+</select>
+</div>
+<div class="relative col-span-1">
+<select class="w-full bg-white border border-outline-variant rounded-lg px-md py-sm text-body-sm appearance-none focus:ring-1 focus:ring-primary">
+<option>Date: Last 30d</option>
+<option>Last 90d</option>
+<option>Custom Range</option>
+</select>
+</div>
+<div class="col-span-1">
+<button class="w-full flex items-center justify-center gap-xs px-md py-sm text-primary font-bold text-label-caps uppercase hover:bg-primary/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="filter_list">filter_list</span>
+                        More Filters
+                    </button>
+</div>
+</div>
+<!-- High Density Table Container -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase">Claim</th>
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase">Company</th>
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase">Type</th>
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase">Status</th>
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase">Risk</th>
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase text-center">Confidence</th>
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase">First seen</th>
+<th class="px-md py-sm font-label-caps text-label-caps text-outline uppercase">Source</th>
+<th class="px-md py-sm"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+<span class="font-semibold text-on-surface">Unlimited automation workflows</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant font-medium">AutoFlow Systems</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-surface-variant text-[11px] font-bold uppercase rounded text-on-surface-variant">Platform</span></td>
+<td class="px-md py-md">
+<div class="flex items-center gap-xs text-emerald-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-sm font-semibold">Verified</span>
+</div>
+</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-emerald-100 text-emerald-800 text-[11px] font-bold uppercase rounded">Low</span></td>
+<td class="px-md py-md">
+<div class="flex flex-col items-center gap-1">
+<span class="font-mono-data text-mono-data text-on-surface">98%</span>
+<div class="w-16 h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-[98%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-mono-data text-on-surface-variant">24 Oct 2023</td>
+<td class="px-md py-md"><span class="material-symbols-outlined text-outline" data-icon="language">language</span></td>
+<td class="px-md py-md text-right">
+<button class="opacity-0 group-hover:opacity-100 p-sm hover:bg-surface-container rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+<span class="font-semibold text-on-surface">SAML SSO</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant font-medium">SecureAuth Inc.</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-surface-variant text-[11px] font-bold uppercase rounded text-on-surface-variant">Security</span></td>
+<td class="px-md py-md">
+<div class="flex items-center gap-xs text-amber-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="pending" style="font-variation-settings: 'FILL' 1;">pending</span>
+<span class="text-body-sm font-semibold">Pending</span>
+</div>
+</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-amber-100 text-amber-800 text-[11px] font-bold uppercase rounded">Medium</span></td>
+<td class="px-md py-md">
+<div class="flex flex-col items-center gap-1">
+<span class="font-mono-data text-mono-data text-on-surface">82%</span>
+<div class="w-16 h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-amber-500 w-[82%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-mono-data text-on-surface-variant">12 Nov 2023</td>
+<td class="px-md py-md"><span class="material-symbols-outlined text-outline" data-icon="description">description</span></td>
+<td class="px-md py-md text-right">
+<button class="opacity-0 group-hover:opacity-100 p-sm hover:bg-surface-container rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+<span class="font-semibold text-on-surface">SOC 2 Type II Compliance</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant font-medium">CloudPillar</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-surface-variant text-[11px] font-bold uppercase rounded text-on-surface-variant">Compliance</span></td>
+<td class="px-md py-md">
+<div class="flex items-center gap-xs text-emerald-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-sm font-semibold">Verified</span>
+</div>
+</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-rose-100 text-rose-800 text-[11px] font-bold uppercase rounded">High</span></td>
+<td class="px-md py-md">
+<div class="flex flex-col items-center gap-1">
+<span class="font-mono-data text-mono-data text-on-surface">94%</span>
+<div class="w-16 h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-[94%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-mono-data text-on-surface-variant">05 Jan 2024</td>
+<td class="px-md py-md"><span class="material-symbols-outlined text-outline" data-icon="verified_user">verified_user</span></td>
+<td class="px-md py-md text-right">
+<button class="opacity-0 group-hover:opacity-100 p-sm hover:bg-surface-container rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+<span class="font-semibold text-on-surface">Custom enterprise pricing</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant font-medium">Global SaaS Corp</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-surface-variant text-[11px] font-bold uppercase rounded text-on-surface-variant">Pricing</span></td>
+<td class="px-md py-md">
+<div class="flex items-center gap-xs text-rose-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="error" style="font-variation-settings: 'FILL' 1;">error</span>
+<span class="text-body-sm font-semibold">Disputed</span>
+</div>
+</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-emerald-100 text-emerald-800 text-[11px] font-bold uppercase rounded">Low</span></td>
+<td class="px-md py-md">
+<div class="flex flex-col items-center gap-1">
+<span class="font-mono-data text-mono-data text-on-surface">45%</span>
+<div class="w-16 h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-rose-500 w-[45%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-mono-data text-on-surface-variant">18 Feb 2024</td>
+<td class="px-md py-md"><span class="material-symbols-outlined text-outline" data-icon="receipt_long">receipt_long</span></td>
+<td class="px-md py-md text-right">
+<button class="opacity-0 group-hover:opacity-100 p-sm hover:bg-surface-container rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+<span class="font-semibold text-on-surface">Admin RBAC</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant font-medium">VaultGuard</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-surface-variant text-[11px] font-bold uppercase rounded text-on-surface-variant">Security</span></td>
+<td class="px-md py-md">
+<div class="flex items-center gap-xs text-emerald-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-body-sm font-semibold">Verified</span>
+</div>
+</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-emerald-100 text-emerald-800 text-[11px] font-bold uppercase rounded">Low</span></td>
+<td class="px-md py-md">
+<div class="flex flex-col items-center gap-1">
+<span class="font-mono-data text-mono-data text-on-surface">91%</span>
+<div class="w-16 h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 w-[91%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-mono-data text-on-surface-variant">02 Mar 2024</td>
+<td class="px-md py-md"><span class="material-symbols-outlined text-outline" data-icon="settings_input_component">settings_input_component</span></td>
+<td class="px-md py-md text-right">
+<button class="opacity-0 group-hover:opacity-100 p-sm hover:bg-surface-container rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors group">
+<td class="px-md py-md">
+<div class="flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-primary shrink-0"></div>
+<span class="font-semibold text-on-surface">Data residency EU</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant font-medium">EuroNodes</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-surface-variant text-[11px] font-bold uppercase rounded text-on-surface-variant">Infrastructure</span></td>
+<td class="px-md py-md">
+<div class="flex items-center gap-xs text-amber-600">
+<span class="material-symbols-outlined text-[16px]" data-icon="pending" style="font-variation-settings: 'FILL' 1;">pending</span>
+<span class="text-body-sm font-semibold">Pending</span>
+</div>
+</td>
+<td class="px-md py-md"><span class="px-sm py-[2px] bg-amber-100 text-amber-800 text-[11px] font-bold uppercase rounded">Medium</span></td>
+<td class="px-md py-md">
+<div class="flex flex-col items-center gap-1">
+<span class="font-mono-data text-mono-data text-on-surface">76%</span>
+<div class="w-16 h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-amber-500 w-[76%]"></div>
+</div>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-mono-data text-on-surface-variant">15 Mar 2024</td>
+<td class="px-md py-md"><span class="material-symbols-outlined text-outline" data-icon="public">public</span></td>
+<td class="px-md py-md text-right">
+<button class="opacity-0 group-hover:opacity-100 p-sm hover:bg-surface-container rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between px-md py-md border-t border-outline-variant bg-surface-container-low">
+<div class="text-body-sm text-on-surface-variant">
+                        Showing <span class="font-bold text-on-surface">1-6</span> of <span class="font-bold text-on-surface">1,284</span> claims
+                    </div>
+<div class="flex items-center gap-xs">
+<button class="p-xs rounded border border-outline-variant hover:bg-white transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-white text-on-surface font-medium text-xs border border-transparent hover:border-outline-variant transition-all">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-white text-on-surface font-medium text-xs border border-transparent hover:border-outline-variant transition-all">3</button>
+<span class="px-xs text-outline">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-white text-on-surface font-medium text-xs border border-transparent hover:border-outline-variant transition-all">42</button>
+<button class="p-xs rounded border border-outline-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dashboard Analytics Mini Grid -->
+<div class="grid grid-cols-4 gap-lg">
+<div class="bg-white p-lg rounded-xl border border-outline-variant flex flex-col gap-sm">
+<span class="font-label-caps text-label-caps text-outline uppercase">Total Scanned Claims</span>
+<div class="flex items-end justify-between">
+<span class="text-[28px] font-bold text-on-surface">14,209</span>
+<span class="text-emerald-600 font-bold text-xs flex items-center">+12% <span class="material-symbols-outlined text-[14px]" data-icon="trending_up">trending_up</span></span>
+</div>
+</div>
+<div class="bg-white p-lg rounded-xl border border-outline-variant flex flex-col gap-sm">
+<span class="font-label-caps text-label-caps text-outline uppercase">Pending Verification</span>
+<div class="flex items-end justify-between">
+<span class="text-[28px] font-bold text-on-surface">432</span>
+<span class="text-amber-600 font-bold text-xs flex items-center">-5% <span class="material-symbols-outlined text-[14px]" data-icon="trending_down">trending_down</span></span>
+</div>
+</div>
+<div class="bg-white p-lg rounded-xl border border-outline-variant flex flex-col gap-sm">
+<span class="font-label-caps text-label-caps text-outline uppercase">High Risk Alerts</span>
+<div class="flex items-end justify-between">
+<span class="text-[28px] font-bold text-on-surface">18</span>
+<span class="text-rose-600 font-bold text-xs flex items-center">+2 <span class="material-symbols-outlined text-[14px]" data-icon="warning">warning</span></span>
+</div>
+</div>
+<div class="bg-white p-lg rounded-xl border border-outline-variant flex flex-col gap-sm">
+<span class="font-label-caps text-label-caps text-outline uppercase">System Health</span>
+<div class="flex items-end justify-between">
+<span class="text-[28px] font-bold text-on-surface">99.9%</span>
+<span class="text-emerald-600 font-bold text-xs flex items-center">STABLE</span>
+</div>
+</div>
+</div>
+</div>
+<footer class="mt-auto px-xl py-lg bg-surface-container-low border-t border-outline-variant">
+<div class="flex justify-between items-center opacity-60">
+<span class="text-body-sm">© 2024 SignalVault Intelligence Systems. All rights reserved.</span>
+<div class="flex gap-xl text-body-sm">
+<a class="hover:text-primary transition-colors" href="#">API Docs</a>
+<a class="hover:text-primary transition-colors" href="#">System Status</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interaction: Table row hover highlights
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'translateX(4px)';
+            });
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'translateX(0)';
+            });
+        });
+
+        // Floating Action Button logic suppression as per rules (this is a details/grid screen)
+        // No FAB rendered here.
+    </script>
+</body></html>

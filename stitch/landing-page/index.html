@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#faf8ff",
+                    "on-secondary-fixed": "#00174b",
+                    "surface-container-high": "#e3e7ff",
+                    "on-error-container": "#93000a",
+                    "primary": "#4212de",
+                    "on-surface": "#151b2d",
+                    "inverse-surface": "#2a3043",
+                    "surface-bright": "#faf8ff",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#b4c5ff",
+                    "inverse-primary": "#c7bfff",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#e0daff",
+                    "surface-variant": "#dce1fb",
+                    "primary-fixed-dim": "#c7bfff",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "tertiary": "#822f00",
+                    "surface-container": "#eaedff",
+                    "surface": "#faf8ff",
+                    "error-container": "#ffdad6",
+                    "outline-variant": "#c8c4d9",
+                    "secondary": "#0051d5",
+                    "on-secondary": "#ffffff",
+                    "surface-tint": "#5738f1",
+                    "tertiary-container": "#a94000",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#474556",
+                    "outline": "#787588",
+                    "inverse-on-surface": "#eef0ff",
+                    "on-primary-fixed": "#170065",
+                    "secondary-fixed": "#dbe1ff",
+                    "on-secondary-fixed-variant": "#003ea8",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#151b2d",
+                    "tertiary-fixed": "#ffdbcd",
+                    "surface-dim": "#d4d9f2",
+                    "on-tertiary-fixed": "#360f00",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#ffd5c4",
+                    "secondary-container": "#316bf3",
+                    "on-secondary-container": "#fefcff",
+                    "surface-container-highest": "#dce1fb",
+                    "surface-container-low": "#f2f3ff",
+                    "primary-fixed": "#e4dfff",
+                    "on-primary-fixed-variant": "#3e04db",
+                    "primary-container": "#5b3df5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "sm": "8px",
+                    "sidebar-width": "280px",
+                    "unit": "8px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "container-margin": "40px"
+            },
+            "fontFamily": {
+                    "section-title": ["Geist"],
+                    "mono-data": ["Geist"],
+                    "body-md": ["Inter"],
+                    "page-title": ["Geist"],
+                    "label-caps": ["Geist"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "section-title": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "page-title": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid #E2E8F0; }
+        .grid-bg { background-image: radial-gradient(#c8c4d9 0.5px, transparent 0.5px); background-size: 24px 24px; }
+        .gradient-mesh { background: radial-gradient(at 0% 0%, rgba(91, 61, 245, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(49, 107, 243, 0.05) 0px, transparent 50%); }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Navigation -->
+<header class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center w-full px-xl py-md bg-white/70 backdrop-blur-md border-b border-outline-variant">
+<div class="flex items-center gap-xl">
+<div class="flex items-center gap-xs">
+<div class="w-8 h-8 bg-primary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[20px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<span class="font-page-title text-page-title text-on-surface tracking-tight">SignalVault</span>
+</div>
+<nav class="hidden lg:flex items-center gap-lg">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Product</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">How it works</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Customers</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Pricing</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="#">Docs</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary px-md py-sm" href="#">Log in</a>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-caps text-label-caps hover:opacity-90 transition-all shadow-sm">
+                Start monitoring
+            </button>
+</div>
+</header>
+<main class="pt-32 pb-xl overflow-x-hidden">
+<!-- Hero Section -->
+<section class="max-w-[1440px] mx-auto px-container-margin grid grid-cols-1 lg:grid-cols-2 gap-xl items-center relative">
+<div class="absolute inset-0 grid-bg -z-10 opacity-30"></div>
+<div class="space-y-lg relative">
+<div class="inline-flex items-center gap-sm px-sm py-1 bg-surface-container-high rounded-full border border-outline-variant">
+<span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-caps text-label-caps text-primary tracking-widest">AI-POWERED MARKET INTELLIGENCE</span>
+</div>
+<h1 class="font-page-title text-[56px] leading-[1.1] text-on-surface max-w-xl">
+                    Turn public web changes into <span class="text-primary italic">auditable</span> market intelligence.
+                </h1>
+<p class="font-body-md text-on-surface-variant text-lg max-w-lg">
+                    SignalVault watches pricing pages, docs, changelogs, trust centers, and careers pages — then detects what changed, why it matters, and stores the evidence.
+                </p>
+<div class="flex flex-col sm:flex-row gap-md pt-md">
+<button class="bg-primary text-on-primary px-xl py-4 rounded-xl font-section-title hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-sm">
+                        Start monitoring
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-white border border-outline-variant text-on-surface px-xl py-4 rounded-xl font-section-title hover:bg-surface-container-low transition-all">
+                        Try demo scan
+                    </button>
+</div>
+<div class="pt-xl flex items-center gap-xl opacity-60 grayscale grayscale-0">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[20px]">layers</span>
+<span class="font-label-caps text-[10px]">APIFY WEB DATA</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-label-caps text-[10px]">BOX EVIDENCE VAULT</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+<span class="font-label-caps text-[10px]">MASTRA AI ORCHESTRATION</span>
+</div>
+</div>
+</div>
+<!-- Hero Card (Bento Style) -->
+<div class="relative group">
+<div class="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-secondary/10 rounded-[40px] blur-2xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
+<div class="relative glass-card rounded-[32px] p-xl shadow-2xl space-y-lg border-white">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 bg-[#F1F5F9] rounded-xl flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Acme AI Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE3vYhbfB6OrzekiOcpKmvzQvmqiayEAFxk35DHxyBivPyR6GBqrC879i4l0nSfTIVNcTzszfXlnXWae6dr-AoxtnYYGN-rgUsqSxTeJfNMUDuGvjdtszzCHYYh7vFmndTpvYVlfSPD-9YjW7RVggEHFQUoZVe7f2Bk0AetRNeJhrFBFuMf0PThs8VR6Is2kF7Pp0VqbHJzUHcuFdQGsLzyxN3ap21jB7z3acc6UH49HKnMrB31bW36GIPuj4oj4FF7t0GEfPFrWYs"/>
+</div>
+<div>
+<h3 class="font-section-title text-on-surface">Acme AI</h3>
+<p class="font-body-sm text-on-surface-variant">Competitor Scan • 2m ago</p>
+</div>
+</div>
+<span class="bg-emerald-100 text-emerald-800 px-md py-1 rounded-full font-label-caps text-[10px]">ACTIVE MONITORING</span>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div class="bg-surface-container-low p-md rounded-2xl border border-outline-variant/30">
+<p class="font-label-caps text-[10px] text-on-surface-variant mb-xs">VERDICT</p>
+<p class="font-section-title text-primary">Moving Upmarket</p>
+</div>
+<div class="bg-surface-container-low p-md rounded-2xl border border-outline-variant/30">
+<p class="font-label-caps text-[10px] text-on-surface-variant mb-xs">CONFIDENCE</p>
+<p class="font-section-title text-on-surface">82% <span class="text-xs font-normal text-on-surface-variant">AI score</span></p>
+</div>
+</div>
+<div class="space-y-sm">
+<div class="flex items-center justify-between font-body-sm text-on-surface border-b border-outline-variant pb-sm">
+<span class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-sm">trending_up</span>
+                                Pricing Updates
+                            </span>
+<span class="font-mono-data text-error">+$499/mo (Enterprise)</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-on-surface border-b border-outline-variant pb-sm">
+<span class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary text-sm">article</span>
+                                TOS Change
+                            </span>
+<span class="font-mono-data">Updated Data Usage Policy</span>
+</div>
+</div>
+<div class="pt-sm">
+<div class="flex items-center justify-between bg-on-surface text-white p-md rounded-xl">
+<div class="flex items-center gap-md">
+<div class="bg-white/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-white text-[18px]">inventory_2</span>
+</div>
+<div>
+<p class="font-label-caps text-[10px] opacity-70">BOX EVIDENCE VAULT</p>
+<p class="font-body-sm font-semibold">Evidence-Hash: 8f2b...3a9e</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-emerald-400">verified</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="max-w-[1440px] mx-auto px-container-margin mt-32 space-y-xl">
+<div class="text-center space-y-md max-w-2xl mx-auto">
+<h2 class="font-page-title text-[40px] text-on-surface">Intelligence that holds up in court.</h2>
+<p class="font-body-md text-on-surface-variant">A seamless workflow from raw web data to auditable strategic insights using the world's most powerful infrastructure.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg">
+<!-- Capture -->
+<div class="md:col-span-1 glass-card p-xl rounded-[24px] flex flex-col gap-lg hover:shadow-lg transition-all group">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined" data-weight="fill">captive_portal</span>
+</div>
+<div class="space-y-sm">
+<h4 class="font-section-title">Capture</h4>
+<p class="font-body-sm text-on-surface-variant">High-fidelity web extraction via <b>Apify</b>. We crawl JS-heavy sites, behind logins, and capture full visual state.</p>
+</div>
+<div class="mt-auto pt-md opacity-30 flex items-center gap-sm">
+<span class="font-mono-data text-[11px] uppercase tracking-tighter">Apify Web SDK</span>
+<div class="h-px flex-1 bg-outline"></div>
+</div>
+</div>
+<!-- Store -->
+<div class="md:col-span-1 glass-card p-xl rounded-[24px] flex flex-col gap-lg hover:shadow-lg transition-all group border-primary/20">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined" data-weight="fill">shield_lock</span>
+</div>
+<div class="space-y-sm">
+<h4 class="font-section-title">Store</h4>
+<p class="font-body-sm text-on-surface-variant">Immutable archiving in <b>Box</b>. Every scan is timestamped and hashed for legal-grade evidence chain of custody.</p>
+</div>
+<div class="mt-auto pt-md opacity-30 flex items-center gap-sm">
+<span class="font-mono-data text-[11px] uppercase tracking-tighter">Box Enterprise</span>
+<div class="h-px flex-1 bg-outline"></div>
+</div>
+</div>
+<!-- Reason -->
+<div class="md:col-span-1 glass-card p-xl rounded-[24px] flex flex-col gap-lg hover:shadow-lg transition-all group">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined" data-weight="fill">psychology</span>
+</div>
+<div class="space-y-sm">
+<h4 class="font-section-title">Reason</h4>
+<p class="font-body-sm text-on-surface-variant">Agentic analysis with <b>Mastra</b>. Our AI doesn't just see changes; it understands strategic shifts and pricing leverage.</p>
+</div>
+<div class="mt-auto pt-md opacity-30 flex items-center gap-sm">
+<span class="font-mono-data text-[11px] uppercase tracking-tighter">Mastra Orchestrator</span>
+<div class="h-px flex-1 bg-outline"></div>
+</div>
+</div>
+<!-- Deliver -->
+<div class="md:col-span-1 glass-card p-xl rounded-[24px] flex flex-col gap-lg hover:shadow-lg transition-all group">
+<div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+<span class="material-symbols-outlined" data-weight="fill">forward_to_inbox</span>
+</div>
+<div class="space-y-sm">
+<h4 class="font-section-title">Deliver</h4>
+<p class="font-body-sm text-on-surface-variant">Real-time alerts via Slack, Teams, or Webhooks. Get the "Why" delivered to your workspace the moment it happens.</p>
+</div>
+<div class="mt-auto pt-md opacity-30 flex items-center gap-sm">
+<span class="font-mono-data text-[11px] uppercase tracking-tighter">Webhook API</span>
+<div class="h-px flex-1 bg-outline"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Use Case Section / Visual Break -->
+<section class="max-w-[1440px] mx-auto px-container-margin mt-32">
+<div class="bg-[#020617] rounded-[40px] p-xl md:p-32 overflow-hidden relative group">
+<div class="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+<img alt="Dashboard Overlay" class="w-full h-full object-cover mix-blend-overlay" data-alt="A futuristic data visualization dashboard featuring high-density analytics charts, glowing blue and purple line graphs, and complex numerical data grids. The aesthetic is clean, professional, and sophisticated, reflecting a high-performance market intelligence software. The lighting is low-key with a dark navy background, creating a mood of total situational awareness and precision. Minimalist UI elements like thin borders and soft neon accents suggest advanced AI technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlVgPUIZQSHlQ80Xv5iDhI1Ptg0p9V1ibVd4EdRwfSBPl52YpeXONtbSuOGpVsF3DjqSQMflSC89OfLF1nD1cyGPlLCC5SPPYuRKmFAMXOMauH6JkVJL09Xe0ImLSxpS2FLetdAOWo-D6D5ZuZxq8ZCGZArTLwJGVoQ5QzSOIePTRUHpTiGzzEMqKyMq0JwaH7On6o36u7nrnvWB52IDs_9KPQctrVNLE9DZQjJXEpW9JLUD89CnWlptrwtyN1mqTNYY6s_iclX9Y_"/>
+</div>
+<div class="relative z-10 max-w-xl space-y-xl">
+<div class="inline-block border border-primary/30 px-md py-1 rounded-full">
+<span class="font-label-caps text-label-caps text-primary-container">ENTERPRISE READY</span>
+</div>
+<h2 class="font-page-title text-[48px] text-white leading-tight">Scale your market awareness, not your headcount.</h2>
+<p class="text-white/60 font-body-md text-lg">
+                        SignalVault automates the tedious work of tracking thousands of competitors. Our platform provides the data density needed for analysts and the high-level clarity required for executives.
+                    </p>
+<div class="flex gap-md">
+<button class="bg-primary text-on-primary px-lg py-sm rounded-lg font-label-caps text-label-caps">
+                            Book a demo
+                        </button>
+<button class="text-white border border-white/20 px-lg py-sm rounded-lg font-label-caps text-label-caps hover:bg-white/5 transition-all">
+                            View case studies
+                        </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-white border-t border-outline-variant py-32 mt-32">
+<div class="max-w-[1440px] mx-auto px-container-margin grid grid-cols-1 md:grid-cols-4 gap-xl">
+<div class="col-span-1 space-y-md">
+<div class="flex items-center gap-xs">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[18px]">shield</span>
+</div>
+<span class="font-page-title text-xl text-on-surface">SignalVault</span>
+</div>
+<p class="font-body-sm text-on-surface-variant max-w-xs">
+                    The standard for auditable market intelligence and competitive monitoring.
+                </p>
+</div>
+<div class="col-span-1 space-y-md">
+<h5 class="font-label-caps text-label-caps text-on-surface">Product</h5>
+<ul class="space-y-sm text-on-surface-variant font-body-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Monitoring</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Evidence Vault</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">AI Insights</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Integrations</a></li>
+</ul>
+</div>
+<div class="col-span-1 space-y-md">
+<h5 class="font-label-caps text-label-caps text-on-surface">Company</h5>
+<ul class="space-y-sm text-on-surface-variant font-body-sm">
+<li><a class="hover:text-primary transition-colors" href="#">About</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Customers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Careers</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact</a></li>
+</ul>
+</div>
+<div class="col-span-1 space-y-md text-right">
+<h5 class="font-label-caps text-label-caps text-on-surface">Security</h5>
+<p class="font-body-sm text-on-surface-variant">SOC2 Type II Certified</p>
+<p class="font-body-sm text-on-surface-variant">GDPR Compliant</p>
+</div>
+</div>
+<div class="max-w-[1440px] mx-auto px-container-margin mt-xl pt-md border-t border-outline-variant flex justify-between items-center text-[11px] font-label-caps text-on-surface-variant">
+<span>© 2024 SignalVault Intelligence Systems. All rights reserved.</span>
+<div class="flex gap-md">
+<a class="hover:text-primary" href="#">Privacy Policy</a>
+<a class="hover:text-primary" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple intersection observer for reveal animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.classList.add('opacity-0', 'translate-y-8', 'transition-all', 'duration-700');
+            observer.observe(card);
+        });
+    </script>
+</body></html>

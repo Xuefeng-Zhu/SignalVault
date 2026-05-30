@@ -27,6 +27,9 @@ yarn-error.log*
 .env
 .env*.local
 
+# MCP server config (may contain API keys)
+.mcp.json
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts

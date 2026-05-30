@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scan Detail: Acme AI | SignalVault</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#faf8ff",
+                        "on-secondary-fixed": "#00174b",
+                        "surface-container-high": "#e3e7ff",
+                        "on-error-container": "#93000a",
+                        "primary": "#4212de",
+                        "on-surface": "#151b2d",
+                        "inverse-surface": "#2a3043",
+                        "surface-bright": "#faf8ff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#c7bfff",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#e0daff",
+                        "surface-variant": "#dce1fb",
+                        "primary-fixed-dim": "#c7bfff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "tertiary": "#822f00",
+                        "surface-container": "#eaedff",
+                        "surface": "#faf8ff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c8c4d9",
+                        "secondary": "#0051d5",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#5738f1",
+                        "tertiary-container": "#a94000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#474556",
+                        "outline": "#787588",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-primary-fixed": "#170065",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#151b2d",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-dim": "#d4d9f2",
+                        "on-tertiary-fixed": "#360f00",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#ffd5c4",
+                        "secondary-container": "#316bf3",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-highest": "#dce1fb",
+                        "surface-container-low": "#f2f3ff",
+                        "primary-fixed": "#e4dfff",
+                        "on-primary-fixed-variant": "#3e04db",
+                        "primary-container": "#5b3df5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sm": "8px",
+                        "sidebar-width": "280px",
+                        "unit": "8px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-margin": "40px"
+                    },
+                    "fontFamily": {
+                        "section-title": ["Geist"],
+                        "mono-data": ["Geist"],
+                        "body-md": ["Inter"],
+                        "page-title": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "section-title": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "mono-data": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "page-title": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        }
+        .active-tab-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background-color: #4212de;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid #E2E8F0;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- SIDEBAR -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-[#020617] flex flex-col py-lg px-md z-50">
+<div class="mb-xl px-sm">
+<h1 class="font-page-title text-page-title text-white tracking-tight">SignalVault</h1>
+<p class="font-label-caps text-label-caps text-white opacity-40 uppercase tracking-widest mt-xs">Market Intelligence</p>
+</div>
+<nav class="flex-1 space-y-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined">business</span>
+<span class="font-label-caps text-label-caps">Companies</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-white font-bold bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined">radar</span>
+<span class="font-label-caps text-label-caps">Scans</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label-caps text-label-caps">Claims</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-caps text-label-caps">Evidence Vault</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined">hub</span>
+<span class="font-label-caps text-label-caps">Integrations</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 text-white opacity-60 hover:opacity-100 hover:bg-surface-variant/10" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-lg border-t border-white/10">
+<div class="flex items-center gap-md px-md py-sm text-white opacity-60 hover:opacity-100 transition-all cursor-pointer">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-caps text-label-caps">Alex Morgan</span>
+</div>
+</div>
+</aside>
+<!-- MAIN CONTENT -->
+<main class="ml-sidebar-width min-h-screen">
+<!-- TOP NAV BAR -->
+<header class="flex justify-between items-center w-full px-xl py-md bg-background border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center gap-md">
+<div class="relative group">
+<span class="absolute inset-y-0 left-0 pl-md flex items-center text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</span>
+<input class="bg-surface-container-low border-none rounded-full pl-xl pr-md py-sm text-body-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search Acme AI scan..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="px-lg py-sm rounded-lg bg-surface-container-high text-primary font-bold hover:bg-surface-container-highest transition-colors flex items-center gap-sm">
+                    Add company
+                </button>
+<button class="px-lg py-sm rounded-lg bg-primary text-white font-bold hover:opacity-90 transition-opacity flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+                    Run scan
+                </button>
+<div class="flex items-center gap-sm ml-md">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/20 text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/20 text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</div>
+</header>
+<!-- HEADER SECTION -->
+<div class="px-xl pt-xl pb-lg">
+<nav class="flex items-center gap-xs text-on-surface-variant mb-sm">
+<span class="font-label-caps text-label-caps">Scans</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-label-caps text-label-caps">Acme AI</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="font-label-caps text-label-caps text-primary">Scan detail</span>
+</nav>
+<div class="flex justify-between items-end">
+<div>
+<div class="flex items-center gap-md mb-xs">
+<h2 class="font-page-title text-page-title text-on-surface">Scan: Acme AI</h2>
+<span class="bg-emerald-100 text-emerald-800 px-md py-xs rounded-full text-label-caps font-bold flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Completed
+                        </span>
+</div>
+<p class="text-on-surface-variant font-body-sm">Last audited: October 24, 2023 • 14:32 GMT</p>
+</div>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-sm px-lg py-sm rounded-lg border border-outline-variant hover:bg-surface-container transition-colors text-body-md font-semibold">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                        Open Box evidence
+                    </button>
+<button class="flex items-center gap-sm px-lg py-sm rounded-lg border border-outline-variant hover:bg-surface-container transition-colors text-body-md font-semibold">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Download brief
+                    </button>
+<button class="flex items-center gap-sm px-lg py-sm rounded-lg bg-primary text-white hover:opacity-90 transition-opacity text-body-md font-bold">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+                        Run again
+                    </button>
+</div>
+</div>
+</div>
+<!-- PROGRESS STEPPER -->
+<div class="px-xl mb-xl">
+<div class="flex items-center justify-between relative px-md">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-outline-variant -translate-y-1/2 -z-10"></div>
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-primary -translate-y-1/2 -z-10 transition-all duration-1000" style="width: 100%;"></div>
+<!-- Steps -->
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs ring-4 ring-background">1</div>
+<span class="font-label-caps text-[10px] uppercase text-on-surface">Queued</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs ring-4 ring-background">2</div>
+<span class="font-label-caps text-[10px] uppercase text-on-surface">Collecting</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs ring-4 ring-background">3</div>
+<span class="font-label-caps text-[10px] uppercase text-on-surface">Ingesting</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs ring-4 ring-background">4</div>
+<span class="font-label-caps text-[10px] uppercase text-on-surface">Analyzing</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs ring-4 ring-background">5</div>
+<span class="font-label-caps text-[10px] uppercase text-on-surface">Scoring</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs ring-4 ring-background">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<span class="font-label-caps text-[10px] uppercase text-on-surface">Completed</span>
+</div>
+</div>
+</div>
+<!-- SUMMARY CARDS (BENTO) -->
+<div class="px-xl grid grid-cols-12 gap-lg mb-xl">
+<div class="col-span-4 glass-card p-lg rounded-xl">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-sm">Verdict</p>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<h3 class="font-section-title text-section-title text-on-surface">Moving upmarket</h3>
+</div>
+</div>
+<div class="col-span-4 glass-card p-lg rounded-xl">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-sm">Confidence</p>
+<div class="flex items-end gap-sm">
+<h3 class="font-page-title text-page-title text-on-surface">82%</h3>
+<div class="mb-2 w-full h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<div class="col-span-4 glass-card p-lg rounded-xl">
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-sm">Risk Profile</p>
+<div class="flex items-center gap-md">
+<span class="bg-amber-100 text-amber-800 px-md py-sm rounded-lg text-section-title font-bold">Medium</span>
+<p class="text-body-sm text-on-surface-variant">4 active disputes detected</p>
+</div>
+</div>
+</div>
+<!-- TABS -->
+<div class="px-xl border-b border-outline-variant mb-xl flex items-center gap-xl">
+<button class="relative py-md font-semibold text-primary">
+                Intelligence brief
+                <div class="active-tab-indicator"></div>
+</button>
+<button class="py-md font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Evidence</button>
+<button class="py-md font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Sources</button>
+<button class="py-md font-semibold text-on-surface-variant hover:text-on-surface transition-colors">Activity log</button>
+</div>
+<!-- TAB CONTENT: INTELLIGENCE BRIEF -->
+<div class="px-xl grid grid-cols-12 gap-xl items-start mb-xl">
+<!-- Left Large Card -->
+<div class="col-span-6 bg-white rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-xl border-b border-outline-variant bg-surface-container-low">
+<h3 class="font-section-title text-section-title mb-md">Moving upmarket</h3>
+<p class="text-body-md text-on-surface-variant leading-relaxed">
+                        Acme AI has significantly pivoted its market positioning over the last fiscal quarter. We have identified a systematic removal of "SMB-friendly" language, replaced by enterprise-grade security commitments and high-ticket pricing frameworks. This shift suggests a move to compete directly with Tier 1 providers.
+                    </p>
+</div>
+<div class="p-xl space-y-lg">
+<div>
+<h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant mb-md">Bullet Evidence</h4>
+<ul class="space-y-md">
+<li class="flex gap-md">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<div>
+<p class="text-body-md font-semibold text-on-surface">Updated Pricing Page</p>
+<p class="text-body-sm text-on-surface-variant">Minimum seat requirement increased from 5 to 50 for all new contracts.</p>
+</div>
+</li>
+<li class="flex gap-md">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<div>
+<p class="text-body-md font-semibold text-on-surface">SOC2 Type II &amp; HIPAA</p>
+<p class="text-body-sm text-on-surface-variant">New security portal published with downloadable compliance artifacts.</p>
+</div>
+</li>
+<li class="flex gap-md">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<div>
+<p class="text-body-md font-semibold text-on-surface">Hiring Surge: Enterprise Sales</p>
+<p class="text-body-sm text-on-surface-variant">6 new listings for Enterprise Account Executives in the EMEA region.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="bg-primary-container/10 p-lg rounded-lg border border-primary/10">
+<h4 class="font-label-caps text-label-caps uppercase text-primary mb-md">Recommended Actions</h4>
+<div class="flex gap-md">
+<button class="bg-primary text-white px-md py-xs rounded-full text-xs font-bold">Monitor Sub-processors</button>
+<button class="bg-white border border-primary/20 text-primary px-md py-xs rounded-full text-xs font-bold">Update Competitor Map</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Middle Metrics Card -->
+<div class="col-span-3 space-y-lg">
+<div class="bg-white p-lg rounded-xl border border-outline-variant">
+<h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant mb-lg">Scan Coverage</h4>
+<div class="space-y-md">
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-on-surface-variant">Pages captured</span>
+<span class="font-mono-data text-mono-data font-bold">8 / 8</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-on-surface-variant">Structural changes</span>
+<span class="font-mono-data text-mono-data font-bold text-primary">23</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-on-surface-variant">Inferred claims</span>
+<span class="font-mono-data text-mono-data font-bold">17</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-sm text-on-surface-variant">High-risk anomalies</span>
+<span class="font-mono-data text-mono-data font-bold text-error">3</span>
+</div>
+</div>
+</div>
+<div class="rounded-xl overflow-hidden border border-outline-variant h-48 relative group">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A sophisticated data visualization dashboard showing complex line charts and network nodes in a high-tech interface. The color palette features deep navy and electric purple with crisp white highlights. The lighting is digital and clean, suggesting a premium financial intelligence software environment with professional and authoritative vibes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuADokZeR_aI02PVe0USu2F2BykoR2BqEnfMyykz6JJELdEzr3c24zQL5CcppQtEJy1ml951zgz5djF1M7ehx0cuHOB5D21KOE5de6vaETenYg38iTulLN1dBG1-Ea2g2HnUQicvdQ9lulWWu7jX4kAv0S1uSMUHhqVyIp7BMyvtn5SKDpkmffE2Evg4li7P9t2a6zDoa6jQSiZBplgfHV_CpmPlxwAgjnSXS5MTn-ZW9ONSra9dvtm5R3Vmraxh-l_oygHHsX8Ez1NW"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#020617] to-transparent opacity-60"></div>
+<div class="absolute bottom-md left-md">
+<p class="text-white font-bold text-body-sm">Traffic Correlation Map</p>
+<p class="text-white/60 text-[10px] uppercase tracking-widest">Real-time update</p>
+</div>
+</div>
+</div>
+<!-- Right Evidence List -->
+<div class="col-span-3 bg-white p-lg rounded-xl border border-outline-variant">
+<div class="flex justify-between items-center mb-lg">
+<h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant">Evidence Artifacts</h4>
+<a class="text-primary font-bold text-[11px] hover:underline flex items-center gap-xs" href="#">
+                        View all in Box
+                        <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</a>
+</div>
+<div class="space-y-sm">
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">file_copy</span>
+<span class="text-body-sm">Raw captures</span>
+</div>
+<span class="text-on-surface-variant material-symbols-outlined text-[18px]">download</span>
+</div>
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+<span class="text-body-sm">Markdown brief</span>
+</div>
+<span class="text-on-surface-variant material-symbols-outlined text-[18px]">download</span>
+</div>
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">image</span>
+<span class="text-body-sm">Full screenshots</span>
+</div>
+<span class="text-on-surface-variant material-symbols-outlined text-[18px]">download</span>
+</div>
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">difference</span>
+<span class="text-body-sm">Diff file (v3.1)</span>
+</div>
+<span class="text-on-surface-variant material-symbols-outlined text-[18px]">download</span>
+</div>
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">summarize</span>
+<span class="text-body-sm">Audit report</span>
+</div>
+<span class="text-on-surface-variant material-symbols-outlined text-[18px]">download</span>
+</div>
+<div class="flex items-center justify-between p-sm hover:bg-surface-container rounded-lg cursor-pointer transition-colors border border-transparent hover:border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">receipt_long</span>
+<span class="text-body-sm">Claim ledger</span>
+</div>
+<span class="text-on-surface-variant material-symbols-outlined text-[18px]">download</span>
+</div>
+</div>
+</div>
+</div>
+<!-- COURTROOM ANALYSIS SECTION -->
+<div class="px-xl mb-xl">
+<h3 class="font-section-title text-section-title mb-lg flex items-center gap-md">
+<span class="material-symbols-outlined text-primary">gavel</span>
+                Courtroom Analysis
+            </h3>
+<div class="grid grid-cols-3 gap-lg">
+<!-- Prosecution -->
+<div class="bg-error-container/20 rounded-xl border border-error/20 p-xl">
+<div class="flex items-center gap-sm mb-lg text-error">
+<span class="material-symbols-outlined">report</span>
+<h4 class="font-label-caps text-label-caps uppercase font-bold">Prosecution</h4>
+</div>
+<div class="space-y-lg">
+<div>
+<p class="text-body-sm font-bold text-on-surface mb-sm">Claim Contradiction</p>
+<p class="text-body-sm text-on-surface-variant">Subject stated "No user data used for training" on May 12, but Terms of Service updated on Oct 20 allow "Metadata ingestion for model refinement".</p>
+</div>
+<div class="h-px bg-error/10"></div>
+<div>
+<p class="text-body-sm font-bold text-on-surface mb-sm">Evidence Strength</p>
+<div class="flex items-center gap-xs">
+<div class="h-1.5 flex-1 bg-error rounded-full"></div>
+<div class="h-1.5 flex-1 bg-error rounded-full"></div>
+<div class="h-1.5 flex-1 bg-error rounded-full"></div>
+<div class="h-1.5 flex-1 bg-outline-variant rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Defense -->
+<div class="bg-surface-container rounded-xl border border-outline-variant p-xl">
+<div class="flex items-center gap-sm mb-lg text-on-surface">
+<span class="material-symbols-outlined">shield</span>
+<h4 class="font-label-caps text-label-caps uppercase font-bold">Defense</h4>
+</div>
+<div class="space-y-lg">
+<div>
+<p class="text-body-sm font-bold text-on-surface mb-sm">Mitigating Factor</p>
+<p class="text-body-sm text-on-surface-variant">The update explicitly excludes "Personal Identifiable Information" (PII) from metadata ingestion, maintaining the core privacy promise.</p>
+</div>
+<div class="h-px bg-outline-variant"></div>
+<div>
+<p class="text-body-sm font-bold text-on-surface mb-sm">Precedent</p>
+<p class="text-body-sm text-on-surface-variant italic">Ref: Meta Intelligence v. CloudCorp (2022) regarding metadata vs. training data.</p>
+</div>
+</div>
+</div>
+<!-- Judge Ruling -->
+<div class="bg-primary/5 rounded-xl border-2 border-primary/30 p-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-sm">
+<span class="material-symbols-outlined text-primary/20 text-[80px]" style="font-variation-settings: 'FILL' 1;">gavel</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-sm mb-lg text-primary">
+<span class="material-symbols-outlined">balance</span>
+<h4 class="font-label-caps text-label-caps uppercase font-bold">Judge Ruling</h4>
+</div>
+<div class="space-y-md">
+<p class="text-body-md font-bold text-primary">Partial Compliance Breach</p>
+<p class="text-body-sm text-on-surface-variant">While PII is protected, the "No user data" marketing claim is now technically inaccurate. Recommendation: Request immediate clarification or marketing update from subject.</p>
+<div class="pt-md">
+<button class="w-full py-sm bg-primary text-white rounded-lg font-bold hover:opacity-90 transition-opacity">
+                                    Issue Notice of Discovery
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FOOTER SPARE SPACE FOR SCROLL -->
+<div class="h-xl"></div>
+</main>
+<script>
+        // Simple animation for the progress bar on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBar = document.querySelector('.absolute.bg-primary');
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 500);
+        });
+
+        // Tab interactions
+        const tabs = document.querySelectorAll('.px-xl.border-b button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => {
+                    t.classList.remove('text-primary');
+                    t.classList.add('text-on-surface-variant');
+                    const indicator = t.querySelector('.active-tab-indicator');
+                    if(indicator) indicator.remove();
+                });
+                tab.classList.add('text-primary');
+                tab.classList.remove('text-on-surface-variant');
+                const indicator = document.createElement('div');
+                indicator.className = 'active-tab-indicator';
+                tab.appendChild(indicator);
+            });
+        });
+    </script>
+</body></html>

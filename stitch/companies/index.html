@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SignalVault | Companies</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .custom-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#faf8ff",
+                        "on-secondary-fixed": "#00174b",
+                        "surface-container-high": "#e3e7ff",
+                        "on-error-container": "#93000a",
+                        "primary": "#4212de",
+                        "on-surface": "#151b2d",
+                        "inverse-surface": "#2a3043",
+                        "surface-bright": "#faf8ff",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#c7bfff",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#e0daff",
+                        "surface-variant": "#dce1fb",
+                        "primary-fixed-dim": "#c7bfff",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "tertiary": "#822f00",
+                        "surface-container": "#eaedff",
+                        "surface": "#faf8ff",
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#c8c4d9",
+                        "secondary": "#0051d5",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#5738f1",
+                        "tertiary-container": "#a94000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#474556",
+                        "outline": "#787588",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-primary-fixed": "#170065",
+                        "secondary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#003ea8",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#151b2d",
+                        "tertiary-fixed": "#ffdbcd",
+                        "surface-dim": "#d4d9f2",
+                        "on-tertiary-fixed": "#360f00",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#ffd5c4",
+                        "secondary-container": "#316bf3",
+                        "on-secondary-container": "#fefcff",
+                        "surface-container-highest": "#dce1fb",
+                        "surface-container-low": "#f2f3ff",
+                        "primary-fixed": "#e4dfff",
+                        "on-primary-fixed-variant": "#3e04db",
+                        "primary-container": "#5b3df5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "sm": "8px",
+                        "sidebar-width": "280px",
+                        "unit": "8px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "lg": "24px",
+                        "container-margin": "40px"
+                    },
+                    "fontFamily": {
+                        "section-title": ["Geist"],
+                        "mono-data": ["Geist"],
+                        "body-md": ["Inter"],
+                        "page-title": ["Geist"],
+                        "label-caps": ["Geist"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "section-title": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "mono-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "page-title": ["30px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<!-- SideNavBar (The Anchor) -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-[#020617] flex flex-col h-full py-lg px-md z-50">
+<div class="mb-xl px-sm flex items-center gap-sm">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div class="flex flex-col">
+<span class="font-page-title text-xl text-white leading-tight">SignalVault</span>
+<span class="font-label-caps text-[10px] text-white opacity-40 uppercase tracking-widest">Market Intelligence</span>
+</div>
+</div>
+<nav class="flex-1 space-y-xs overflow-y-auto">
+<!-- Dashboard -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 ease-in-out hover:opacity-100 hover:bg-surface-variant/10 text-white opacity-60" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<!-- Companies (Active) -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 ease-in-out text-white font-bold bg-white/10" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">business</span>
+<span class="font-label-caps text-label-caps">Companies</span>
+</a>
+<!-- Scans -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 ease-in-out hover:opacity-100 hover:bg-surface-variant/10 text-white opacity-60" href="#">
+<span class="material-symbols-outlined text-[20px]">radar</span>
+<span class="font-label-caps text-label-caps">Scans</span>
+</a>
+<!-- Claims -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 ease-in-out hover:opacity-100 hover:bg-surface-variant/10 text-white opacity-60" href="#">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+<span class="font-label-caps text-label-caps">Claims</span>
+</a>
+<!-- Evidence Vault -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 ease-in-out hover:opacity-100 hover:bg-surface-variant/10 text-white opacity-60" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-label-caps text-label-caps">Evidence Vault</span>
+</a>
+<!-- Integrations -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 ease-in-out hover:opacity-100 hover:bg-surface-variant/10 text-white opacity-60" href="#">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+<span class="font-label-caps text-label-caps">Integrations</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-md px-md py-sm rounded-lg transition-all duration-200 ease-in-out hover:opacity-100 hover:bg-surface-variant/10 text-white opacity-60" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/10 pt-lg px-sm">
+<div class="flex items-center gap-md text-white">
+<img alt="Alex Morgan" class="w-10 h-10 rounded-full object-cover border border-white/20" data-alt="A professional headshot of a female market intelligence analyst in a corporate office setting. The lighting is soft and neutral, typical of a high-end fintech office. She wears a minimalist navy blazer. The background is slightly blurred showing glass partitions and soft warm indoor lighting, maintaining a clean and modern professional aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGHM7IXn9Iz_CQ27MlMuaRnoDilAVHfnDdWsah8mB4YVzv80bNX-yI_CMRgV-PIQgk5iAZI9KHEugag289--UkZ1nUMuniY-CBlAAn_nZqJxXvSufWK160riF14xJFRWrSLlCkwm6yImlOpKxKw68ULAXW3e_ZTcZg-_rfqbX-UHkhs-XkpRvAkMPLK6GIEhfGmOwpfk5jlsDUJxDA4NNQcSmPirZf9ngs_W2KGVZ5P2Dsull57c0qr-F4ZSDAsmN9MMsZQzxe7W8e"/>
+<div class="flex flex-col overflow-hidden">
+<span class="font-label-caps text-sm truncate">Alex Morgan</span>
+<span class="text-[10px] opacity-60 uppercase tracking-tighter">Enterprise Plan</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center w-full px-xl py-md bg-background border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center gap-lg flex-1">
+<h1 class="font-page-title text-xl text-on-surface whitespace-nowrap">Companies</h1>
+<div class="relative w-full max-w-md ml-lg">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-sm pl-xl pr-md text-body-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search companies, domains, or tags..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-xs px-md py-sm bg-surface-container-lowest border border-outline-variant text-on-surface-variant rounded-lg font-label-caps hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add company
+                </button>
+<button class="flex items-center gap-xs px-md py-sm bg-primary text-white rounded-lg font-label-caps hover:opacity-90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+                    Run scan
+                </button>
+<div class="h-6 w-px bg-outline-variant mx-sm"></div>
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-background"></span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-xl space-y-lg max-w-[1440px]">
+<!-- Filters & Stats (Bento Minimal) -->
+<section class="grid grid-cols-12 gap-lg">
+<div class="col-span-12 lg:col-span-8 flex flex-wrap gap-sm">
+<button class="px-md py-sm rounded-full bg-primary text-white font-label-caps flex items-center gap-xs">
+                        All Companies <span class="bg-white/20 px-2 rounded-full text-[10px]">124</span>
+</button>
+<button class="px-md py-sm rounded-full bg-white border border-outline-variant text-on-surface-variant font-label-caps hover:bg-surface-container-low transition-colors">
+                        High Risk <span class="bg-error/10 text-error px-2 rounded-full text-[10px]">12</span>
+</button>
+<button class="px-md py-sm rounded-full bg-white border border-outline-variant text-on-surface-variant font-label-caps hover:bg-surface-container-low transition-colors">
+                        Verified <span class="bg-emerald-100 text-emerald-700 px-2 rounded-full text-[10px]">86</span>
+</button>
+<button class="px-md py-sm rounded-full bg-white border border-outline-variant text-on-surface-variant font-label-caps hover:bg-surface-container-low transition-colors">
+                        Pending Scan <span class="bg-amber-100 text-amber-700 px-2 rounded-full text-[10px]">26</span>
+</button>
+<div class="flex-1"></div>
+<button class="px-md py-sm bg-white border border-outline-variant text-on-surface-variant rounded-lg font-label-caps flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        More Filters
+                    </button>
+</div>
+</section>
+<!-- Table Container -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+<div class="overflow-x-auto">
+<table class="w-full border-collapse text-left">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-xl py-md font-label-caps text-on-surface-variant">Company</th>
+<th class="px-md py-md font-label-caps text-on-surface-variant">Domain</th>
+<th class="px-md py-md font-label-caps text-on-surface-variant">Watched Sources</th>
+<th class="px-md py-md font-label-caps text-on-surface-variant">Latest Verdict</th>
+<th class="px-md py-md font-label-caps text-on-surface-variant text-center">Risk Score</th>
+<th class="px-md py-md font-label-caps text-on-surface-variant">Last Scan</th>
+<th class="px-xl py-md font-label-caps text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Acme AI -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-surface-container-highest flex items-center justify-center font-bold text-primary">A</div>
+<span class="font-section-title text-[14px]">Acme AI</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">acme-ai.io</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center" title="Dark Web Feed"><span class="material-symbols-outlined text-[14px]">public</span></div>
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center" title="GitHub Monitor"><span class="material-symbols-outlined text-[14px]">code</span></div>
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center" title="Cloud Leaks"><span class="material-symbols-outlined text-[14px]">cloud</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-200">Stable</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-surface-container-low rounded-full">
+<span class="font-mono-data text-on-surface font-bold">12/100</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">2h ago</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- BlueLedger -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-secondary-fixed flex items-center justify-center font-bold text-secondary">B</div>
+<span class="font-section-title text-[14px]">BlueLedger</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">blueledger.co</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">account_balance</span></div>
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">lan</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-rose-100 text-rose-700 border border-rose-200">Compromised</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-rose-50 rounded-full border border-rose-100">
+<span class="font-mono-data text-rose-700 font-bold">88/100</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">Oct 24, 14:02</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Gamma Security -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-primary-fixed flex items-center justify-center font-bold text-primary">G</div>
+<span class="font-section-title text-[14px]">Gamma Security</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">gammasys.tech</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">verified_user</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">Suspicious</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-amber-50 rounded-full border border-amber-100">
+<span class="font-mono-data text-amber-700 font-bold">54/100</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">Yesterday</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- DeltaSound -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-surface-container-high flex items-center justify-center font-bold text-on-secondary-fixed">D</div>
+<span class="font-section-title text-[14px]">DeltaSound</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">deltasound.fm</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">share</span></div>
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">link</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-200">Stable</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-surface-container-low rounded-full">
+<span class="font-mono-data text-on-surface font-bold">04/100</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">3d ago</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Epsilon One -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-tertiary-fixed flex items-center justify-center font-bold text-tertiary">E</div>
+<span class="font-section-title text-[14px]">Epsilon One</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">epsilon.one</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">dns</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-surface-variant text-on-surface-variant border border-outline-variant">Scanning...</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-surface-container-low rounded-full">
+<span class="font-mono-data text-on-surface-variant italic">N/A</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">In progress</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Solar Partners -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-amber-100 flex items-center justify-center font-bold text-amber-700">S</div>
+<span class="font-section-title text-[14px]">Solar Partners</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">solar-ops.com</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">vpn_lock</span></div>
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">router</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">Alert</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-amber-50 rounded-full border border-amber-100">
+<span class="font-mono-data text-amber-700 font-bold">67/100</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">Oct 22, 09:15</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Sky Platforms -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-sky-100 flex items-center justify-center font-bold text-sky-700">S</div>
+<span class="font-section-title text-[14px]">Sky Platforms</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">sky-platform.net</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">cloud_sync</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-200">Stable</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-surface-container-low rounded-full">
+<span class="font-mono-data text-on-surface font-bold">21/100</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">4h ago</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Tek Systems -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-xl py-md">
+<div class="flex items-center gap-md">
+<div class="w-9 h-9 rounded bg-indigo-100 flex items-center justify-center font-bold text-indigo-700">T</div>
+<span class="font-section-title text-[14px]">Tek Systems</span>
+</div>
+</td>
+<td class="px-md py-md font-mono-data text-on-surface-variant">tek.global</td>
+<td class="px-md py-md">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">hub</span></div>
+<div class="w-7 h-7 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center"><span class="material-symbols-outlined text-[14px]">memory</span></div>
+</div>
+</td>
+<td class="px-md py-md">
+<span class="px-2 py-1 rounded text-[11px] font-semibold uppercase tracking-wider bg-rose-100 text-rose-700 border border-rose-200">Incident</span>
+</td>
+<td class="px-md py-md text-center">
+<div class="inline-flex items-center justify-center px-3 py-1 bg-rose-50 rounded-full border border-rose-100">
+<span class="font-mono-data text-rose-700 font-bold">94/100</span>
+</div>
+</td>
+<td class="px-md py-md text-on-surface-variant text-body-sm">12m ago</td>
+<td class="px-xl py-md text-right">
+<button class="p-sm text-outline hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-xl py-md bg-surface-container-low border-t border-outline-variant flex items-center justify-between">
+<span class="text-body-sm text-on-surface-variant">Showing <span class="font-bold text-on-surface">1-8</span> of 124 companies</span>
+<div class="flex items-center gap-sm">
+<button class="p-sm rounded-lg border border-outline-variant hover:bg-white transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center gap-xs">
+<button class="w-8 h-8 rounded-lg bg-primary text-white text-body-sm font-bold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-white text-on-surface-variant text-body-sm transition-colors">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-white text-on-surface-variant text-body-sm transition-colors">3</button>
+<span class="px-sm text-outline-variant">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-white text-on-surface-variant text-body-sm transition-colors">16</button>
+</div>
+<button class="p-sm rounded-lg border border-outline-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual Insights Section -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-lg mt-xl">
+<div class="bg-white border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-on-surface-variant">Risk Distribution</span>
+<span class="material-symbols-outlined text-outline text-[20px]">insights</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex mt-sm">
+<div class="h-full bg-emerald-500 w-[60%]"></div>
+<div class="h-full bg-amber-500 w-[25%]"></div>
+<div class="h-full bg-rose-500 w-[15%]"></div>
+</div>
+<div class="flex justify-between mt-xs">
+<span class="text-[10px] text-on-surface-variant uppercase font-semibold">Healthy (60%)</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-semibold">Critical (15%)</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-on-surface-variant">Total Scans (24h)</span>
+<span class="material-symbols-outlined text-outline text-[20px]">speed</span>
+</div>
+<span class="text-3xl font-page-title text-on-surface">1,492</span>
+<span class="text-emerald-600 text-[11px] font-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> 12.5% increase from yesterday
+                    </span>
+</div>
+<div class="bg-white border border-outline-variant rounded-xl p-lg flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-on-surface-variant">Active Monitoring</span>
+<span class="material-symbols-outlined text-outline text-[20px]">visibility</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex -space-x-3">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-[10px] ring-2 ring-white">AI</div>
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-white text-[10px] ring-2 ring-white">DB</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-primary text-[10px] ring-2 ring-white">+4</div>
+</div>
+<span class="text-body-sm text-on-surface-variant">Sources per company average</span>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.querySelector('button.opacity-0')?.classList.remove('opacity-0');
+            });
+            row.addEventListener('mouseleave', () => {
+                row.querySelector('button')?.classList.add('opacity-0');
+            });
+        });
+
+        // Search bar focus effect
+        const searchInput = document.querySelector('input[type="text"]');
+        searchInput?.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('scale-[1.02]');
+        });
+        searchInput?.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('scale-[1.02]');
+        });
+    </script>
+</body></html>
