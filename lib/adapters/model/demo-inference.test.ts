@@ -48,12 +48,12 @@ describe("seededInferenceText payload selection", () => {
     }
   });
 
-  it("returns a Verdict ('moving_upmarket', confidence 82) for verdict/judge names", () => {
+  it("returns a Verdict ('moving_upmarket', confidence 85) for verdict/judge names", () => {
     for (const name of ["Verdict", "JudgeVerdict"]) {
       const verdict = VerdictSchema.parse(JSON.parse(seededInferenceText(req(name))));
       const strategy: Strategy = "moving_upmarket";
       expect(verdict.strategyPrediction).toBe(strategy);
-      expect(verdict.confidence).toBe(82);
+      expect(verdict.confidence).toBe(85);
     }
   });
 
@@ -80,7 +80,7 @@ describe("seededInferenceText payload selection", () => {
   it("falls back to a deterministic plain-text narrative for unknown names", () => {
     const text = seededInferenceText(req("SomethingUnknown"));
     expect(() => JSON.parse(text)).toThrow();
-    expect(text).toContain("Acme AI");
+    expect(text).toContain("Dropbox");
     expect(resolvePayloadKind(req("SomethingUnknown"))).toBe("default");
   });
 
@@ -91,7 +91,7 @@ describe("seededInferenceText payload selection", () => {
     const verdict = VerdictSchema.parse(
       JSON.parse(seededInferenceText(req("Unknown", "Please produce the final verdict."))),
     );
-    expect(verdict.confidence).toBe(82);
+    expect(verdict.confidence).toBe(85);
   });
 
   it("is deterministic across repeated calls (Requirement 18.7)", () => {

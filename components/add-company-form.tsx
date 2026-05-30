@@ -171,7 +171,7 @@ export function AddCompanyForm({
             name="name"
             value={name}
             maxLength={NAME_MAX}
-            placeholder="Acme AI"
+            placeholder="Dropbox"
             aria-invalid={errors?.name ? true : undefined}
             aria-describedby={errors?.name ? "company-name-error" : undefined}
             onChange={(e) => {

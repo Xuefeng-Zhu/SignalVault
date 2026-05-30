@@ -10,14 +10,14 @@ import type {
 } from './types';
 
 /**
- * Deterministic seed for the Demo_Company "Acme AI".
+ * Deterministic seed for the Demo_Company "Dropbox".
  *
- * Acme AI demonstrates a deliberate **upmarket strategy shift** between two
- * seeded Snapshots: a `previous` state (self-serve, free tier, light security)
- * and a `current` state (contact-sales pricing, enterprise security &
- * compliance, admin controls in the docs, and enterprise go-to-market hiring).
- * The shift maps to the deterministic Verdict "Moving upmarket" (confidence 82)
- * defined in `./fallback-verdict`.
+ * Dropbox demonstrates a deliberate **AI-platform pivot** between two seeded
+ * Snapshots: a `previous` state (file-sync, consumer-focused, simple storage
+ * plans) and a `current` state (Dropbox Dash AI assistant, enterprise admin
+ * controls, AI-powered search, and aggressive AI/ML hiring). The shift maps to
+ * the deterministic Verdict "AI platform pivot" (confidence 85) defined in
+ * `./fallback-verdict`.
  *
  * Everything in this module is pure and deterministic — no randomness, no
  * timestamps, no ids, no network — so Demo_Mode produces identical snapshots,
@@ -34,9 +34,9 @@ import type {
 
 /** The seeded Demo_Company identity (Requirement 18.3). */
 const ACME_DEMO_COMPANY_DATA: DemoCompany = {
-  name: 'Acme AI',
-  domain: 'acme.ai',
-  slug: 'acme-ai',
+  name: 'Dropbox',
+  domain: 'dropbox.com',
+  slug: 'dropbox',
   isDemo: true,
 };
 
@@ -45,132 +45,154 @@ const ACME_DEMO_COMPANY_DATA: DemoCompany = {
  * trust/security, docs, and careers (Requirement 18.3).
  */
 const ACME_WATCHED_SOURCES_DATA: DemoWatchedSource[] = [
-  { pageRole: 'pricing', url: 'https://acme.ai/pricing' },
-  { pageRole: 'trust', url: 'https://acme.ai/trust' },
-  { pageRole: 'docs', url: 'https://docs.acme.ai' },
-  { pageRole: 'careers', url: 'https://acme.ai/careers' },
+  { pageRole: 'pricing', url: 'https://www.dropbox.com/plans' },
+  { pageRole: 'trust', url: 'https://www.dropbox.com/security' },
+  { pageRole: 'docs', url: 'https://www.dropbox.com/developers/documentation' },
+  { pageRole: 'careers', url: 'https://www.dropbox.com/jobs' },
 ];
 
-// --- Normalized content: PREVIOUS snapshot (self-serve, pre-upmarket) --------
+// --- Normalized content: PREVIOUS snapshot (consumer file-sync era) -----------
 
-const PRICING_PREVIOUS = `# Pricing
+const PRICING_PREVIOUS = `# Plans & Pricing
 
-Start for free, no credit card required. Acme AI offers a free self-serve tier so any developer can sign up and start building in minutes.
+Dropbox keeps your files safe, synced, and easy to share. Get started with 2 GB of free storage.
 
 ## Plans
 
-- Free: $0/month. Generous limits for individuals and side projects.
-- Pro: $49/month. For growing teams, billed monthly, cancel anytime.
+- Basic: Free. 2 GB of storage for personal use.
+- Plus: $11.99/month. 2 TB of storage, billed annually.
+- Family: $19.99/month. 2 TB shared across up to 6 users.
+- Professional: $24.99/month. 3 TB for freelancers and solo professionals.
 
-Self-serve checkout. Upgrade or downgrade instantly from your dashboard.`;
+All plans include file sync, file recovery, and sharing. Start free and upgrade as you grow.`;
 
-const TRUST_PREVIOUS = `# Trust & Security
+const TRUST_PREVIOUS = `# Security
 
-Security is important to us. All data is encrypted in transit using TLS.
+Dropbox is designed with multiple layers of protection to keep your files safe.
 
-We follow security best practices and review our infrastructure regularly.`;
+All files are encrypted in transit using 256-bit AES and TLS. Your data is stored on secure servers in data centers across the globe.
 
-const DOCS_PREVIOUS = `# Documentation
+We offer two-step verification so you can add an extra layer of security to your account.`;
 
-Welcome to the Acme AI docs.
+const DOCS_PREVIOUS = `# Developer Documentation
+
+Welcome to the Dropbox Platform developer documentation.
 
 ## Getting started
 
-Install the SDK and authenticate with your API key.
+Register your app, obtain an access token, and make your first API call.
 
 ## API reference
 
-Browse endpoints for completions, embeddings, and files.`;
+Browse endpoints for files, folders, sharing, and user account management.
 
-const CAREERS_PREVIOUS = `# Careers
+## SDKs
 
-Join Acme AI. We are a small, product-focused team.
+Official SDKs for Python, JavaScript, Java, Swift, and .NET.`;
+
+const CAREERS_PREVIOUS = `# Careers at Dropbox
+
+We're building a more enlightened way of working. Join us.
 
 ## Open roles
 
-- Software Engineer, Backend
-- Software Engineer, Frontend
-- Developer Advocate
+- Software Engineer, Sync Engine
+- Software Engineer, Mobile (iOS)
+- Software Engineer, Mobile (Android)
+- Product Designer, Core Experience
+- Data Analyst, Growth
 
-We hire remotely across North America.`;
+We are a Virtual First company. Work from anywhere that works for you.`;
 
-// --- Normalized content: CURRENT snapshot (upmarket shift) -------------------
+// --- Normalized content: CURRENT snapshot (AI-platform pivot) -----------------
 
-const PRICING_CURRENT = `# Pricing
+const PRICING_CURRENT = `# Plans & Pricing
 
-Acme AI is built for teams with serious requirements. Contact our sales team to find the right plan for your organization.
+Dropbox helps teams work smarter with AI-powered tools, secure collaboration, and enterprise-grade admin controls.
 
 ## Plans
 
-- Team: Custom pricing. For growing teams, billed annually.
-- Enterprise: Contact sales for a custom quote. Includes SSO, audit logs, and a dedicated success manager.
+- Plus: $11.99/month. 2 TB for individuals who need more storage.
+- Essentials: $24.99/month. 3 TB with professional features and full-text search.
+- Business: $20/user/month. Starting at 9 TB for teams, with admin controls and audit logs.
+- Business Plus: $26/user/month. Advanced security, compliance, and unlimited storage for enterprises.
+- Enterprise: Contact sales for custom pricing. Includes Dropbox Dash AI, advanced DLP, and dedicated support.
 
-Enterprise plans require an annual contract and an onboarding call with our team.`;
+Enterprise plans include SSO, advanced admin controls, and a dedicated customer success manager.`;
 
-const TRUST_CURRENT = `# Trust & Security
+const TRUST_CURRENT = `# Security
 
-Acme AI is SOC 2 Type II certified and HIPAA compliant. All data is encrypted in transit and at rest.
+Dropbox protects your data with enterprise-grade security infrastructure and compliance certifications.
+
+## Compliance
+
+Dropbox is SOC 2 Type II, SOC 3, ISO 27001, ISO 27017, and ISO 27018 certified. HIPAA compliance is available for Business and Enterprise customers.
 
 ## Enterprise controls
 
-- SAML SSO and SCIM provisioning for centralized identity management.
-- Audit logs that capture every administrative action.
-- Data residency options in the US and EU regions.
+- SAML 2.0 SSO and domain verification for centralized identity management.
+- Advanced audit logging that captures file events, sharing activity, and administrative actions.
+- Data loss prevention (DLP) to classify and protect sensitive content.
+- Granular sharing controls and external sharing restrictions by domain.
 
-Request our security package and penetration test reports from the trust center.`;
+## Data governance
 
-const DOCS_CURRENT = `# Documentation
+Legal holds, data retention policies, and content lifecycle management for regulated industries. Request our security whitepaper from the trust center.`;
 
-Welcome to the Acme AI docs.
+const DOCS_CURRENT = `# Developer Documentation
+
+Welcome to the Dropbox Platform developer documentation.
 
 ## Getting started
 
-Install the SDK and authenticate with your API key.
+Register your app, obtain an access token, and make your first API call.
 
 ## API reference
 
-Browse endpoints for completions, embeddings, and files.
+Browse endpoints for files, folders, sharing, and user account management.
 
-## Administration
+## Dropbox Dash API
 
-Admin controls let workspace owners manage members, roles, and permissions.
+Integrate with Dropbox Dash to bring AI-powered universal search across all connected tools.
 
-## Single sign-on
+## AI content suggestions
 
-Configure SSO and SAML for your organization, including SCIM user provisioning.
+Use the content intelligence API for automatic tagging, classification, and smart suggestions powered by machine learning.
 
-## Role-based access control
+## Admin SDK
 
-Assign roles to enforce least-privilege access across your workspace.`;
+Programmatically manage team members, groups, sharing policies, and audit logs for enterprise deployments.`;
 
-const CAREERS_CURRENT = `# Careers
+const CAREERS_CURRENT = `# Careers at Dropbox
 
-Join Acme AI as we scale to serve the world's largest organizations.
+We're building the AI-powered workspace for modern teams. Join us.
 
 ## Open roles
 
-- Software Engineer, Backend
-- Enterprise Account Executive
-- Solutions Engineer
-- Customer Success Manager, Enterprise
-- Head of Security & Compliance
+- Senior Machine Learning Engineer, Dash AI
+- Staff Engineer, AI/ML Platform
+- Software Engineer, AI Search & Retrieval
+- Product Manager, Dropbox Dash
+- Enterprise Account Executive, EMEA
+- Solutions Architect, Enterprise
+- Head of AI Research
 
-We are building out our enterprise go-to-market team.`;
+We are a Virtual First company. Work from anywhere that works for you.`;
 
 // --- Snapshots ----------------------------------------------------------------
 
 const PREVIOUS_SOURCES: DemoSourceContent[] = [
-  { pageRole: 'pricing', url: 'https://acme.ai/pricing', normalizedContent: PRICING_PREVIOUS },
-  { pageRole: 'trust', url: 'https://acme.ai/trust', normalizedContent: TRUST_PREVIOUS },
-  { pageRole: 'docs', url: 'https://docs.acme.ai', normalizedContent: DOCS_PREVIOUS },
-  { pageRole: 'careers', url: 'https://acme.ai/careers', normalizedContent: CAREERS_PREVIOUS },
+  { pageRole: 'pricing', url: 'https://www.dropbox.com/plans', normalizedContent: PRICING_PREVIOUS },
+  { pageRole: 'trust', url: 'https://www.dropbox.com/security', normalizedContent: TRUST_PREVIOUS },
+  { pageRole: 'docs', url: 'https://www.dropbox.com/developers/documentation', normalizedContent: DOCS_PREVIOUS },
+  { pageRole: 'careers', url: 'https://www.dropbox.com/jobs', normalizedContent: CAREERS_PREVIOUS },
 ];
 
 const CURRENT_SOURCES: DemoSourceContent[] = [
-  { pageRole: 'pricing', url: 'https://acme.ai/pricing', normalizedContent: PRICING_CURRENT },
-  { pageRole: 'trust', url: 'https://acme.ai/trust', normalizedContent: TRUST_CURRENT },
-  { pageRole: 'docs', url: 'https://docs.acme.ai', normalizedContent: DOCS_CURRENT },
-  { pageRole: 'careers', url: 'https://acme.ai/careers', normalizedContent: CAREERS_CURRENT },
+  { pageRole: 'pricing', url: 'https://www.dropbox.com/plans', normalizedContent: PRICING_CURRENT },
+  { pageRole: 'trust', url: 'https://www.dropbox.com/security', normalizedContent: TRUST_CURRENT },
+  { pageRole: 'docs', url: 'https://www.dropbox.com/developers/documentation', normalizedContent: DOCS_CURRENT },
+  { pageRole: 'careers', url: 'https://www.dropbox.com/jobs', normalizedContent: CAREERS_CURRENT },
 ];
 
 /**
@@ -185,19 +207,19 @@ const ACME_SNAPSHOTS_DATA: DemoSnapshot[] = [
 // --- Claims -------------------------------------------------------------------
 
 /**
- * Seeded Claims with statuses that narrate the upmarket shift (Requirement
+ * Seeded Claims with statuses that narrate the AI-platform pivot (Requirement
  * 18.6). Every `evidenceText` is an exact substring of the normalized content
  * for its `pageRole` at its `snapshotState`, so the seed satisfies claim
  * grounding (Requirement 13.5). The set exercises all six `Claim_Status`
  * values: new, strengthened, removed, weakened, contradicted, and needs_review.
  */
 const ACME_CLAIMS_DATA: DemoClaim[] = [
-  // Pricing: self-serve/free → contact-sales/enterprise.
+  // Pricing: consumer-only → enterprise tiers with AI features.
   {
     claimType: 'pricing',
-    statementText: 'Acme AI offers a free, self-serve tier.',
+    statementText: 'Dropbox offers a free 2 GB storage tier for personal use.',
     evidenceText:
-      'Acme AI offers a free self-serve tier so any developer can sign up and start building in minutes.',
+      'Basic: Free. 2 GB of storage for personal use.',
     confidence: 0.92,
     claimStatus: 'removed',
     pageRole: 'pricing',
@@ -205,8 +227,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'pricing',
-    statementText: 'Acme AI lets users start for free with no credit card.',
-    evidenceText: 'Start for free, no credit card required.',
+    statementText: 'Dropbox positions as simple file sync with free starter storage.',
+    evidenceText: 'Get started with 2 GB of free storage.',
     confidence: 0.85,
     claimStatus: 'contradicted',
     pageRole: 'pricing',
@@ -214,8 +236,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'pricing',
-    statementText: 'Pro pricing is self-serve and billed monthly with cancel-anytime terms.',
-    evidenceText: 'Pro: $49/month. For growing teams, billed monthly, cancel anytime.',
+    statementText: 'Dropbox Family plan targets consumer multi-user households.',
+    evidenceText: 'Family: $19.99/month. 2 TB shared across up to 6 users.',
     confidence: 0.8,
     claimStatus: 'weakened',
     pageRole: 'pricing',
@@ -223,27 +245,27 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'pricing',
-    statementText: 'Acme AI now directs prospective customers to contact sales.',
-    evidenceText: 'Contact our sales team to find the right plan for your organization.',
-    confidence: 0.9,
+    statementText: 'Dropbox now offers an Enterprise tier with AI-powered Dash and custom pricing.',
+    evidenceText: 'Enterprise: Contact sales for custom pricing. Includes Dropbox Dash AI, advanced DLP, and dedicated support.',
+    confidence: 0.93,
     claimStatus: 'new',
     pageRole: 'pricing',
     snapshotState: 'current',
   },
   {
     claimType: 'packaging',
-    statementText: 'Acme AI introduced an Enterprise plan with quote-based pricing.',
-    evidenceText: 'Enterprise: Contact sales for a custom quote.',
+    statementText: 'Dropbox introduced Business Plus with unlimited storage and compliance features.',
+    evidenceText: 'Business Plus: $26/user/month. Advanced security, compliance, and unlimited storage for enterprises.',
     confidence: 0.88,
     claimStatus: 'new',
     pageRole: 'pricing',
     snapshotState: 'current',
   },
-  // Trust/security: added SOC 2, HIPAA, SAML SSO, SCIM, audit logs, data residency.
+  // Trust/security: added comprehensive compliance, DLP, legal holds.
   {
     claimType: 'compliance',
-    statementText: 'Acme AI is SOC 2 Type II certified and HIPAA compliant.',
-    evidenceText: 'Acme AI is SOC 2 Type II certified and HIPAA compliant.',
+    statementText: 'Dropbox is SOC 2 Type II, ISO 27001, and HIPAA compliant for enterprise customers.',
+    evidenceText: 'Dropbox is SOC 2 Type II, SOC 3, ISO 27001, ISO 27017, and ISO 27018 certified.',
     confidence: 0.95,
     claimStatus: 'new',
     pageRole: 'trust',
@@ -251,8 +273,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'security',
-    statementText: 'Acme AI added SAML SSO and SCIM provisioning.',
-    evidenceText: 'SAML SSO and SCIM provisioning for centralized identity management.',
+    statementText: 'Dropbox added SAML 2.0 SSO and domain verification for enterprise identity management.',
+    evidenceText: 'SAML 2.0 SSO and domain verification for centralized identity management.',
     confidence: 0.93,
     claimStatus: 'new',
     pageRole: 'trust',
@@ -260,8 +282,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'security',
-    statementText: 'Acme AI added audit logs for administrative actions.',
-    evidenceText: 'Audit logs that capture every administrative action.',
+    statementText: 'Dropbox added data loss prevention (DLP) for sensitive content.',
+    evidenceText: 'Data loss prevention (DLP) to classify and protect sensitive content.',
     confidence: 0.9,
     claimStatus: 'new',
     pageRole: 'trust',
@@ -269,8 +291,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'compliance',
-    statementText: 'Acme AI offers US and EU data residency options.',
-    evidenceText: 'Data residency options in the US and EU regions.',
+    statementText: 'Dropbox offers legal holds and data retention policies for regulated industries.',
+    evidenceText: 'Legal holds, data retention policies, and content lifecycle management for regulated industries.',
     confidence: 0.9,
     claimStatus: 'new',
     pageRole: 'trust',
@@ -278,27 +300,27 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'security',
-    statementText: 'Acme AI encrypts data in transit.',
-    evidenceText: 'All data is encrypted in transit using TLS.',
+    statementText: 'Dropbox encrypts files in transit using 256-bit AES and TLS.',
+    evidenceText: 'All files are encrypted in transit using 256-bit AES and TLS.',
     confidence: 0.85,
     claimStatus: 'strengthened',
     pageRole: 'trust',
     snapshotState: 'previous',
   },
-  // Docs: added admin controls, SSO/SAML setup, role-based access control.
+  // Docs: added AI APIs, Admin SDK, content intelligence.
   {
     claimType: 'feature',
-    statementText: 'Acme AI docs added admin controls for managing members and roles.',
-    evidenceText: 'Admin controls let workspace owners manage members, roles, and permissions.',
+    statementText: 'Dropbox launched a Dash API for AI-powered universal search across connected tools.',
+    evidenceText: 'Integrate with Dropbox Dash to bring AI-powered universal search across all connected tools.',
     confidence: 0.9,
     claimStatus: 'new',
     pageRole: 'docs',
     snapshotState: 'current',
   },
   {
-    claimType: 'integration',
-    statementText: 'Acme AI docs added an SSO/SAML configuration guide.',
-    evidenceText: 'Configure SSO and SAML for your organization, including SCIM user provisioning.',
+    claimType: 'feature',
+    statementText: 'Dropbox added a content intelligence API for automatic tagging and classification.',
+    evidenceText: 'Use the content intelligence API for automatic tagging, classification, and smart suggestions powered by machine learning.',
     confidence: 0.88,
     claimStatus: 'new',
     pageRole: 'docs',
@@ -306,8 +328,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'feature',
-    statementText: 'Acme AI documented role-based access control.',
-    evidenceText: 'Assign roles to enforce least-privilege access across your workspace.',
+    statementText: 'Dropbox released an Admin SDK for enterprise programmatic management.',
+    evidenceText: 'Programmatically manage team members, groups, sharing policies, and audit logs for enterprise deployments.',
     confidence: 0.82,
     claimStatus: 'new',
     pageRole: 'docs',
@@ -315,18 +337,18 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'feature',
-    statementText: 'Acme AI provides completions, embeddings, and files API endpoints.',
-    evidenceText: 'Browse endpoints for completions, embeddings, and files.',
+    statementText: 'Dropbox provides SDKs for Python, JavaScript, Java, Swift, and .NET.',
+    evidenceText: 'Official SDKs for Python, JavaScript, Java, Swift, and .NET.',
     confidence: 0.6,
     claimStatus: 'needs_review',
     pageRole: 'docs',
-    snapshotState: 'current',
+    snapshotState: 'previous',
   },
-  // Careers: added enterprise sales and solutions engineering roles.
+  // Careers: shifted from file-sync engineering to AI/ML hiring.
   {
     claimType: 'hiring',
-    statementText: 'Acme AI is hiring an Enterprise Account Executive.',
-    evidenceText: 'Enterprise Account Executive',
+    statementText: 'Dropbox is hiring a Senior Machine Learning Engineer for Dash AI.',
+    evidenceText: 'Senior Machine Learning Engineer, Dash AI',
     confidence: 0.9,
     claimStatus: 'new',
     pageRole: 'careers',
@@ -334,8 +356,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'hiring',
-    statementText: 'Acme AI is hiring a Solutions Engineer.',
-    evidenceText: 'Solutions Engineer',
+    statementText: 'Dropbox is hiring a Staff Engineer for the AI/ML Platform.',
+    evidenceText: 'Staff Engineer, AI/ML Platform',
     confidence: 0.9,
     claimStatus: 'new',
     pageRole: 'careers',
@@ -343,8 +365,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'hiring',
-    statementText: 'Acme AI is hiring a Head of Security & Compliance.',
-    evidenceText: 'Head of Security & Compliance',
+    statementText: 'Dropbox is hiring a Head of AI Research.',
+    evidenceText: 'Head of AI Research',
     confidence: 0.78,
     claimStatus: 'new',
     pageRole: 'careers',
@@ -352,8 +374,8 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
   },
   {
     claimType: 'hiring',
-    statementText: 'Acme AI was hiring a Developer Advocate for community growth.',
-    evidenceText: 'Developer Advocate',
+    statementText: 'Dropbox was hiring mobile engineers for the sync engine.',
+    evidenceText: 'Software Engineer, Mobile (iOS)',
     confidence: 0.7,
     claimStatus: 'removed',
     pageRole: 'careers',
@@ -363,7 +385,7 @@ const ACME_CLAIMS_DATA: DemoClaim[] = [
 
 // --- Frozen canonical constants ----------------------------------------------
 
-/** The seeded Demo_Company "Acme AI" (frozen, stable reference). */
+/** The seeded Demo_Company "Dropbox" (frozen, stable reference). */
 export const ACME_DEMO_COMPANY: DemoCompany = deepFreeze(ACME_DEMO_COMPANY_DATA);
 
 /** The Demo_Company's four Watched_Sources (frozen, stable reference). */

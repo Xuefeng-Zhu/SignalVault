@@ -373,8 +373,8 @@ describe("CompanyCard — not-yet-scanned state (Req 3.7)", () => {
       <CompanyCard
         company={{
           id: "test-id",
-          name: "Acme AI",
-          domain: "acme.ai",
+          name: "Dropbox",
+          domain: "dropbox.com",
           sourceCount: 4,
           latestScan: null,
         }}
@@ -388,14 +388,14 @@ describe("CompanyCard — not-yet-scanned state (Req 3.7)", () => {
       <CompanyCard
         company={{
           id: "test-id",
-          name: "Acme AI",
-          domain: "acme.ai",
+          name: "Dropbox",
+          domain: "dropbox.com",
           sourceCount: 4,
           latestScan: null,
         }}
       />,
     );
-    expect(screen.getByText("Acme AI")).toBeInTheDocument();
-    expect(screen.getByText("acme.ai")).toBeInTheDocument();
+    expect(screen.getByText("Dropbox")).toBeInTheDocument();
+    expect(screen.getByText("dropbox.com")).toBeInTheDocument();
   });
 });

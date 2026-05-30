@@ -26,7 +26,7 @@ import type { ClaimStatusAssignment } from './debate';
  * *For any* agent output that fails its Zod schema validation, or *for any*
  * model invocation that errors / throws / times out, `concludeDebate` records
  * the failure cause and substitutes the deterministic Demo_Company fallback
- * Verdict ("moving_upmarket", confidence 82) so the workflow can continue —
+ * Verdict ("moving_upmarket", confidence 85) so the workflow can continue —
  * and it NEVER throws.
  *
  * The insufficient-evidence rule (Requirement 15.6) takes PRECEDENCE and is a
@@ -333,7 +333,7 @@ describe('Property 23: model failure / invalid agent output yields the determini
         // ...and the verdict equals the deterministic fallback value.
         expect(result.verdict).toEqual(EXPECTED_FALLBACK_VERDICT);
         expect(result.verdict.strategyPrediction).toBe('moving_upmarket');
-        expect(result.verdict.confidence).toBe(82);
+        expect(result.verdict.confidence).toBe(85);
 
         // The substituted verdict is itself schema-valid.
         expect(VerdictSchema.safeParse(result.verdict).success).toBe(true);

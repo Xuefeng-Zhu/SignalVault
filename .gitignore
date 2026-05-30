@@ -48,3 +48,8 @@ next-env.d.ts
 .roo
 .trae
 .windsurf
+
+# Build artifacts
+_scan-bundle.mjs
+_scan-entry.cjs
+run-scan.mjs

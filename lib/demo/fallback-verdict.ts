@@ -4,10 +4,10 @@ import { cloneSeed, deepFreeze } from './freeze';
 import type { FallbackVerdict, FlaggedVerdict } from './types';
 
 /**
- * The deterministic Verdict for the Demo_Company "Acme AI".
+ * The deterministic Verdict for the Demo_Company "Dropbox".
  *
- * Demo_Mode always produces the strategy prediction "Moving upmarket" with a
- * confidence of 82 on a 0–100 scale (Requirements 18.5, 18.6). This module
+ * Demo_Mode always produces the strategy prediction "AI platform pivot" with a
+ * confidence of 85 on a 0–100 scale (Requirements 18.5, 18.6). This module
  * exposes that verdict plus a reusable **deterministic fallback Verdict** that
  * is substituted whenever an agent's Zod validation fails or the model fails
  * (Requirements 15.7, 19.3); per the design the fallback *is* the Demo_Company
@@ -19,43 +19,43 @@ import type { FallbackVerdict, FlaggedVerdict } from './types';
  * Requirements: 18.5, 18.6, 18.7, 15.7, 19.3
  */
 
-/** Strategy prediction enum value backing the human label "Moving upmarket". */
+/** Strategy prediction enum value backing the human label "AI platform pivot". */
 export const DEMO_STRATEGY_PREDICTION: Strategy = 'moving_upmarket';
 
 /** Human-readable label for the demo verdict's strategy prediction. */
-export const DEMO_STRATEGY_LABEL = 'Moving upmarket' as const;
+export const DEMO_STRATEGY_LABEL = 'AI platform pivot' as const;
 
 /** Confidence value for the demo verdict on a 0–100 scale (Requirement 18.5). */
-export const DEMO_CONFIDENCE = 82 as const;
+export const DEMO_CONFIDENCE = 85 as const;
 
 /**
- * The deterministic Demo_Company Verdict ("Moving upmarket", confidence 82).
+ * The deterministic Demo_Company Verdict ("AI platform pivot", confidence 85).
  *
- * `keyEvidence` and `counterEvidence` are drawn from the seeded Acme AI story:
- * pricing moved to contact-sales, enterprise security & compliance were added,
- * admin controls landed in the docs, and enterprise GTM hiring opened — with
- * the prosecution noting some changes could be a copy refresh.
+ * `keyEvidence` and `counterEvidence` are drawn from the seeded Dropbox story:
+ * pricing added Enterprise + AI tiers, security added full compliance stack and
+ * DLP, docs launched Dash AI and content intelligence APIs, and careers shifted
+ * from file-sync engineering to AI/ML research hiring.
  */
 const DEMO_VERDICT_DATA: FlaggedVerdict = {
   strategyPrediction: DEMO_STRATEGY_PREDICTION,
   confidence: DEMO_CONFIDENCE,
-  riskScore: 64,
+  riskScore: 72,
   recommendedActions: [
-    'Brief sales and competitive teams that Acme AI is repositioning upmarket toward enterprise buyers.',
-    'Reassess pricing exposure now that the free, self-serve tier has been replaced with contact-sales plans.',
-    'Track the new SOC 2 Type II and HIPAA posture when evaluating Acme AI for regulated workloads.',
-    'Monitor enterprise hiring (Account Executive, Solutions Engineer, Head of Security & Compliance) as a leading indicator of GTM intent.',
-    'Re-run a scan in 30 days to confirm the upmarket shift is sustained rather than a one-off copy refresh.',
+    'Brief product and competitive teams that Dropbox is pivoting from file-sync to an AI-powered workspace platform.',
+    'Evaluate how Dropbox Dash AI universal search competes with Box AI for enterprise content discovery.',
+    'Track Dropbox AI/ML hiring (Head of AI Research, ML Engineers) as a leading indicator of platform investment.',
+    'Assess competitive exposure in enterprise compliance — Dropbox now matches Box on SOC 2, ISO 27001, and HIPAA.',
+    'Re-run a scan in 30 days to confirm the AI pivot is sustained and not a temporary marketing push.',
   ],
   keyEvidence: [
-    'Pricing replaced the free self-serve tier with contact-sales and a quote-based Enterprise plan.',
-    'Trust center added SOC 2 Type II, HIPAA, SAML SSO, SCIM, audit logs, and US/EU data residency.',
-    'Docs added admin controls, SSO/SAML setup, and role-based access control.',
-    'Careers opened Enterprise Account Executive, Solutions Engineer, and Head of Security & Compliance roles.',
+    'Pricing added an Enterprise tier with Dropbox Dash AI, advanced DLP, and contact-sales pricing.',
+    'Security page added SOC 2 Type II, ISO 27001, HIPAA, SAML SSO, DLP, and legal holds — full enterprise compliance.',
+    'Docs launched Dropbox Dash API for AI-powered universal search and a content intelligence API for ML-powered tagging.',
+    'Careers shifted from sync-engine and mobile roles to Senior ML Engineer, Staff AI/ML Platform, and Head of AI Research.',
   ],
   counterEvidence: [
-    'Some security language (encryption in transit) was already present and may have only been re-emphasized.',
-    'A pricing-page copy refresh alone cannot confirm a durable strategy shift without follow-up scans.',
+    'Dropbox has announced AI features before (Smart Sync, content suggestions) without fully committing to a platform pivot.',
+    'The free/consumer tiers still exist in the pricing structure — the pivot may be additive rather than a full repositioning.',
   ],
   isFallback: false,
 };
@@ -79,14 +79,14 @@ function assertVerdictShape(verdict: FlaggedVerdict): void {
 assertVerdictShape(DEMO_VERDICT_DATA);
 
 /**
- * The deterministic Demo_Company Verdict ("Moving upmarket", confidence 82),
+ * The deterministic Demo_Company Verdict ("AI platform pivot", confidence 85),
  * deep-frozen for a stable reference (Requirements 18.5, 18.6).
  */
 export const DEMO_VERDICT: FlaggedVerdict = deepFreeze(DEMO_VERDICT_DATA);
 
 /**
  * The reusable deterministic fallback Verdict for the Demo_Company. It is the
- * Demo_Company verdict (same "Moving upmarket" / 82 conclusion) with
+ * Demo_Company verdict (same "AI platform pivot" / 85 conclusion) with
  * `isFallback` set true, substituted when an agent's Zod validation fails or
  * the model fails (Requirements 15.7, 19.3). Deep-frozen, stable reference.
  */

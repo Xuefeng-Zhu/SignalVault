@@ -102,7 +102,7 @@ export default function Home() {
                     Live scan preview
                   </p>
                   <p className="mt-2 font-page-title text-[22px] font-semibold tracking-[-0.03em] text-white">
-                    Acme AI
+                    Dropbox
                   </p>
                 </div>
                 <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-sm font-medium text-white">

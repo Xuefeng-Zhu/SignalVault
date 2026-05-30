@@ -33,8 +33,8 @@ async function seedQueuedScan(
     scanId: scan!.id,
     workspaceId,
     companyId,
-    companyName: "Acme AI",
-    companySlug: "acme-ai",
+    companyName: "Dropbox",
+    companySlug: "dropbox",
     urls: [
       { url: "https://acme.example/pricing", pageRole: "pricing" },
       { url: "https://acme.example/docs", pageRole: "docs" },
@@ -61,8 +61,8 @@ describe("createScanCore", () => {
     expect(baseline.scanId).toBe(input.scanId);
     expect(baseline.workspaceId).toBe(input.workspaceId);
     expect(baseline.companyId).toBe(input.companyId);
-    expect(baseline.companyName).toBe("Acme AI");
-    expect(baseline.companySlug).toBe("acme-ai");
+    expect(baseline.companyName).toBe("Dropbox");
+    expect(baseline.companySlug).toBe("dropbox");
     expect(baseline.mode).toBe("demo");
 
     // Watch targets carried forward; diagnostics start empty.

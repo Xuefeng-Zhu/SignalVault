@@ -53,10 +53,10 @@ describe("demoScreenshotRef", () => {
 
 describe("captureDemoRequests", () => {
   const seededRequests: CaptureRequest[] = [
-    req("https://acme.ai/pricing", "pricing"),
-    req("https://acme.ai/trust", "trust"),
-    req("https://docs.acme.ai", "docs"),
-    req("https://acme.ai/careers", "careers"),
+    req("https://www.dropbox.com/plans", "pricing"),
+    req("https://www.dropbox.com/security", "trust"),
+    req("https://www.dropbox.com/developers/documentation", "docs"),
+    req("https://www.dropbox.com/jobs", "careers"),
   ];
 
   it("returns exactly one result per request, in order", () => {
@@ -78,33 +78,33 @@ describe("captureDemoRequests", () => {
     }
   });
 
-  it("defaults to the current-state content (upmarket shift)", () => {
-    const [pricing] = captureDemoRequests([req("https://acme.ai/pricing", "pricing")]);
-    // Current pricing seed contains the contact-sales language, not the free tier.
-    expect(pricing!.rawHtml).toContain("Contact our sales team");
-    expect(pricing!.rawHtml).not.toContain("free self-serve tier");
+  it("defaults to the current-state content (AI-platform pivot)", () => {
+    const [pricing] = captureDemoRequests([req("https://www.dropbox.com/plans", "pricing")]);
+    // Current pricing seed contains the enterprise/AI language, not the free Basic tier.
+    expect(pricing!.rawHtml).toContain("Contact sales for custom pricing");
+    expect(pricing!.rawHtml).not.toContain("2 GB of free storage");
   });
 
   it("can select the previous-state content explicitly", () => {
     const [pricing] = captureDemoRequests(
-      [req("https://acme.ai/pricing", "pricing")],
+      [req("https://www.dropbox.com/plans", "pricing")],
       "previous",
     );
-    expect(pricing!.rawHtml).toContain("free self-serve tier");
-    expect(pricing!.rawHtml).not.toContain("Contact our sales team");
+    expect(pricing!.rawHtml).toContain("2 GB of free storage");
+    expect(pricing!.rawHtml).not.toContain("Contact sales for custom pricing");
   });
 
   it("matches seeded sources by URL ignoring case and trailing slash", () => {
     const [result] = captureDemoRequests([
-      req("HTTPS://ACME.AI/pricing/", "pricing"),
+      req("HTTPS://WWW.DROPBOX.COM/PLANS/", "pricing"),
     ]);
-    expect(result!.rawHtml).toContain("Contact our sales team");
+    expect(result!.rawHtml).toContain("Contact sales for custom pricing");
   });
 
   it("synthesizes raw HTML from the matched seeded normalized content", () => {
     const current = acmeSnapshots.find((s) => s.state === "current")!;
     const trustSeed = current.sources.find((s) => s.pageRole === "trust")!;
-    const [result] = captureDemoRequests([req("https://acme.ai/trust", "trust")]);
+    const [result] = captureDemoRequests([req("https://www.dropbox.com/security", "trust")]);
     expect(result!.rawHtml).toBe(synthesizeRawHtml(trustSeed.normalizedContent));
   });
 

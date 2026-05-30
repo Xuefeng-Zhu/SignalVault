@@ -7,7 +7,7 @@ import { seededInferenceText } from "./demo-inference";
 /**
  * Demo implementation of {@link ModelClient} (Model_Adapter).
  *
- * Returns DETERMINISTIC seeded analysis output for the Demo_Company "Acme AI"
+ * Returns DETERMINISTIC seeded analysis output for the Demo_Company "Dropbox"
  * and NEVER issues a network request (Requirements 24.3, 18.1). It is selected
  * by the adapter factory whenever `DEMO_MODE` is true or the model provider
  * credentials (`MODEL_API_KEY` / `MODEL_BASE_URL`) are missing (Requirement

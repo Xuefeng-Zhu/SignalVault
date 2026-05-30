@@ -178,8 +178,8 @@ function makeContext(parts: {
     scanId: "11111111-1111-1111-1111-111111111111",
     workspaceId: "22222222-2222-2222-2222-222222222222",
     companyId: "33333333-3333-3333-3333-333333333333",
-    companyName: "Acme AI",
-    companySlug: "acme-ai",
+    companyName: "Dropbox",
+    companySlug: "dropbox",
     scanTimestamp: "2024-01-01T00-00-00",
     scanCreatedAt: "2024-01-01T00:00:00.000Z",
     mode: "demo",
@@ -534,7 +534,7 @@ describe("writeBriefToBoxStep (Requirement 16.5)", () => {
 
     // The brief covers verdict, evidence, actions, claims, and diffs.
     const brief = result.brief;
-    expect(brief).toContain("# SignalVault Intelligence Brief: Acme AI");
+    expect(brief).toContain("# SignalVault Intelligence Brief: Dropbox");
     expect(brief).toContain("Moving upmarket");
     expect(brief).toContain("Confidence:** 82");
     expect(brief).toContain("Risk score:** 64");

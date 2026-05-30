@@ -45,7 +45,7 @@ async function loadScanDetail(workspaceId: string, scanId: string) {
 }
 
 describe("GET /api/scans/:id data path (demo store)", () => {
-  it("returns the seeded Acme AI scan with snapshots, diffs, claims, verdict, and Box artifacts", async () => {
+  it("returns the seeded Dropbox scan with snapshots, diffs, claims, verdict, and Box artifacts", async () => {
     const result = await loadScanDetail(DEMO_WORKSPACE_ID, DEMO_LATEST_SCAN_ID);
     expect(result.notFound).toBe(false);
     if (result.notFound) return;
@@ -62,7 +62,7 @@ describe("GET /api/scans/:id data path (demo store)", () => {
 
     // Seeded deterministic verdict.
     expect(payload.verdict?.strategyPrediction).toBe("moving_upmarket");
-    expect(payload.verdict?.confidence).toBe(82);
+    expect(payload.verdict?.confidence).toBe(85);
 
     // Box evidence folder link is derived for BoxEvidenceLink and marked simulated.
     expect(payload.evidenceFolder?.simulated).toBe(true);

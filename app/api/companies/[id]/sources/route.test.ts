@@ -41,14 +41,14 @@ function postSource(id: string, body: unknown): Promise<Response> {
 describe("POST /api/companies/:id/sources", () => {
   it("persists a valid watched source and returns 201 with the created row (Req 5.6)", async () => {
     const res = await postSource(DEMO_COMPANY_ID, {
-      url: "https://acme.ai/security",
+      url: "https://www.dropbox.com/security",
       sourceType: "trust",
     });
 
     expect(res.status).toBe(201);
     const body = await res.json();
     expect(body.source.companyId).toBe(DEMO_COMPANY_ID);
-    expect(body.source.url).toBe("https://acme.ai/security");
+    expect(body.source.url).toBe("https://www.dropbox.com/security");
     expect(body.source.sourceType).toBe("trust");
     expect(typeof body.source.id).toBe("string");
     expect(body.source.id.length).toBeGreaterThan(0);
@@ -56,7 +56,7 @@ describe("POST /api/companies/:id/sources", () => {
 
   it("rejects an invalid http(s) URL with 400 VALIDATION and field=url (Req 5.7)", async () => {
     const res = await postSource(DEMO_COMPANY_ID, {
-      url: "ftp://acme.ai/not-http",
+      url: "ftp://dropbox.com/not-http",
       sourceType: "trust",
     });
 
@@ -80,7 +80,7 @@ describe("POST /api/companies/:id/sources", () => {
 
   it("rejects an invalid source type with 400 VALIDATION and field=sourceType", async () => {
     const res = await postSource(DEMO_COMPANY_ID, {
-      url: "https://acme.ai/blog",
+      url: "https://www.dropbox.com/blog",
       sourceType: "newsletter",
     });
 
@@ -92,7 +92,7 @@ describe("POST /api/companies/:id/sources", () => {
 
   it("returns 404 NOT_FOUND for a company outside the active workspace and creates nothing (Req 1.5)", async () => {
     const res = await postSource("00000000-0000-0000-0000-000000000000", {
-      url: "https://acme.ai/security",
+      url: "https://www.dropbox.com/security",
       sourceType: "trust",
     });
 

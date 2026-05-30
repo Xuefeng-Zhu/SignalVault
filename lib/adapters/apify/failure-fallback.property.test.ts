@@ -56,11 +56,11 @@ const stateArb: fc.Arbitrary<SnapshotState> = fc.constantFrom(
 
 /** URLs that exactly match seeded Demo_Company sources (force the URL-match path). */
 const seededUrlArb = fc.constantFrom(
-  "https://acme.ai/pricing",
-  "https://acme.ai/trust",
-  "https://docs.acme.ai",
-  "https://acme.ai/careers",
-  "HTTPS://ACME.AI/pricing/", // case/trailing-slash variant still matches
+  "https://www.dropbox.com/plans",
+  "https://www.dropbox.com/security",
+  "https://www.dropbox.com/developers/documentation",
+  "https://www.dropbox.com/jobs",
+  "HTTPS://WWW.DROPBOX.COM/PLANS/", // case/trailing-slash variant still matches
 );
 
 /**

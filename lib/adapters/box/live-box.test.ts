@@ -108,7 +108,7 @@ describe("LiveBoxClient.ensureScanFolders", () => {
     const box = fakeBox();
     const client = new LiveBoxClient({ developerToken: TOKEN, fetchImpl: box.fetchImpl });
 
-    const set = await client.ensureScanFolders("Acme AI", "2024-01-01T00:00:00Z");
+    const set = await client.ensureScanFolders("Dropbox", "2024-01-01T00:00:00Z");
 
     expect(set.simulated).toBe(false);
     expect(Object.keys(set.subfolders).sort()).toEqual(

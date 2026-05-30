@@ -11,7 +11,7 @@ import { GET } from "./route";
  * These exercise the REAL guard + the seeded demo InsForge repository (no
  * mocks): with `DEMO_MODE=true`, `resolveActiveWorkspace()` resolves the single
  * default demo workspace, and the demo store is pre-seeded with the Demo_Company
- * "Acme AI" (id {@link DEMO_COMPANY_ID}) whose most recent scan is `completed`
+ * "Dropbox" (id {@link DEMO_COMPANY_ID}) whose most recent scan is `completed`
  * with the deterministic "Moving upmarket"/82 verdict and classified claims.
  */
 
@@ -44,7 +44,7 @@ describe("GET /api/companies/:id", () => {
 
     // Company + sources (Requirement 21.2).
     expect(body.company.id).toBe(DEMO_COMPANY_ID);
-    expect(body.company.name).toBe("Acme AI");
+    expect(body.company.name).toBe("Dropbox");
     expect(Array.isArray(body.sources)).toBe(true);
     expect(body.sources.length).toBeGreaterThan(0);
     for (const source of body.sources) {
@@ -57,7 +57,7 @@ describe("GET /api/companies/:id", () => {
     expect(body.latestScan).toBeDefined();
     expect(body.latestScan.status).toBe("completed");
     expect(body.latestScan.verdict.strategyPrediction).toBe("moving_upmarket");
-    expect(body.latestScan.verdict.confidence).toBe(82);
+    expect(body.latestScan.verdict.confidence).toBe(85);
     expect(Array.isArray(body.latestScan.claims)).toBe(true);
     expect(body.latestScan.claims.length).toBeGreaterThan(0);
   });

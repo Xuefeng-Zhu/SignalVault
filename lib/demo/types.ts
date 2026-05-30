@@ -8,7 +8,7 @@ import type {
 } from '@/lib/schemas';
 
 /**
- * Types for the deterministic Demo_Company ("Acme AI") seed.
+ * Types for the deterministic Demo_Company ("Dropbox") seed.
  *
  * Everything here is plain, serializable data with no behavior. The seed must
  * be reproducible across repeated Demo_Mode scans (Requirement 18.7), so these

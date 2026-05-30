@@ -1,7 +1,7 @@
 /**
  * End-to-end integration test for the SignalVault scan workflow in Demo Mode.
  *
- * Runs `runSignalVaultScanWorkflow` for the seeded "Acme AI" demo company and
+ * Runs `runSignalVaultScanWorkflow` for the seeded "Dropbox" demo company and
  * asserts it reaches `completed` with the deterministic "Moving upmarket"
  * verdict at 82% confidence, and that all evidence artifacts are recorded.
  *
@@ -23,8 +23,8 @@ import { DEMO_CONFIDENCE, DEMO_STRATEGY_PREDICTION } from "@/lib/demo";
 import { runSignalVaultScanWorkflow } from "./workflow";
 
 describe("signalVaultScanWorkflow — Demo Mode end-to-end", () => {
-  it("reaches completed with the seeded Acme AI verdict (Req 18.3, 18.5)", async () => {
-    // Build a fresh demo InsForge client with the seeded Acme AI company.
+  it("reaches completed with the seeded Dropbox verdict (Req 18.3, 18.5)", async () => {
+    // Build a fresh demo InsForge client with the seeded Dropbox company.
     const insforge = new DemoInsForgeClient({ seedDemoCompany: true });
 
     const adapters: AdapterSet = {
@@ -34,7 +34,7 @@ describe("signalVaultScanWorkflow — Demo Mode end-to-end", () => {
       model: createDemoModelClient(),
     };
 
-    // Create a new queued scan for Acme AI in the demo workspace.
+    // Create a new queued scan for Dropbox in the demo workspace.
     const repo = insforge.scoped(DEMO_WORKSPACE_ID);
     const scanRows = await repo.scans.create([
       {
@@ -58,8 +58,8 @@ describe("signalVaultScanWorkflow — Demo Mode end-to-end", () => {
     const input = {
       scanId: scan.id,
       companyId: DEMO_COMPANY_ID,
-      companyName: "Acme AI",
-      companySlug: "acme-ai",
+      companyName: "Dropbox",
+      companySlug: "dropbox",
       workspaceId: DEMO_WORKSPACE_ID,
       urls,
       mode: "demo" as const,

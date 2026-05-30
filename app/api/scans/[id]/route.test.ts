@@ -14,9 +14,9 @@ import { GET } from "./route";
  * These exercise the REAL `requireActiveWorkspace` guard + the seeded demo
  * InsForge repository + the demo Box client (no mocks): with `DEMO_MODE=true`,
  * `resolveActiveWorkspace()` resolves the single default demo workspace, and the
- * store is pre-seeded with the Acme AI scan {@link DEMO_LATEST_SCAN_ID} whose
+ * store is pre-seeded with the Dropbox scan {@link DEMO_LATEST_SCAN_ID} whose
  * status is `completed` with snapshots, diffs, classified claims, the
- * deterministic "Moving upmarket"/82 verdict, and mock Box artifacts.
+ * deterministic "AI platform pivot"/85 verdict, and mock Box artifacts.
  */
 
 const ORIGINAL_DEMO_MODE = process.env.DEMO_MODE;
@@ -65,7 +65,7 @@ describe("GET /api/scans/:id", () => {
 
     // Deterministic seeded verdict.
     expect(body.verdict.strategyPrediction).toBe("moving_upmarket");
-    expect(body.verdict.confidence).toBe(82);
+    expect(body.verdict.confidence).toBe(85);
 
     // Evidence folder link + flattened artifact list for the UI.
     expect(body.evidenceFolder).not.toBeNull();

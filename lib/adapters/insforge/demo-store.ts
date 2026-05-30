@@ -59,7 +59,7 @@ import type {
  * active or InsForge credentials are missing (Requirements 18.1, 1.6). It holds
  * no secrets and makes no network calls: every table is an in-memory `Map`, and
  * the store is pre-seeded with a single default demo Workspace plus the
- * Demo_Company "Acme AI", its four Watched_Sources, and a reproducible scan
+ * Demo_Company "Dropbox", its four Watched_Sources, and a reproducible scan
  * history built entirely from the deterministic `lib/demo` seed.
  *
  * The repository surface, scoping semantics, and array-form inserts are
@@ -91,8 +91,8 @@ import type {
 export const DEMO_WORKSPACE_ID = "demo-workspace-acme";
 /** Human-readable name of the default demo Workspace. */
 export const DEMO_WORKSPACE_NAME = "Demo Workspace";
-/** Stable id of the seeded Demo_Company "Acme AI". */
-export const DEMO_COMPANY_ID = "demo-company-acme-ai";
+/** Stable id of the seeded Demo_Company "Dropbox". */
+export const DEMO_COMPANY_ID = "demo-company-dropbox";
 /** Stable id of the older, baseline (previous-state) seeded Scan. */
 export const DEMO_BASELINE_SCAN_ID = "demo-scan-acme-baseline";
 /** Stable id of the newer, latest (current-state) seeded Scan that holds the verdict. */
@@ -101,7 +101,7 @@ export const DEMO_LATEST_SCAN_ID = "demo-scan-acme-latest";
 /** Options controlling what the in-memory store is seeded with. */
 export interface DemoInsForgeOptions {
   /**
-   * When true (default), seed the Demo_Company "Acme AI", its Watched_Sources,
+   * When true (default), seed the Demo_Company "Dropbox", its Watched_Sources,
    * and the reproducible baseline + latest scan history. The default Workspace
    * is always created regardless so {@link InsForgeClient.getActiveWorkspace}
    * can resolve it (Requirement 1.6).
@@ -624,7 +624,7 @@ export class DemoInsForgeClient implements InsForgeClient {
   /* ------------------------------------------------------------------------ */
 
   /**
-   * Seed the default demo Workspace and (optionally) the Demo_Company "Acme AI"
+   * Seed the default demo Workspace and (optionally) the Demo_Company "Dropbox"
    * with a reproducible two-scan history derived from the `lib/demo` seed:
    *
    *  - a baseline scan carrying the previous-state snapshots, and

@@ -12,7 +12,7 @@ import type { InferenceRequest } from "@/lib/adapters/types";
 
 /**
  * Pure, deterministic mapping from an {@link InferenceRequest} to the seeded
- * "Acme AI" analysis text the demo {@link import('./demo').DemoModelClient}
+ * "Dropbox" analysis text the demo {@link import('./demo').DemoModelClient}
  * returns. No randomness, no timestamps, no ids, and no network — repeated
  * scans produce byte-identical output (Requirements 24.3, 18.1, 18.7).
  *
@@ -104,23 +104,23 @@ function toJson(payload: unknown): string {
 
 /**
  * The deterministic plain-text analysis narrative used when no schema/message
- * keyword matches. Mirrors the seeded "Acme AI" upmarket story.
+ * keyword matches. Mirrors the seeded Dropbox AI-platform pivot story.
  */
 const DEFAULT_ANALYSIS_TEXT = [
-  "Demo analysis for Acme AI.",
+  "Demo analysis for Dropbox.",
   "",
-  "Across the two seeded snapshots, Acme AI shows a coordinated move upmarket: pricing replaced its free, self-serve tier with contact-sales and a quote-based Enterprise plan; the trust center added SOC 2 Type II, HIPAA, SAML SSO, SCIM, audit logs, and US/EU data residency; the docs added admin controls, SSO/SAML setup, and role-based access control; and careers opened enterprise go-to-market roles.",
+  "Across the two seeded snapshots, Dropbox shows a coordinated AI-platform pivot: pricing added Enterprise tiers with Dropbox Dash AI and DLP; the security page added SOC 2 Type II, ISO 27001, HIPAA, SAML SSO, DLP, and legal holds; the docs launched a Dash AI universal search API and content intelligence API; and careers shifted from file-sync engineering to AI/ML research hiring.",
   "",
-  "Strategy prediction: Moving upmarket (confidence 82 / 100).",
+  "Strategy prediction: AI platform pivot (confidence 85 / 100).",
 ].join("\n");
 
-/** Seeded defense argument: the changes support a deliberate strategy shift. */
+/** Seeded defense argument: the changes support a deliberate AI pivot. */
 const DEFENSE_ARGUMENT =
-  "The evidence supports a deliberate move upmarket. Acme AI replaced its free, self-serve pricing with contact-sales and a quote-based Enterprise plan, hardened its trust center with SOC 2 Type II, HIPAA, SAML SSO, SCIM, audit logs, and US/EU data residency, documented admin controls and role-based access control, and opened enterprise go-to-market roles. Taken together these are coordinated signals of an enterprise strategy shift rather than isolated edits.";
+  "The evidence supports a deliberate pivot to an AI-powered workspace platform. Dropbox added an Enterprise tier with Dash AI and DLP, hardened its security posture with SOC 2 Type II, ISO 27001, HIPAA, SAML SSO, and legal holds, launched Dash AI universal search and content intelligence APIs, and is hiring a Head of AI Research, Senior ML Engineers, and Staff AI/ML Platform engineers. Taken together these are coordinated signals of an AI-platform transformation rather than incremental product updates.";
 
-/** Seeded prosecutor argument: the changes may not prove a durable shift. */
+/** Seeded prosecutor argument: the changes may not prove a durable pivot. */
 const PROSECUTOR_ARGUMENT =
-  "These changes may not prove a durable strategy shift. Some security language, such as encryption in transit, was already present and may only have been re-emphasized, and a pricing-page copy refresh alone cannot confirm intent. The signals could reflect a routine marketing update, so follow-up scans are needed to rule out a one-off copy refresh before concluding an upmarket move.";
+  "These changes may not prove a durable AI-platform pivot. Dropbox has announced AI features before (Smart Sync, content suggestions) without fully committing to a platform transformation. The free/consumer tiers still exist in the pricing structure, suggesting the pivot may be additive rather than a full repositioning. Follow-up scans are needed to confirm the AI investment is sustained rather than a temporary marketing push.";
 
 /**
  * Build the deterministic seeded text for a request. Pure and side-effect free;

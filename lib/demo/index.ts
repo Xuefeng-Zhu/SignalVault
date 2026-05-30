@@ -1,5 +1,5 @@
 /**
- * Barrel for the deterministic Demo_Company ("Acme AI") seed.
+ * Barrel for the deterministic Demo_Company ("Dropbox") seed.
  *
  * Demo_Mode uses these seeded snapshots, claims, and verdict instead of calling
  * external services, and the same data is reproducible across repeated scans

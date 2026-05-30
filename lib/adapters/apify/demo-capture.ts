@@ -11,7 +11,7 @@ import type { CaptureRequest, CaptureResult } from "@/lib/adapters/types";
  * 19.1).
  *
  * Demo_Mode never touches the network: every {@link CaptureResult} is
- * synthesized from the deep-frozen "Acme AI" seed in `@/lib/demo`, so repeated
+ * synthesized from the deep-frozen "Dropbox" seed in `@/lib/demo`, so repeated
  * scans produce byte-for-byte identical output (Requirement 18.7). There is no
  * randomness, no clock, and no I/O anywhere in this module.
  *

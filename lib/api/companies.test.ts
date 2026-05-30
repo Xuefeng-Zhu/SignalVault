@@ -27,7 +27,7 @@ function emptyRepo(): WorkspaceRepository {
 }
 
 /** A valid Add Company body with `count` URLs (3–5). */
-function validBody(name = "Acme AI", count = 3) {
+function validBody(name = "Dropbox", count = 3) {
   const roles = ["homepage", "pricing", "docs", "changelog", "trust"] as const;
   return {
     name,
@@ -41,7 +41,7 @@ function validBody(name = "Acme AI", count = 3) {
 
 describe("slugifyCompanyName", () => {
   it("lowercases and hyphenates non-alphanumeric runs", () => {
-    expect(slugifyCompanyName("Acme AI")).toBe("acme-ai");
+    expect(slugifyCompanyName("Dropbox")).toBe("dropbox");
     expect(slugifyCompanyName("  Foo / Bar!! ")).toBe("foo-bar");
   });
 
@@ -57,13 +57,13 @@ describe("createCompany — valid input (Req 4.1, 4.2, 4.7)", () => {
   });
 
   it("creates one company and one watched source per URL", async () => {
-    const result = await createCompany(repo, validBody("Acme AI", 4));
+    const result = await createCompany(repo, validBody("Dropbox", 4));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
 
-    expect(result.company.name).toBe("Acme AI");
+    expect(result.company.name).toBe("Dropbox");
     expect(result.company.domain).toBe("acme.example");
-    expect(result.company.slug).toBe("acme-ai");
+    expect(result.company.slug).toBe("dropbox");
     expect(result.sources).toHaveLength(4);
     for (const source of result.sources) {
       expect(source.companyId).toBe(result.company.id);
@@ -206,7 +206,7 @@ describe("listCompanies — dashboard shaping + ordering (Req 3.1, 3.2, 3.6, 3.7
 
   it("reports source count and a not-yet-scanned company (latestScan/verdict null)", async () => {
     const repo = emptyRepo();
-    await createCompany(repo, validBody("Acme AI", 5));
+    await createCompany(repo, validBody("Dropbox", 5));
 
     const { companies } = await listCompanies(repo);
     expect(companies[0]!.sourceCount).toBe(5);
