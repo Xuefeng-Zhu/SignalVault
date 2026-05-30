@@ -115,20 +115,41 @@ export async function POST(
     mode: runMode as "demo" | "live",
   };
 
-  // Build adapters for the workflow. Thread the user's access token from the
-  // request cookie (if available) so RLS applies correctly.
+  // Build adapters for the workflow. Thread the user's access token so the
+  // live InsForge client runs under the correct RLS identity (Requirements
+  // 1.4, 21.7). Captured here before the request context is torn down.
+  const accessToken = guard.accessToken;
   void (async () => {
     try {
-      const adapters = createAdapters({});
-      await runSignalVaultScanWorkflow(workflowInput, adapters);
+      const adapters = createAdapters({ accessToken });
+      const result = await runSignalVaultScanWorkflow(workflowInput, adapters);
+      if (!result.ok) {
+        // Early-step failure (input validation, createScan, or planTargets):
+        // the workflow returned ok:false without setting the scan status itself,
+        // so we must mark it failed here to avoid leaving it stuck in `queued`.
+        try {
+          await repo.scans.updateStatus(scan.id, "failed", {
+            failureReason: result.error,
+          });
+        } catch (secondaryErr) {
+          console.error(
+            `[SignalVault] Failed to mark scan ${scan.id} as failed after early workflow error:`,
+            secondaryErr,
+          );
+        }
+      }
     } catch (err) {
       // Unrecoverable workflow start error: best-effort set scan to failed.
+      console.error(`[SignalVault] Scan ${scan.id} workflow threw unexpectedly:`, err);
       try {
         await repo.scans.updateStatus(scan.id, "failed", {
           failureReason: err instanceof Error ? err.message : String(err),
         });
-      } catch {
-        // Ignore secondary failure.
+      } catch (secondaryErr) {
+        console.error(
+          `[SignalVault] Failed to mark scan ${scan.id} as failed after workflow throw:`,
+          secondaryErr,
+        );
       }
     }
   })();

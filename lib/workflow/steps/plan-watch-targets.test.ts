@@ -86,8 +86,8 @@ describe("planWatchTargetsCore", () => {
 
     // Both private/loopback URLs are recorded as skips with a reason.
     expect(out.skipped).toEqual([
-      { url: "http://127.0.0.1/admin", reason: "loopback address" },
-      { url: "http://10.0.0.5/internal", reason: "private IPv4 range" },
+      { url: "http://127.0.0.1/admin", pageRole: "docs", reason: "loopback address" },
+      { url: "http://10.0.0.5/internal", pageRole: "changelog", reason: "private IPv4 range" },
     ]);
 
     // Each skip surfaces a matching warning identifying the source (Req 8.4).
@@ -134,6 +134,7 @@ describe("planWatchTargetsCore", () => {
     // Plus the new loopback skip.
     expect(out.skipped).toContainEqual({
       url: "http://127.0.0.1/",
+      pageRole: "pricing",
       reason: "loopback address",
     });
   });

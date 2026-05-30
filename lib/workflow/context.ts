@@ -55,6 +55,9 @@ import type {
  */
 export const SkippedSourceSchema = z.object({
   url: z.string(),
+  /** The page role of the skipped source. Optional for backwards-compatibility
+   *  with skips recorded before this field was added. */
+  pageRole: SourceTypeEnum.optional(),
   reason: z.string().min(1),
 });
 export type SkippedSource = z.infer<typeof SkippedSourceSchema>;
@@ -83,6 +86,15 @@ export type ScanContext = z.infer<typeof ScanContextSchema>;
 export const ThreadedContextSchema = ScanContextSchema.extend({
   warnings: z.array(z.string()),
   skipped: z.array(SkippedSourceSchema),
+  /**
+   * The real `createdAt` timestamp of the Scan DB row, carried forward from
+   * `createScanCore` so downstream steps (e.g. `findPreviousSnapshotStep`) use
+   * the authoritative cutoff instead of the approximate `new Date()` at
+   * assembly time (fixes race condition under concurrent scans). Optional for
+   * backwards-compatibility: the assembly falls back to `scanTimestamp` when
+   * absent.
+   */
+  scanCreatedAt: z.string().optional(),
 });
 export type ThreadedContext = z.infer<typeof ThreadedContextSchema>;
 

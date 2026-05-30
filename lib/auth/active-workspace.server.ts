@@ -68,6 +68,16 @@ export async function resolveActiveWorkspace(): Promise<ActiveWorkspaceResolutio
     return { status: "redirect", reason: "no InsForge access-token cookie" };
   }
 
+  // Demo session token: treat as demo mode so the app works without a live backend.
+  if (accessToken.startsWith("demo_")) {
+    const insforge = getInsForgeClient();
+    return resolveActiveWorkspaceCore({
+      insforge,
+      demoMode: true,
+      session: null,
+    });
+  }
+
   const session = await readSession(accessToken);
   if (!session) {
     // Cookie present but the token does not resolve to a user (expired/invalid).

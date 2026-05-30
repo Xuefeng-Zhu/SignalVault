@@ -112,12 +112,15 @@ export async function runSignalVaultScanWorkflow(
     companyName: threaded.companyName,
     companySlug: threaded.companySlug,
     scanTimestamp: new Date().toISOString(),
+    // Use the real scan createdAt from the DB row (carried by createScanCore)
+    // so findPreviousSnapshotStep uses the authoritative cutoff.
+    scanCreatedAt: threaded.scanCreatedAt,
     mode: threaded.mode,
     adapters,
   });
   // Carry forward any SSRF skips from the planning step.
   for (const skip of threaded.skipped) {
-    ctx.skipped.push({ url: skip.url, pageRole: "docs", reason: skip.reason });
+    ctx.skipped.push({ url: skip.url, pageRole: skip.pageRole ?? "homepage", reason: skip.reason });
   }
   ctx.warnings.push(...threaded.warnings);
 
@@ -196,8 +199,12 @@ export async function runSignalVaultScanWorkflow(
     const cause = errorMessage(err);
     try {
       await setScanStatus(ctx, "failed", { failureReason: cause });
-    } catch {
-      // Best-effort; ignore secondary failure.
+    } catch (secondaryErr) {
+      // Best-effort; log but don't throw over the original error.
+      console.error(
+        `[SignalVault] Failed to mark scan ${ctx.scanId} as failed:`,
+        secondaryErr,
+      );
     }
     return { ok: false, error: cause };
   }

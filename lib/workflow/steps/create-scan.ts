@@ -89,6 +89,9 @@ export async function createScanCore(
   return {
     ...toThreadedContext(context),
     urls: input.urls,
+    // Carry the real DB createdAt so downstream steps use the authoritative
+    // cutoff for "earlier scan" selection rather than an approximate timestamp.
+    scanCreatedAt: scan.createdAt,
   };
 }
 

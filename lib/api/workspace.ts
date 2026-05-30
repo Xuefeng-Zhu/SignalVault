@@ -23,6 +23,10 @@ export type RouteWorkspace =
       ok: true;
       workspace: Workspace;
       insforge: InsForgeClient;
+      /** The signed-in user's access token, when present. Thread into
+       *  `createAdapters({ accessToken })` so the workflow's live InsForge client
+       *  runs under the correct RLS identity (Requirements 1.4, 21.7). */
+      accessToken?: string;
     }
   | {
       ok: false;
@@ -47,5 +51,6 @@ export async function requireActiveWorkspace(): Promise<RouteWorkspace> {
     ok: true,
     workspace: resolution.workspace,
     insforge: resolution.insforge,
+    accessToken: resolution.accessToken,
   };
 }

@@ -72,6 +72,7 @@ export async function planWatchTargetsCore(
       // with the remaining valid sources (Requirements 8.2, 8.3).
       context = appendSkip(context, {
         url: target.url,
+        pageRole: target.pageRole,
         reason: verdict.reason ?? "rejected by SSRF guard",
       });
     }
