@@ -38,3 +38,9 @@ export {
   planWatchTargetsStepConfig,
   planWatchTargetsStep,
 } from "./steps/plan-watch-targets";
+
+/* All step cores (steps 3–12). */
+export * from "./steps";
+
+/* Workflow assembly (task 18.8) — server-only. */
+export { runSignalVaultScanWorkflow } from "./workflow";

@@ -194,7 +194,7 @@ The build is sequenced foundation-first: shared Zod schemas, the SSRF guard, the
     - **Feature: signalvault, Property 23: Model failure or invalid agent output yields the deterministic fallback verdict**
     - **Validates: Requirements 15.7, 19.3, 24.3**
 
-- [ ] 18. Mastra workflow steps and assembly
+- [x] 18. Mastra workflow steps and assembly
   - [x] 18.1 Implement createScanStep and planWatchTargetsStep
     - Confirm the scan record/baseline; validate URLs, run the SSRF guard, build the capture plan, and record skipped sources with reasons
     - _Requirements: 23.4, 8.2, 8.3, 8.4_
@@ -213,45 +213,45 @@ The build is sequenced foundation-first: shared Zod schemas, the SSRF guard, the
   - [x] 18.6 Implement extractClaimsStep, classifyClaimsStep, runDebateStep, and writeBriefToBoxStep
     - Run the extractor (upload claim ledger to `claims/`), classifier (persist statuses), defense/prosecutor/judge debate, then render and upload the markdown brief to `reports/`
     - _Requirements: 13.2, 13.4, 14.6, 15.1, 15.2, 15.3, 16.5_
-  - [-] 18.7 Implement completeScanStep with persist-before-emit and result aggregation
+  - [x] 18.7 Implement completeScanStep with persist-before-emit and result aggregation
     - Persist verdict (retry ≤ 3), set status `completed`/`failed`, persist each status before emitting progress, and aggregate `{ data, warnings[], skipped[] }` across steps; on unrecoverable failure set `failed`, retain prior evidence, surface the failing step
     - _Requirements: 7.2, 7.6, 16.1, 16.6, 19.4, 19.5_
-  - [~] 18.8 Assemble signalVaultScanWorkflow with Zod I/O validation
+  - [x] 18.8 Assemble signalVaultScanWorkflow with Zod I/O validation
     - Wire the twelve steps in order, validate workflow input/output and every step/agent boundary against Zod, halting an affected step on validation failure and surfacing the failing field
     - _Requirements: 23.2, 23.3, 23.4, 23.5, 23.6, 23.7_
-  - [~] 18.9 Write property test for status-before-progress ordering
+  - [x] 18.9 Write property test for status-before-progress ordering
     - **Feature: signalvault, Property 25: Status is persisted before any progress is emitted**
     - **Validates: Requirements 7.2**
-  - [~] 18.10 Write property test for schema-gated consumption
+  - [x] 18.10 Write property test for schema-gated consumption
     - **Feature: signalvault, Property 29: Schema validation gates step and agent consumption**
     - **Validates: Requirements 23.5, 23.6**
-  - [~] 18.11 Write integration test for an end-to-end Demo_Mode scan
+  - [x] 18.11 Write integration test for an end-to-end Demo_Mode scan
     - Run `signalVaultScanWorkflow` for Acme AI and assert it reaches `completed` with the seeded verdict and all evidence artifacts recorded
     - _Requirements: 18.3, 18.5, 18.7_
 
-- [~] 19. Checkpoint - orchestration
+- [x] 19. Checkpoint - orchestration
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 20. API routes
+- [x] 20. API routes
   - [x] 20.1 Implement POST /api/companies and GET /api/companies
     - Validate name 1–200, valid hostname, 3–5 unique valid http(s) URLs each with a source type; create company + one watched-source per URL atomically in the active workspace; list scoped companies
     - _Requirements: 21.1, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8_
-  - [-] 20.2 Write property test for dashboard ordering
+  - [x] 20.2 Write property test for dashboard ordering
     - **Feature: signalvault, Property 4: Dashboard ordering is case-insensitive ascending and lossless**
     - **Validates: Requirements 3.1**
-  - [-] 20.3 Write property test for valid Add Company creation
+  - [x] 20.3 Write property test for valid Add Company creation
     - **Feature: signalvault, Property 5: Valid Add Company creates one company and one source per URL**
     - **Validates: Requirements 4.1, 4.2, 4.7**
-  - [-] 20.4 Write property test for atomic rejection of invalid Add Company
+  - [x] 20.4 Write property test for atomic rejection of invalid Add Company
     - **Feature: signalvault, Property 6: Invalid Add Company is rejected atomically**
     - **Validates: Requirements 4.3, 4.4, 4.5, 4.6, 4.8**
   - [x] 20.5 Implement GET /api/companies/:id and POST /api/companies/:id/sources
     - Return company + sources + most recent scan/verdict/claims (scope-checked); add a watched source validating http(s) URL + source type
     - _Requirements: 21.2, 5.6, 5.7_
-  - [~] 20.6 Implement POST /api/companies/:id/scans
+  - [x] 20.6 Implement POST /api/companies/:id/scans
     - Create the scan record with status `queued`/trigger `manual` retrying ≤ 4 total attempts; on success start the workflow and associate workspace + company; on workflow start failure set `failed`
     - _Requirements: 21.4, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
-  - [~] 20.7 Write property test for the scan-creation retry budget
+  - [x] 20.7 Write property test for the scan-creation retry budget
     - **Feature: signalvault, Property 24: Scan creation honors the retry budget**
     - **Validates: Requirements 6.2, 6.3**
   - [x] 20.8 Implement GET /api/scans/:id
@@ -260,24 +260,24 @@ The build is sequenced foundation-first: shared Zod schemas, the SSRF guard, the
   - [x] 20.9 Implement POST /api/integrations/apify and /api/integrations/box
     - Store integration config server-side: encrypt live credentials (persisted value ≠ plaintext) or store a mock placeholder in Demo Mode (≠ any production credential); transmit only placeholders to the browser
     - _Requirements: 21.6, 22.2, 22.3, 22.4, 22.5_
-  - [-] 20.10 Write property test for cross-workspace denial
+  - [x] 20.10 Write property test for cross-workspace denial
     - **Feature: signalvault, Property 2: Cross-workspace access is denied without leakage or mutation**
     - **Validates: Requirements 1.5, 21.7**
-  - [-] 20.11 Write property test for credential non-leakage
+  - [x] 20.11 Write property test for credential non-leakage
     - **Feature: signalvault, Property 28: Credentials never leak to the browser**
     - **Validates: Requirements 22.2, 22.4, 22.5**
 
-- [~] 21. Checkpoint - API
+- [x] 21. Checkpoint - API
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 22. UI components
+- [x] 22. UI components
   - [x] 22.1 Implement CompanyCard and RunScanButton
     - CompanyCard shows name, domain, source count, latest scan status/time, verdict + risk, and a not-yet-scanned state; RunScanButton starts a scan and navigates to scan detail
     - _Requirements: 3.2, 3.6, 3.7, 5.4, 6.1, 6.7_
   - [x] 22.2 Implement WatchedSourcesTable and AddCompanyForm
     - Table lists each source's URL + type; form provides 3–5 URL rows with source-type selection and inline validation
     - _Requirements: 5.1, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
-  - [-] 22.3 Implement ScanProgressTimeline with realtime-and-polling
+  - [x] 22.3 Implement ScanProgressTimeline with realtime-and-polling
     - Render ordered statuses with labels; subscribe to `scan:{id}` realtime and update within 2s; transparently fall back to polling `GET /api/scans/:id` at an interval ≤ 5s until `completed`/`failed`
     - _Requirements: 7.1, 7.3, 7.4, 7.5_
   - [x] 22.4 Implement DiffViewer, ClaimLedger, and ClaimStatusBadge
@@ -286,39 +286,39 @@ The build is sequenced foundation-first: shared Zod schemas, the SSRF guard, the
   - [x] 22.5 Implement RiskBadge, StrategyVerdictCard, CourtroomAnalysis, EvidenceArtifactList, and BoxEvidenceLink
     - Verdict/risk display; CourtroomAnalysis renders available defense/prosecution/judge parts and omits unavailable ones; EvidenceArtifactList shows one entry per artifact with type + Box location and an empty state; BoxEvidenceLink links to the (possibly mock) folder
     - _Requirements: 16.2, 16.3, 15.4, 17.4, 17.5, 10.6_
-  - [~] 22.6 Write component snapshot/unit tests
+  - [x] 22.6 Write component snapshot/unit tests
     - Test ClaimStatusBadge color mapping (14.5), RiskBadge (16.3), StrategyVerdictCard (16.2), DiffViewer (11.4), ClaimLedger (14.4), CourtroomAnalysis partial rendering (15.4), EvidenceArtifactList empty state (17.5), and status-to-label/lifecycle ordering (7.1), CompanyCard not-yet-scanned state (3.7)
     - _Requirements: 14.5, 16.3, 16.2, 11.4, 14.4, 15.4, 17.5, 7.1, 3.7_
 
-- [ ] 23. Pages
+- [x] 23. Pages
   - [x] 23.1 Implement the landing page `/`
     - Show product name + tagline (placeholder fallback within 5s), the integration strip in order Apify, Box, Mastra, InsForge, an example brief card, and dashboard navigation; built with Tailwind + shadcn/ui
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7_
   - [x] 23.2 Write unit test for landing content and integration order
     - Assert the product name, tagline, and the integration strip order Apify, Box, Mastra, InsForge
     - _Requirements: 2.1, 2.6_
-  - [-] 23.3 Implement the dashboard `/companies`
+  - [x] 23.3 Implement the dashboard `/companies`
     - Render alpha-ordered CompanyCard grid, empty state with add control, add-company navigation, and an error+retry state with no partial/stale cards
     - _Requirements: 3.1, 3.3, 3.4, 3.5, 3.8_
-  - [-] 23.4 Implement the Add Company page `/companies/new`
+  - [x] 23.4 Implement the Add Company page `/companies/new`
     - Host AddCompanyForm; on success navigate to the new company detail page
     - _Requirements: 4.1, 4.9_
   - [x] 23.5 Implement the Company detail page `/companies/[id]`
     - Show header, WatchedSourcesTable, scan history (newest first) with empty state, RunScanButton, and latest complete claims/verdict; error+retry on load failure/timeout
     - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.8_
-  - [~] 23.6 Implement the Scan detail page `/scans/[id]`
+  - [x] 23.6 Implement the Scan detail page `/scans/[id]`
     - Compose ScanProgressTimeline, top region BoxEvidenceLink, middle region watched sources + detected changes, bottom region claims/courtroom/verdict/risk/actions, EvidenceArtifactList, and simulated-adapter warnings; show failure reason on `failed`
     - _Requirements: 7.6, 10.5, 10.6, 17.1, 17.3, 18.2_
-  - [~] 23.7 Write property test for partial-results rendering
+  - [x] 23.7 Write property test for partial-results rendering
     - **Feature: signalvault, Property 26: Partial results render available elements and placeholder the rest**
     - **Validates: Requirements 17.2**
 
-- [ ] 24. README and documentation
-  - [~] 24.1 Write the README with architecture diagram and demo script
+- [x] 24. README and documentation
+  - [x] 24.1 Write the README with architecture diagram and demo script
     - Document the stack, adapter/demo-mode design, environment variables, an architecture diagram, and a step-by-step demo script for the Acme AI upmarket scenario (deterministic 82% "Moving upmarket" verdict)
     - _Requirements: 18.3, 18.5_
 
-- [~] 25. Final checkpoint
+- [x] 25. Final checkpoint
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

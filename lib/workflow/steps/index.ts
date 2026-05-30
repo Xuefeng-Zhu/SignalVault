@@ -40,6 +40,9 @@ export { runApifyCaptureStep } from "./run-apify-capture";
 /* Step 4 — normalize. */
 export { normalizeArtifactsStep } from "./normalize-artifacts";
 
+/* Step 5 — upload snapshots to Box. */
+export { uploadSnapshotToBoxStep } from "./upload-snapshot-to-box";
+
 /* Step 6 — find previous snapshot. */
 export {
   findPreviousSnapshotStep,
@@ -84,3 +87,9 @@ export {
   renderBrief,
   type WriteBriefData,
 } from "./write-brief";
+
+/* Step 12 — complete scan. */
+export {
+  completeScanStep,
+  type CompleteScanData,
+} from "./complete-scan";
