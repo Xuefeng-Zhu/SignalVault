@@ -36,7 +36,7 @@ export default function EvidenceVaultPage() {
   const [dateRange, setDateRange] = useState(DEFAULT_FILTERS.dateRange);
 
   // Selection
-  const [selectedId, setSelectedId] = useState<string | null>("ev-005");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set());
 
   // Table view
@@ -181,14 +181,13 @@ export default function EvidenceVaultPage() {
           )}
         </div>
 
-        {/* Right detail panel */}
-        {showPreview && (
-          <EvidenceDetailPanel
-            artifact={selectedArtifact}
-            allArtifacts={artifacts}
-            onClose={() => setSelectedId(null)}
-          />
-        )}
+        {/* Right detail panel — drawer overlay */}
+        <EvidenceDetailPanel
+          artifact={selectedArtifact}
+          allArtifacts={artifacts}
+          open={selectedId !== null}
+          onClose={() => setSelectedId(null)}
+        />
       </div>
 
       {/* Upload dialog */}
