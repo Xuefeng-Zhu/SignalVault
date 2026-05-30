@@ -6,15 +6,29 @@ import {
 } from "@insforge/sdk/ssr";
 
 /**
- * OAuth callback route. After a successful OAuth sign-in, InsForge redirects
- * back to this URL with `?access_token=...&refresh_token=...`. We persist the
- * tokens as httpOnly cookies and redirect to the requested page.
+ * OAuth callback route (legacy/fallback). The primary OAuth callback is now
+ * the client-side page at /auth/callback which handles PKCE exchange.
+ *
+ * This server route handles two cases:
+ * 1. Direct token delivery: ?access_token=...&refresh_token=...
+ * 2. PKCE code: ?insforge_code=... → redirects to client-side handler
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const redirectTo = searchParams.get("redirect_to") ?? "/companies";
+
+  // PKCE flow: redirect to client-side handler that can access sessionStorage
+  const insforgeCode = searchParams.get("insforge_code");
+  if (insforgeCode) {
+    const clientCallbackUrl = new URL("/auth/callback", request.url);
+    clientCallbackUrl.searchParams.set("insforge_code", insforgeCode);
+    clientCallbackUrl.searchParams.set("redirect_to", redirectTo);
+    return NextResponse.redirect(clientCallbackUrl);
+  }
+
+  // Legacy: direct token delivery
   const accessToken = searchParams.get("access_token");
   const refreshToken = searchParams.get("refresh_token");
-  const redirectTo = searchParams.get("redirect_to") ?? "/companies";
 
   if (!accessToken) {
     return NextResponse.redirect(new URL("/login?error=missing_token", request.url));

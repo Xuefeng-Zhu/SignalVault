@@ -36,7 +36,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         return;
       }
 
-      setSuccess("Account created! Check your email to verify, then sign in.");
+      setSuccess("Account created! You can now sign in.");
       setMode("signin");
       return;
     }
@@ -52,6 +52,10 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
       return;
     }
 
+    // Establish the insforge_access_token cookie via the refresh endpoint
+    // so the Edge middleware recognizes the session on subsequent navigations.
+    await fetch("/api/auth/refresh", { method: "POST", credentials: "include" });
+
     startTransition(() => {
       router.push(redirectTo);
       router.refresh();
@@ -62,18 +66,18 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     setError(null);
     const client = getInsForgeClientBrowser();
 
-    const { data, error: oauthError } = await client.auth.signInWithOAuth({
+    // SDK uses PKCE: it stores code_verifier in sessionStorage, then redirects
+    // the browser. After OAuth completes, the backend redirects back with
+    // ?insforge_code=... which the client-side callback page handles.
+    const { error: oauthError } = await client.auth.signInWithOAuth({
       provider,
-      redirectTo: `${window.location.origin}/api/auth/callback?redirect_to=${encodeURIComponent(redirectTo)}`,
+      redirectTo: `${window.location.origin}/auth/callback?redirect_to=${encodeURIComponent(redirectTo)}`,
     });
 
-    if (oauthError || !data?.url) {
-      setError(oauthError?.message ?? "Failed to start OAuth sign-in.");
-      return;
+    if (oauthError) {
+      setError(oauthError.message ?? "Failed to start OAuth sign-in.");
     }
-
-    // Redirect to the OAuth provider
-    window.location.href = data.url;
+    // In browser mode the SDK already sets window.location.href internally
   }
 
   async function handleDemoSignIn() {
