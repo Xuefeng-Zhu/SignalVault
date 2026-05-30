@@ -98,6 +98,10 @@ export const DEMO_BASELINE_SCAN_ID = "demo-scan-acme-baseline";
 /** Stable id of the newer, latest (current-state) seeded Scan that holds the verdict. */
 export const DEMO_LATEST_SCAN_ID = "demo-scan-acme-latest";
 
+/** Additional seeded companies for demo list view. */
+export const DEMO_ONEDRIVE_COMPANY_ID = "demo-company-onedrive";
+export const DEMO_GDRIVE_COMPANY_ID = "demo-company-google-drive";
+
 /** Options controlling what the in-memory store is seeded with. */
 export interface DemoInsForgeOptions {
   /**
@@ -159,7 +163,7 @@ class DemoStore {
   readonly integrations = new Map<string, Integration>();
 
   /** Anchored at a fixed epoch so seeded timestamps are reproducible. */
-  private readonly baseEpochMs = Date.parse("2024-01-01T00:00:00.000Z");
+  private readonly baseEpochMs = Date.parse("2026-05-01T00:00:00.000Z");
   private tick = 0;
 
   /** Strictly increasing ISO timestamp; successive calls are 1s apart. */
@@ -630,7 +634,7 @@ export class DemoInsForgeClient implements InsForgeClient {
    *  - a baseline scan carrying the previous-state snapshots, and
    *  - a latest (completed) scan carrying the current-state snapshots, the
    *    diffs between previous and current per source, the classified claims,
-   *    and the deterministic "Moving upmarket" verdict (confidence 82).
+   *    and the deterministic "AI platform pivot" verdict (confidence 85).
    *
    * Returns the default Workspace so the constructor can retain it.
    */
@@ -726,6 +730,9 @@ export class DemoInsForgeClient implements InsForgeClient {
     this.seedDiffs(latestScan.id, previous, current, previousSnapshotIdByRole, currentSnapshotIdByRole);
     this.seedClaims(latestScan.id, currentSnapshotIdByRole, previousSnapshotIdByRole);
     this.seedVerdict(latestScan.id, workspace.id);
+
+    // --- Additional monitored companies (OneDrive, Google Drive) ----------
+    this.seedAdditionalCompanies(workspace.id);
 
     return workspace;
   }
@@ -842,8 +849,8 @@ export class DemoInsForgeClient implements InsForgeClient {
   }
 
   /**
-   * Seed the deterministic Demo_Company verdict ("Moving upmarket", confidence
-   * 82) concluding the latest scan (Requirements 18.5, 18.6).
+   * Seed the deterministic Demo_Company verdict ("AI platform pivot", confidence
+   * 85) concluding the latest scan (Requirements 18.5, 18.6).
    */
   private seedVerdict(scanId: string, workspaceId: string): void {
     const id = `demo-verdict-${scanId}`;
@@ -861,6 +868,128 @@ export class DemoInsForgeClient implements InsForgeClient {
       createdAt: this.store.now(),
     };
     this.store.verdicts.set(row.id, clone(row));
+  }
+
+  /**
+   * Seed additional monitored companies (OneDrive, Google Drive) with recent
+   * scan activity so the demo dashboard shows multiple companies being tracked.
+   */
+  private seedAdditionalCompanies(workspaceId: string): void {
+    // --- OneDrive (Microsoft) ---
+    const onedrive: Company = {
+      id: DEMO_ONEDRIVE_COMPANY_ID,
+      workspaceId,
+      name: "OneDrive",
+      domain: "onedrive.live.com",
+      slug: "onedrive",
+      createdAt: this.store.now(),
+    };
+    this.store.companies.set(onedrive.id, clone(onedrive));
+
+    const onedriveSources: Array<{ pageRole: DemoSourceRole; url: string }> = [
+      { pageRole: "pricing", url: "https://www.microsoft.com/en-us/microsoft-365/onedrive/compare-onedrive-plans" },
+      { pageRole: "trust", url: "https://www.microsoft.com/en-us/trust-center" },
+      { pageRole: "docs", url: "https://learn.microsoft.com/en-us/onedrive/developer" },
+      { pageRole: "careers", url: "https://careers.microsoft.com" },
+    ];
+    for (const source of onedriveSources) {
+      const id = `demo-source-onedrive-${source.pageRole}`;
+      const watched: WatchedSource = {
+        id,
+        companyId: onedrive.id,
+        url: source.url,
+        sourceType: source.pageRole,
+        createdAt: this.store.now(),
+      };
+      this.store.watchedSources.set(watched.id, clone(watched));
+    }
+
+    // Seed a recent completed scan for OneDrive
+    const onedriveScanId = "demo-scan-onedrive-latest";
+    const onedriveScan: Scan = {
+      id: onedriveScanId,
+      workspaceId,
+      companyId: onedrive.id,
+      status: "completed",
+      triggerType: "scheduled",
+      failureReason: null,
+      boxScanFolderId: `mock-folder-scan-${onedriveScanId}`,
+      createdAt: this.store.now(),
+      updatedAt: this.store.now(),
+    };
+    this.store.scans.set(onedriveScan.id, clone(onedriveScan));
+
+    // Simple verdict for OneDrive
+    const onedriveVerdictId = `demo-verdict-${onedriveScanId}`;
+    const onedriveVerdict: VerdictRow = {
+      id: onedriveVerdictId,
+      scanId: onedriveScanId,
+      workspaceId,
+      strategyPrediction: "moving_upmarket",
+      confidence: 71,
+      riskScore: 55,
+      recommendedActions: [
+        "Monitor Microsoft Copilot integration with OneDrive for enterprise content intelligence features.",
+        "Track OneDrive for Business pricing changes as Microsoft bundles AI into 365 plans.",
+        "Evaluate OneDrive's new compliance certifications (FedRAMP High, GCC High) for government sector competition.",
+      ],
+      keyEvidence: [
+        "Microsoft is bundling Copilot AI into OneDrive via Microsoft 365 E5 plans.",
+        "OneDrive for Business added advanced DLP, sensitivity labels, and compliance retention policies.",
+        "New developer APIs for Microsoft Graph enable AI-powered content search across OneDrive.",
+      ],
+      counterEvidence: [
+        "OneDrive consumer tier remains unchanged at 5 GB free, suggesting the AI push is enterprise-only.",
+        "Copilot features are tied to Microsoft 365 licensing, not standalone OneDrive upgrades.",
+      ],
+      isFallback: false,
+      createdAt: this.store.now(),
+    };
+    this.store.verdicts.set(onedriveVerdict.id, clone(onedriveVerdict));
+
+    // --- Google Drive ---
+    const gdrive: Company = {
+      id: DEMO_GDRIVE_COMPANY_ID,
+      workspaceId,
+      name: "Google Drive",
+      domain: "drive.google.com",
+      slug: "google-drive",
+      createdAt: this.store.now(),
+    };
+    this.store.companies.set(gdrive.id, clone(gdrive));
+
+    const gdriveSources: Array<{ pageRole: DemoSourceRole; url: string }> = [
+      { pageRole: "pricing", url: "https://one.google.com/about/plans" },
+      { pageRole: "trust", url: "https://workspace.google.com/security" },
+      { pageRole: "docs", url: "https://developers.google.com/drive" },
+      { pageRole: "careers", url: "https://careers.google.com" },
+    ];
+    for (const source of gdriveSources) {
+      const id = `demo-source-google-drive-${source.pageRole}`;
+      const watched: WatchedSource = {
+        id,
+        companyId: gdrive.id,
+        url: source.url,
+        sourceType: source.pageRole,
+        createdAt: this.store.now(),
+      };
+      this.store.watchedSources.set(watched.id, clone(watched));
+    }
+
+    // Seed a queued scan for Google Drive (shows "in progress" state)
+    const gdriveScanId = "demo-scan-google-drive-latest";
+    const gdriveScan: Scan = {
+      id: gdriveScanId,
+      workspaceId,
+      companyId: gdrive.id,
+      status: "analyzing",
+      triggerType: "manual",
+      failureReason: null,
+      boxScanFolderId: `mock-folder-scan-${gdriveScanId}`,
+      createdAt: this.store.now(),
+      updatedAt: this.store.now(),
+    };
+    this.store.scans.set(gdriveScan.id, clone(gdriveScan));
   }
 }
 
