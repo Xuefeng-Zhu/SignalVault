@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
 import { RunScanButton } from "@/components/run-scan-button";
 import { strategyLabel } from "@/components/strategy-verdict-card";
+import { buttonVariants } from "@/components/ui/button";
 import { resolveActiveWorkspace } from "@/lib/auth/active-workspace.server";
 import { LOGIN_PATH, REDIRECT_PARAM } from "@/lib/auth/routes";
 import { cn } from "@/lib/utils";
@@ -24,12 +23,14 @@ const LOAD_TIMEOUT_MS = 10_000;
 const SCAN_STATUS_LABELS: Record<ScanStatus, string> = {
   queued: "Queued",
   scraping: "Scraping",
-  uploading: "Uploading to Box",
+  uploading: "Uploading",
   diffing: "Diffing",
   analyzing: "Analyzing",
   completed: "Complete",
   failed: "Failed",
 };
+
+const TABS = ["Overview", "Sources", "Scans", "Claims", "Evidence", "Settings"] as const;
 
 interface LatestCompleteResults {
   scan: Scan;
@@ -53,6 +54,7 @@ async function withTimeout<T>(
   const timeout = new Promise<never>((_resolve, reject) => {
     timer = setTimeout(() => reject(new Error(message)), ms);
   });
+
   try {
     return await Promise.race([promise, timeout]);
   } finally {
@@ -94,11 +96,17 @@ async function loadCompanyDetail(
   };
 }
 
+function parseTimestamp(iso: string): number {
+  const timestamp = new Date(iso).getTime();
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
 function formatTimestamp(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) {
     return iso;
   }
+
   return new Intl.DateTimeFormat("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
@@ -106,17 +114,30 @@ function formatTimestamp(iso: string): string {
   }).format(date);
 }
 
+function formatShortDate(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) {
+    return iso;
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
+
 function statusBadge(status: ScanStatus): string {
-  if (status === "completed") return "border-emerald-200 bg-emerald-100 text-emerald-700";
-  if (status === "failed") return "border-rose-200 bg-rose-100 text-rose-700";
-  return "border-amber-200 bg-amber-100 text-amber-700";
+  if (status === "completed") return "border-emerald-200 bg-emerald-50 text-emerald-700";
+  if (status === "failed") return "border-rose-200 bg-rose-50 text-rose-700";
+  return "border-amber-200 bg-amber-50 text-amber-700";
 }
 
 function verdictBadge(verdict: VerdictRow | null): { label: string; className: string } {
   if (!verdict) {
     return {
       label: "Awaiting verdict",
-      className: "border-amber-200 bg-amber-100 text-amber-700",
+      className: "border-amber-200 bg-amber-50 text-amber-700",
     };
   }
 
@@ -126,28 +147,43 @@ function verdictBadge(verdict: VerdictRow | null): { label: string; className: s
   ) {
     return {
       label: strategyLabel(verdict.strategyPrediction),
-      className: "border-violet-200 bg-violet-100 text-violet-700",
+      className: "border-violet-200 bg-violet-50 text-violet-700",
     };
   }
 
   if (verdict.riskScore >= 70) {
     return {
       label: strategyLabel(verdict.strategyPrediction),
-      className: "border-rose-200 bg-rose-100 text-rose-700",
+      className: "border-rose-200 bg-rose-50 text-rose-700",
     };
   }
 
   if (verdict.strategyPrediction === "self_serve_push") {
     return {
       label: strategyLabel(verdict.strategyPrediction),
-      className: "border-emerald-200 bg-emerald-100 text-emerald-700",
+      className: "border-emerald-200 bg-emerald-50 text-emerald-700",
     };
   }
 
   return {
     label: strategyLabel(verdict.strategyPrediction),
-    className: "border-amber-200 bg-amber-100 text-amber-700",
+    className: "border-slate-200 bg-slate-50 text-slate-700",
   };
+}
+
+function riskLevelLabel(score: number): string {
+  if (score >= 70) return "High";
+  if (score >= 40) return "Medium";
+  return "Low";
+}
+
+function sourceTypeIcon(sourceType: WatchedSource["sourceType"]): string {
+  if (sourceType === "pricing") return "sell";
+  if (sourceType === "docs") return "description";
+  if (sourceType === "trust") return "verified_user";
+  if (sourceType === "careers") return "work";
+  if (sourceType === "blog") return "article";
+  return "language";
 }
 
 export default async function CompanyDetailPage({
@@ -157,10 +193,9 @@ export default async function CompanyDetailPage({
 }) {
   const companyId = params.id;
   const resolution = await resolveActiveWorkspace();
+
   if (resolution.status === "redirect") {
-    redirect(
-      `${LOGIN_PATH}?${REDIRECT_PARAM}=${encodeURIComponent(`/companies/${companyId}`)}`,
-    );
+    redirect(`${LOGIN_PATH}?${REDIRECT_PARAM}=${encodeURIComponent(`/companies/${companyId}`)}`);
   }
 
   const repo = resolution.insforge.scoped(resolution.workspace.id);
@@ -176,110 +211,115 @@ export default async function CompanyDetailPage({
 
   const verdict = latestComplete?.verdict ?? null;
   const verdictTone = verdictBadge(verdict);
+  const signals = latestComplete?.claims ?? [];
+  const orderedScans = [...scans].sort((a, b) => parseTimestamp(b.createdAt) - parseTimestamp(a.createdAt));
+  const timelineScans = orderedScans.slice(0, 5);
+
   const confidence = verdict?.confidence ?? 0;
   const riskScore = verdict?.riskScore ?? 0;
-  const signals = latestComplete?.claims ?? [];
+  const summary = verdict?.keyEvidence[0] ?? signals[0]?.evidenceText ?? "Run a completed scan to generate a verdict summary.";
+  const removedCount = signals.filter((signal) => signal.claimStatus === "removed").length;
+  const underReviewCount = signals.filter((signal) => signal.claimStatus === "needs_review").length;
+  const unchangedCount = 0;
+  const highRiskCount = signals.filter((signal) => {
+    const level = signal.riskLevel?.toLowerCase() ?? "";
+    return level.includes("high") || level.includes("critical");
+  }).length;
 
   return (
     <div className="flex flex-col gap-6">
-      <nav className="flex items-center gap-2 text-body-sm text-on-surface-variant">
-        <Link href="/companies" className="hover:text-on-surface">
-          Companies
-        </Link>
-        <span>›</span>
-        <span className="text-on-surface">{company.name}</span>
-      </nav>
-
-      <section className="glass-card overflow-hidden bg-[linear-gradient(135deg,rgba(91,61,245,0.08),rgba(234,237,255,0.6)_45%,rgba(255,255,255,0.95))] px-8 py-8">
-        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-          <div className="space-y-4">
-            <Badge className={cn("border", verdictTone.className)}>
-              {verdictTone.label}
-            </Badge>
-            <div>
-              <h1 className="font-page-title text-page-title text-on-surface">
+      <header className="rounded-[30px] border border-outline-variant bg-surface-container-lowest p-6 shadow-[0_24px_50px_-36px_rgba(21,27,45,0.3)]">
+        <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-on-surface-variant">
+              <Link href="/companies" className="transition hover:text-on-surface">
+                Companies
+              </Link>{" "}
+              / {company.name}
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <h1 className="font-page-title text-[42px] font-semibold tracking-[-0.04em] text-on-surface">
                 {company.name}
               </h1>
-              <p className="mt-1 text-body-md text-on-surface-variant">
-                {company.domain}
+              <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+                Enterprise
+              </span>
+            </div>
+            <p className="mt-3 text-sm text-on-surface-variant">{company.domain}</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              className="inline-flex h-10 items-center justify-center rounded-full border border-outline-variant bg-surface-container-lowest px-4 text-sm font-medium text-on-surface transition hover:bg-surface-container-low"
+            >
+              <span className="material-symbols-outlined text-[18px]">edit</span>
+              Edit
+            </button>
+            <button
+              type="button"
+              className="inline-flex h-10 items-center justify-center rounded-full border border-outline-variant bg-surface-container-lowest px-4 text-sm font-medium text-on-surface transition hover:bg-surface-container-low"
+            >
+              <span className="material-symbols-outlined text-[18px]">download</span>
+              Export
+            </button>
+            <RunScanButton
+              companyId={company.id}
+              label="Run scan"
+              icon="bolt"
+              buttonClassName="h-10 rounded-full bg-primary px-4 text-sm font-medium text-on-primary hover:bg-primary-container"
+            />
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-px overflow-hidden rounded-[24px] border border-outline-variant bg-outline-variant md:grid-cols-3">
+          <article className="bg-surface-container-lowest p-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-on-surface-variant">Verdict</p>
+            <div className="mt-3 flex items-center gap-3">
+              <span className={cn("inline-flex rounded-full border px-3 py-1 text-sm font-medium", verdictTone.className)}>
+                {verdictTone.label}
+              </span>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-on-surface-variant">{summary}</p>
+          </article>
+
+          <article className="bg-surface-container-lowest p-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-on-surface-variant">Confidence</p>
+            <p className="mt-3 font-page-title text-[34px] font-semibold leading-none tracking-[-0.04em] text-on-surface">
+              {confidence}%
+            </p>
+            <div className="mt-4 h-2 rounded-full bg-surface-container-low">
+              <div className="h-full rounded-full bg-primary" style={{ width: `${Math.max(confidence, verdict ? 12 : 4)}%` }} />
+            </div>
+          </article>
+
+          <article className="bg-surface-container-lowest p-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-on-surface-variant">Risk Level</p>
+            <div className="mt-3 flex items-center gap-3">
+              <p className="font-page-title text-[34px] font-semibold leading-none tracking-[-0.04em] text-on-surface">
+                {riskLevelLabel(riskScore)}
               </p>
-            </div>
-            <div className="flex flex-wrap gap-3 text-body-sm text-on-surface-variant">
-              <span className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-white/80 px-3 py-1">
-                <span className="material-symbols-outlined text-[16px]">language</span>
-                {sources.length} watched source{sources.length === 1 ? "" : "s"}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-white/80 px-3 py-1">
-                <span className="material-symbols-outlined text-[16px]">radar</span>
-                {scans.length} scan{scans.length === 1 ? "" : "s"}
+              <span className={cn("inline-flex rounded-full border px-3 py-1 text-sm font-medium", statusBadge(riskScore >= 70 ? "failed" : riskScore >= 40 ? "analyzing" : "completed"))}>
+                {riskScore}/100
               </span>
             </div>
-          </div>
-
-          <RunScanButton
-            companyId={company.id}
-            label="Run scan"
-            icon="bolt"
-            buttonClassName="h-11 rounded-lg bg-primary px-5 text-on-primary hover:bg-primary-container"
-          />
+            <p className="mt-3 text-sm text-on-surface-variant">
+              Last completed verdict updated {latestComplete ? formatShortDate(latestComplete.scan.createdAt) : "after the next scan"}.
+            </p>
+          </article>
         </div>
-
-        <div className="mt-8 grid gap-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-outline-variant/80 bg-white/85 p-5">
-            <div className="mb-2 flex items-center justify-between text-body-sm text-on-surface-variant">
-              <span>Confidence</span>
-              <span className="font-mono-data text-mono-data text-on-surface">
-                {confidence}%
-              </span>
-            </div>
-            <div className="h-2 rounded-full bg-surface-variant">
-              <div
-                className="h-full rounded-full bg-primary"
-                style={{ width: `${Math.max(confidence, verdict ? 12 : 4)}%` }}
-              />
-            </div>
-          </div>
-          <div className="rounded-2xl border border-outline-variant/80 bg-white/85 p-5">
-            <div className="mb-2 flex items-center justify-between text-body-sm text-on-surface-variant">
-              <span>Risk score</span>
-              <span className="font-mono-data text-mono-data text-on-surface">
-                {riskScore}
-              </span>
-            </div>
-            <div className="h-2 rounded-full bg-surface-variant">
-              <div
-                className={cn(
-                  "h-full rounded-full",
-                  riskScore >= 70
-                    ? "bg-rose-500"
-                    : riskScore >= 40
-                      ? "bg-amber-500"
-                      : "bg-emerald-500",
-                )}
-                style={{ width: `${Math.max(riskScore, verdict ? 12 : 4)}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      </header>
 
       <div className="flex flex-wrap gap-2">
-        {[
-          "Overview",
-          "Sources",
-          "Scans",
-          "Claims",
-          "Evidence",
-          "Settings",
-        ].map((tab, index) => (
+        {TABS.map((tab, index) => (
           <button
             key={tab}
             type="button"
             className={cn(
-              "rounded-full px-4 py-2 text-body-sm transition",
+              "rounded-full px-4 py-2 text-sm font-medium transition",
               index === 0
-                ? "bg-primary text-on-primary"
-                : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container",
+                ? "bg-primary text-white"
+                : "border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low",
             )}
           >
             {tab}
@@ -287,285 +327,161 @@ export default async function CompanyDetailPage({
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.9fr)]">
-        <section className="glass-card p-6">
-          <div className="flex items-start justify-between gap-4">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.95fr)]">
+        <section className="rounded-[28px] border border-outline-variant bg-surface-container-lowest p-6 shadow-[0_24px_50px_-36px_rgba(21,27,45,0.28)]">
+          <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
-                Current verdict
-              </p>
-              <h2 className="mt-2 font-section-title text-[24px] font-semibold text-on-surface">
-                {verdict ? strategyLabel(verdict.strategyPrediction) : "No completed verdict yet"}
+              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-primary">Current Verdict</p>
+              <h2 className="mt-3 font-page-title text-[30px] font-semibold tracking-[-0.04em] text-on-surface">
+                {verdict ? strategyLabel(verdict.strategyPrediction) : "Awaiting first complete verdict"}
               </h2>
             </div>
             {latestComplete ? (
-              <span className="rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-body-sm text-on-surface-variant">
-                Updated {formatTimestamp(latestComplete.scan.createdAt)}
+              <span className="rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-sm text-on-surface-variant">
+                Updated {formatShortDate(latestComplete.scan.createdAt)}
               </span>
             ) : null}
           </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4">
-              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-on-surface-variant">
-                Supporting evidence
-              </p>
-              <ul className="mt-3 space-y-3 text-body-md text-on-surface">
-                {(verdict?.keyEvidence ?? []).slice(0, 4).map((item) => (
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-on-surface-variant">{summary}</p>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            <div className="rounded-[24px] border border-outline-variant bg-surface-container-low p-5">
+              <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-on-surface-variant">Key Evidence</p>
+              <ul className="mt-4 space-y-3 text-sm leading-6 text-on-surface">
+                {(verdict?.keyEvidence.length ? verdict.keyEvidence : signals.map((signal) => signal.statementText)).slice(0, 4).map((item) => (
                   <li key={item} className="flex gap-3">
-                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-primary">
-                      check_circle
-                    </span>
+                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-primary">check_circle</span>
                     <span>{item}</span>
                   </li>
                 ))}
-                {verdict?.keyEvidence.length ? null : (
-                  <li className="text-body-md text-on-surface-variant">
-                    Run a completed scan to populate supporting evidence.
-                  </li>
-                )}
+                {!verdict?.keyEvidence.length && signals.length === 0 ? (
+                  <li className="text-on-surface-variant">No evidence has been published for this company yet.</li>
+                ) : null}
               </ul>
             </div>
-            <div className="rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4">
-              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-on-surface-variant">
-                Counterpoints
-              </p>
-              <ul className="mt-3 space-y-3 text-body-md text-on-surface">
-                {(verdict?.counterEvidence ?? []).slice(0, 4).map((item) => (
-                  <li key={item} className="flex gap-3">
-                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-amber-600">
-                      warning
+
+            <div className="rounded-[24px] border border-outline-variant bg-surface-container-low p-5">
+              <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-on-surface-variant">Watched Sources</p>
+              <div className="mt-4 space-y-3">
+                {sources.slice(0, 4).map((source) => (
+                  <div key={source.id} className="flex items-start gap-3 rounded-2xl bg-surface-container-lowest px-4 py-3">
+                    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <span className="material-symbols-outlined text-[18px]">{sourceTypeIcon(source.sourceType)}</span>
                     </span>
-                    <span>{item}</span>
-                  </li>
+                    <div>
+                      <p className="text-sm font-medium text-on-surface">{source.sourceType}</p>
+                      <p className="mt-1 break-all text-sm text-on-surface-variant">{source.url}</p>
+                    </div>
+                  </div>
                 ))}
-                {verdict?.counterEvidence.length ? null : (
-                  <li className="text-body-md text-on-surface-variant">
-                    No counter-evidence was recorded for the latest complete scan.
-                  </li>
-                )}
-              </ul>
+                {sources.length === 0 ? (
+                  <p className="text-sm text-on-surface-variant">No watched sources have been configured yet.</p>
+                ) : null}
+              </div>
             </div>
           </div>
 
-          {verdict?.recommendedActions?.length ? (
-            <div className="mt-6 rounded-2xl border border-outline-variant/70 bg-white/80 p-4">
-              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
-                Recommended next steps
-              </p>
-              <ul className="mt-3 grid gap-3 text-body-md text-on-surface md:grid-cols-2">
-                {verdict.recommendedActions.map((action) => (
-                  <li key={action} className="flex gap-3 rounded-xl bg-surface-container-low px-3 py-3">
-                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-primary">
-                      task_alt
-                    </span>
-                    <span>{action}</span>
-                  </li>
-                ))}
-              </ul>
+          <div className="mt-6 rounded-[24px] border border-outline-variant bg-surface-container-low p-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-on-surface-variant">Recommended Actions</p>
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
+              {(verdict?.recommendedActions ?? []).slice(0, 4).map((action) => (
+                <div key={action} className="flex gap-3 rounded-2xl bg-surface-container-lowest px-4 py-3 text-sm leading-6 text-on-surface">
+                  <span className="material-symbols-outlined mt-0.5 text-[18px] text-primary">task_alt</span>
+                  <span>{action}</span>
+                </div>
+              ))}
+              {!verdict?.recommendedActions.length ? (
+                <div className="rounded-2xl bg-surface-container-lowest px-4 py-3 text-sm text-on-surface-variant md:col-span-2">
+                  Recommended actions will appear after a completed verdict is stored.
+                </div>
+              ) : null}
             </div>
-          ) : null}
+          </div>
         </section>
 
-        <aside className="glass-card p-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
-                Intelligence timeline
-              </p>
-              <h2 className="mt-2 font-section-title text-section-title text-on-surface">
-                Recent scan activity
-              </h2>
-            </div>
-          </div>
+        <section className="rounded-[28px] border border-outline-variant bg-surface-container-lowest p-6 shadow-[0_24px_50px_-36px_rgba(21,27,45,0.28)]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-primary">Intelligence Timeline</p>
+          <h2 className="mt-3 font-page-title text-[30px] font-semibold tracking-[-0.04em] text-on-surface">
+            Scan activity
+          </h2>
+          <p className="mt-3 text-sm leading-6 text-on-surface-variant">
+            Follow each scan, verdict, and evidence change in the order your team experienced it.
+          </p>
 
-          {scans.length === 0 ? (
-            <p className="mt-6 text-body-md text-on-surface-variant">
-              No scans yet. Trigger a scan to start building an evidence timeline.
-            </p>
-          ) : (
-            <ol className="mt-6 space-y-4">
-              {scans.slice(0, 6).map((scan) => (
-                <li key={scan.id} className="flex gap-3">
-                  <div className="mt-1 h-3 w-3 rounded-full bg-primary" />
-                  <div className="min-w-0 flex-1 rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <Badge className={cn("border", statusBadge(scan.status))}>
+          <div className="mt-6 space-y-4">
+            {timelineScans.map((scan, index) => (
+              <div key={scan.id} className="relative rounded-[24px] border border-outline-variant bg-surface-container-low p-5">
+                {index < timelineScans.length - 1 ? (
+                  <span className="absolute left-[25px] top-[68px] h-10 w-px bg-outline-variant" aria-hidden="true" />
+                ) : null}
+                <div className="flex items-start gap-4">
+                  <span className="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-medium text-on-surface">{SCAN_STATUS_LABELS[scan.status]}</p>
+                        <p className="mt-1 text-sm text-on-surface-variant">{formatTimestamp(scan.createdAt)}</p>
+                      </div>
+                      <span className={cn("inline-flex rounded-full border px-3 py-1 text-sm font-medium", statusBadge(scan.status))}>
                         {SCAN_STATUS_LABELS[scan.status]}
-                      </Badge>
-                      <span className="text-body-sm text-on-surface-variant">
-                        {formatTimestamp(scan.createdAt)}
                       </span>
                     </div>
-                    <p className="mt-3 text-body-md text-on-surface">
-                      Scan <span className="font-mono-data">{scan.id.slice(0, 8)}</span>
+                    <p className="mt-3 text-sm leading-6 text-on-surface-variant">
+                      {scan.status === "completed"
+                        ? "Evidence archived and verdict refreshed for the latest public changes."
+                        : scan.failureReason || "This scan is still moving through the SignalVault workflow."}
                     </p>
-                    {scan.failureReason ? (
-                      <p className="mt-2 text-body-sm text-error">{scan.failureReason}</p>
-                    ) : null}
                   </div>
-                </li>
-              ))}
-            </ol>
-          )}
-        </aside>
-      </div>
-
-      <section className="glass-card p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
-              Strategy signals
-            </p>
-            <h2 className="mt-2 font-section-title text-section-title text-on-surface">
-              Extracted changes from the latest completed scan
-            </h2>
-          </div>
-          {latestComplete ? (
-            <span className="rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-body-sm text-on-surface-variant">
-              {signals.length} claims captured
-            </span>
-          ) : null}
-        </div>
-
-        {signals.length === 0 ? (
-          <p className="mt-6 text-body-md text-on-surface-variant">
-            No claim signals yet. Once a scan completes, SignalVault will surface classified evidence here.
-          </p>
-        ) : (
-          <div className="mt-6 grid gap-4 lg:grid-cols-2">
-            {signals.slice(0, 6).map((claim) => (
-              <article
-                key={claim.id}
-                className="rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4"
-              >
-                <div className="flex flex-wrap items-center gap-2 text-body-sm text-on-surface-variant">
-                  <span className="rounded-full bg-white px-3 py-1 font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
-                    {claim.claimType}
-                  </span>
-                  {claim.claimStatus ? (
-                    <span className="rounded-full bg-white px-3 py-1 text-body-sm text-on-surface-variant">
-                      {claim.claimStatus}
-                    </span>
-                  ) : null}
-                  <span className="rounded-full bg-white px-3 py-1 font-mono-data text-mono-data text-on-surface">
-                    {claim.confidence}% confidence
-                  </span>
                 </div>
-                <h3 className="mt-4 font-section-title text-body-md font-semibold text-on-surface">
-                  {claim.statementText}
-                </h3>
-                {claim.evidenceText ? (
-                  <p className="mt-3 text-body-sm text-on-surface-variant">
-                    {claim.evidenceText}
-                  </p>
-                ) : null}
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-        <section className="glass-card p-6">
-          <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
-            Watched sources
-          </p>
-          <div className="mt-4 space-y-3">
-            {sources.map((source) => (
-              <div
-                key={source.id}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4"
-              >
-                <div>
-                  <p className="text-body-md font-medium text-on-surface">{source.url}</p>
-                  <p className="mt-1 text-body-sm text-on-surface-variant">
-                    {source.sourceType}
-                  </p>
-                </div>
-                <span className="rounded-full bg-white px-3 py-1 text-body-sm text-on-surface-variant">
-                  Watching
-                </span>
               </div>
             ))}
-            {sources.length === 0 ? (
-              <p className="text-body-md text-on-surface-variant">
-                No watched sources have been configured for this company.
-              </p>
+
+            {timelineScans.length === 0 ? (
+              <div className="rounded-[24px] border border-dashed border-outline-variant bg-surface-container-low px-5 py-10 text-center text-sm text-on-surface-variant">
+                No scans yet. Start a scan to create the first timeline entry.
+              </div>
             ) : null}
           </div>
         </section>
-
-        <section className="glass-card p-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
-                Scan history
-              </p>
-              <h2 className="mt-2 font-section-title text-section-title text-on-surface">
-                Latest runs
-              </h2>
-            </div>
-            <Link
-              href="/companies"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-lg")}
-            >
-              All companies
-            </Link>
-          </div>
-          {scans.length === 0 ? (
-            <p className="mt-6 text-body-md text-on-surface-variant">
-              No scans yet for this company. Run a scan to capture evidence.
-            </p>
-          ) : (
-            <ul className="mt-4 space-y-3">
-              {scans.map((scan) => (
-                <li key={scan.id}>
-                  <Link
-                    href={`/scans/${scan.id}`}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4 transition hover:bg-surface-container"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Badge className={cn("border", statusBadge(scan.status))}>
-                        {SCAN_STATUS_LABELS[scan.status]}
-                      </Badge>
-                      <span className="text-body-md text-on-surface">
-                        {scan.id.slice(0, 8)}
-                      </span>
-                    </div>
-                    <span className="text-body-sm text-on-surface-variant">
-                      {formatTimestamp(scan.createdAt)}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
       </div>
+
+      <section className="grid gap-px overflow-hidden rounded-[24px] border border-outline-variant bg-outline-variant md:grid-cols-5">
+        {[
+          { label: "Total Claims", value: String(signals.length) },
+          { label: "Removed", value: String(removedCount) },
+          { label: "Unchanged", value: String(unchangedCount) },
+          { label: "Under Review", value: String(underReviewCount) },
+          { label: "High Risk", value: String(highRiskCount) },
+        ].map((stat) => (
+          <article key={stat.label} className="bg-surface-container-lowest p-5">
+            <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-on-surface-variant">{stat.label}</p>
+            <p className="mt-3 font-page-title text-[28px] font-semibold tracking-[-0.03em] text-on-surface">
+              {stat.value}
+            </p>
+          </article>
+        ))}
+      </section>
     </div>
   );
 }
 
 function CompanyNotFound() {
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-4 rounded-[28px] border border-outline-variant bg-surface-container-lowest px-8 py-14 text-center shadow-[0_24px_60px_-34px_rgba(35,28,95,0.28)]">
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-container text-primary">
-        <span className="material-symbols-outlined text-[28px]">domain_disabled</span>
+    <div className="rounded-[28px] border border-outline-variant bg-surface-container-lowest px-8 py-12 text-center shadow-[0_24px_50px_-36px_rgba(21,27,45,0.28)]">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-surface-container-low text-primary">
+        <span className="material-symbols-outlined text-[28px]">search_off</span>
       </div>
-      <div className="space-y-2">
-        <h1 className="font-section-title text-[24px] font-semibold text-on-surface">
-          Company not found
-        </h1>
-        <p className="text-body-md text-on-surface-variant">
-          We couldn&apos;t find this company in your workspace. It may have been removed, or the link may be incorrect.
-        </p>
-      </div>
-      <Link
-        href="/companies"
-        className={cn(buttonVariants({ variant: "outline" }), "rounded-lg px-5")}
-      >
-        Back to companies
+      <h1 className="mt-5 font-page-title text-[30px] font-semibold tracking-[-0.03em] text-on-surface">
+        Company not found
+      </h1>
+      <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-on-surface-variant">
+        The company may have been removed from this workspace, or the link is no longer valid.
+      </p>
+      <Link href="/companies" className={cn(buttonVariants(), "mt-6 inline-flex h-10 rounded-full px-5 text-sm font-medium")}>
+        Back to dashboard
       </Link>
     </div>
   );
