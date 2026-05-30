@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 
@@ -30,6 +30,13 @@ function isActivePath(pathname: string, item: NavItem): boolean {
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await fetch("/api/auth/signout", { method: "POST" });
+    router.push("/login");
+    router.refresh();
+  }
 
   return (
     <aside className="fixed inset-y-0 left-0 z-40 flex w-sidebar-width flex-col border-r border-white/10 bg-sidebar px-5 py-5 text-white">
@@ -84,12 +91,19 @@ export function AppSidebar() {
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold text-white">
             AM
           </div>
-          <div>
+          <div className="flex-1">
             <p className="text-sm font-medium text-white">Alex Morgan</p>
             <p className="text-[10px] uppercase tracking-[0.22em] text-white/40">
               Enterprise Plan
             </p>
           </div>
+          <button
+            onClick={handleSignOut}
+            title="Sign out"
+            className="rounded-lg p-2 text-white/40 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            <span className="material-symbols-outlined text-[18px]">logout</span>
+          </button>
         </div>
       </div>
     </aside>
