@@ -7,14 +7,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export interface RunScanButtonProps {
-  /** Target Company id; used to build the scan-creation endpoint. */
   companyId: string;
-  /** Optional label override for the idle state. */
   label?: string;
   className?: string;
+  buttonClassName?: string;
+  icon?: string;
 }
 
-/** Read a scan id from a few likely API response shapes. */
 function extractScanId(body: unknown): string | null {
   if (body == null || typeof body !== "object") {
     return null;
@@ -36,21 +35,12 @@ function extractScanId(body: unknown): string | null {
   return null;
 }
 
-/**
- * Starts a Scan for a Company and navigates to its Scan detail page.
- *
- * On click it POSTs to `/api/companies/{companyId}/scans`
- * (Requirements 5.4, 6.1). While the request is in flight the button shows a
- * loading state and is disabled to prevent duplicate submissions. On success
- * it reads the returned scan id and routes to `/scans/{scanId}`
- * (Requirement 6.7). If the request fails — a network error, a non-OK
- * response, or a response without a scan id — it shows an inline error and
- * re-enables the button so the User can retry.
- */
 export function RunScanButton({
   companyId,
   label = "Run scan",
   className,
+  buttonClassName,
+  icon,
 }: RunScanButtonProps) {
   const router = useRouter();
   const [isRunning, setIsRunning] = React.useState(false);
@@ -89,11 +79,15 @@ export function RunScanButton({
         onClick={handleClick}
         disabled={isRunning}
         aria-busy={isRunning}
+        className={cn(buttonClassName)}
       >
+        {icon ? (
+          <span className="material-symbols-outlined text-[18px]">{icon}</span>
+        ) : null}
         {isRunning ? "Starting scan…" : label}
       </Button>
       {error != null && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="text-body-sm text-error">
           {error}
         </p>
       )}

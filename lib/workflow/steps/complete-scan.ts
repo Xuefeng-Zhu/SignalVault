@@ -115,7 +115,7 @@ export async function completeScanStep(
   }, PERSISTENCE_MAX_ATTEMPTS);
 
   if (verdictResult.ok) {
-    persistedVerdict = verdictResult.value;
+    persistedVerdict = verdictResult.value ?? null;
   } else {
     // Verdict persistence failure is non-fatal (Requirement 19.4); record a
     // warning and continue toward `completed`.

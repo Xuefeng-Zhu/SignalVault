@@ -12,45 +12,40 @@ import { AddCompanyClient } from "./add-company-client";
 
 export const dynamic = "force-dynamic";
 
-/**
- * Add Company page (`/companies/new`).
- *
- * Protected route — the middleware redirects unauthenticated requests to the
- * auth flow before this renders, so no server-side workspace load is needed for
- * the form itself (Requirement 1.1). The page is a server component that frames
- * the form with a heading and a back link to the dashboard, then delegates the
- * interactive submit → navigate behavior to {@link AddCompanyClient}, which
- * hosts {@link AddCompanyForm} (Requirement 4.1) and routes to the new Company
- * detail page on success (Requirement 4.9).
- */
 export default function NewCompanyPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-background px-6 py-16">
-      <div className="flex w-full max-w-2xl flex-col gap-8">
-        <div className="flex flex-col gap-2">
-          <Link
-            href="/companies"
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            &larr; Back to companies
-          </Link>
-          <h1 className="text-3xl font-bold tracking-tight">Add a company</h1>
-        </div>
+    <section className="mx-auto flex w-full max-w-4xl flex-col gap-6">
+      <nav className="flex items-center gap-2 text-body-sm text-on-surface-variant">
+        <Link href="/companies" className="hover:text-on-surface">
+          Companies
+        </Link>
+        <span>›</span>
+        <span className="text-on-surface">Add company</span>
+      </nav>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Company details</CardTitle>
-            <CardDescription>
-              Add a company with 3&ndash;5 public URLs to monitor. Each URL is
-              categorized by source type so SignalVault knows what it&rsquo;s
-              watching.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AddCompanyClient />
-          </CardContent>
-        </Card>
+      <div className="glass-card overflow-hidden bg-[linear-gradient(135deg,rgba(91,61,245,0.08),rgba(234,237,255,0.65)_45%,rgba(255,255,255,0.95))] px-8 py-8">
+        <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+          Company onboarding
+        </p>
+        <h1 className="mt-3 font-page-title text-page-title text-on-surface">
+          Add a company
+        </h1>
+        <p className="mt-3 max-w-2xl text-body-md text-on-surface-variant">
+          Add a company with 3–5 public URLs to monitor. SignalVault will categorize each source, preserve evidence, and prepare the company for future scans.
+        </p>
       </div>
-    </main>
+
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle>Company details</CardTitle>
+          <CardDescription>
+            Provide the company domain and the high-signal URLs you want monitored.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <AddCompanyClient />
+        </CardContent>
+      </Card>
+    </section>
   );
 }

@@ -8,32 +8,6 @@
  * (task 18.8) wires them in order.
  */
 
-/* Inter-step artifact schemas + boundary validation (steps 3–5). */
-export {
-  CAPTURE_TIMEOUT_MS,
-  CaptureRequestSchema,
-  PlannedCaptureSchema,
-  CapturePlanSchema,
-  CapturedSnapshotSchema,
-  CapturedSnapshotsSchema,
-  NormalizedSnapshotSchema,
-  NormalizedSnapshotsSchema,
-  ArtifactIdentifiersSchema,
-  UploadedSnapshotSchema,
-  UploadedSnapshotsSchema,
-  BoxFolderSetSchema,
-  UploadSnapshotsResultSchema,
-  StepBoundaryError,
-  parseAtBoundary,
-  type PlannedCapture,
-  type CapturePlan,
-  type CapturedSnapshot,
-  type NormalizedSnapshot,
-  type ArtifactIdentifiers,
-  type UploadedSnapshot,
-  type UploadSnapshotsResult,
-} from "./artifacts";
-
 /* Step 3 — capture. */
 export { runApifyCaptureStep } from "./run-apify-capture";
 

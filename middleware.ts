@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getAccessTokenCookieName } from "@insforge/sdk/ssr";
+
+const ACCESS_TOKEN_COOKIE = "insforge_access_token";
 
 import {
   LOGIN_PATH,
@@ -40,8 +41,8 @@ import {
  * This file runs in the Edge runtime, so it avoids Node-only APIs and the
  * `server-only` env module. It reads `DEMO_MODE` straight off `process.env`
  * (parsed with the same rule as `lib/config/env.ts#isDemoMode`) and the auth
- * cookie NAME from the InsForge SDK's Edge-safe `@insforge/sdk/ssr` helper
- * (never hardcoded). It performs no network or database I/O.
+ * cookie name mirrored from the InsForge SDK default (`insforge_access_token`)
+ * so the middleware stays Edge-safe. It performs no network or database I/O.
  */
 export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
@@ -60,7 +61,7 @@ export function middleware(request: NextRequest): NextResponse {
 
   // Authenticated iff the InsForge access-token cookie is present. Server-side
   // resolution re-validates the token before any scoped data is read.
-  const accessTokenCookie = request.cookies.get(getAccessTokenCookieName());
+  const accessTokenCookie = request.cookies.get(ACCESS_TOKEN_COOKIE);
   if (accessTokenCookie?.value) {
     return NextResponse.next();
   }

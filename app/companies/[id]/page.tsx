@@ -1,20 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { ClaimLedger, type ClaimLedgerRow } from "@/components/claim-ledger";
-import { RiskBadge } from "@/components/risk-badge";
-import { RunScanButton } from "@/components/run-scan-button";
-import { StrategyVerdictCard } from "@/components/strategy-verdict-card";
-import { WatchedSourcesTable } from "@/components/watched-sources-table";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { RunScanButton } from "@/components/run-scan-button";
+import { strategyLabel } from "@/components/strategy-verdict-card";
 import { resolveActiveWorkspace } from "@/lib/auth/active-workspace.server";
 import { LOGIN_PATH, REDIRECT_PARAM } from "@/lib/auth/routes";
 import { cn } from "@/lib/utils";
@@ -28,47 +18,9 @@ import type {
   WorkspaceRepository,
 } from "@/lib/adapters/types";
 
-/**
- * Company detail page — `/companies/[id]` (Requirement 5; design "Pages").
- *
- * A protected App Router **server component** that loads everything the page
- * needs server-side (auth + workspace-scoped reads) and composes existing
- * presentational components. It renders:
- *  - the Company header: name + domain (Requirement 5.1),
- *  - a {@link WatchedSourcesTable} of each Watched_Source's URL + type (5.1),
- *  - the Scan history, newest → oldest, with status + creation time (5.2),
- *    and an empty state when the Company has no scans (5.3),
- *  - a {@link RunScanButton} (5.4),
- *  - the Claims + Verdict strategy prediction from the most recent **Complete**
- *    scan, when one exists (5.5).
- *
- * ## Auth / redirect / not-found
- *
- * {@link resolveActiveWorkspace} resolves the single active workspace from the
- * session. On a `redirect` outcome (unauthenticated; the middleware normally
- * catches this first, this is the server-side backstop) we `redirect()` to the
- * auth flow with this page as the return target — no scoped content renders
- * (Requirement 1.1). Reads go through a workspace-scoped repository
- * (`insforge.scoped(workspace.id)`), so a company owned by another tenant
- * resolves to `null` and we render an in-page not-found state (no cross-tenant
- * existence is leaked, Requirement 1.5).
- *
- * ## Load failure + 10s timeout (Requirement 5.8)
- *
- * The scoped reads are wrapped in {@link withTimeout}: if they reject, or do not
- * settle within {@link LOAD_TIMEOUT_MS} (10s), the wrapper throws. The throw
- * propagates out of this async server component to the sibling `error.tsx`
- * boundary, which shows an error message + a retry control (`reset()`). Because
- * the page only renders after the load resolves, no partial or stale content is
- * shown on failure. Auth resolution runs *before* the timeout so the
- * `redirect()` (and its `NEXT_REDIRECT` signal) is never swallowed by the race.
- */
 export const dynamic = "force-dynamic";
+const LOAD_TIMEOUT_MS = 10_000;
 
-/** Hard ceiling for the company-detail data load before we surface an error (Req 5.8). */
-export const LOAD_TIMEOUT_MS = 10_000;
-
-/** Lifecycle labels for the scan history, mirroring the ScanProgressTimeline (Req 7.1). */
 const SCAN_STATUS_LABELS: Record<ScanStatus, string> = {
   queued: "Queued",
   scraping: "Scraping",
@@ -79,23 +31,12 @@ const SCAN_STATUS_LABELS: Record<ScanStatus, string> = {
   failed: "Failed",
 };
 
-/** Badge styling per scan status: completed=green, failed=red, otherwise in-progress. */
-function scanStatusVariant(
-  status: ScanStatus,
-): "default" | "secondary" | "destructive" {
-  if (status === "failed") return "destructive";
-  if (status === "completed") return "default";
-  return "secondary";
-}
-
-/** The results carried by the most recent Complete scan (Requirement 5.5). */
 interface LatestCompleteResults {
   scan: Scan;
   verdict: VerdictRow | null;
   claims: ClaimRow[];
 }
 
-/** Everything the page renders, loaded under one workspace-scoped read pass. */
 interface CompanyDetail {
   company: Company | null;
   sources: WatchedSource[];
@@ -103,11 +44,6 @@ interface CompanyDetail {
   latestComplete?: LatestCompleteResults;
 }
 
-/**
- * Resolve a promise, but reject with a timeout error if it does not settle
- * within `ms` (Requirement 5.8). The timer is always cleared so a fast resolve
- * never leaves a dangling handle.
- */
 async function withTimeout<T>(
   promise: Promise<T>,
   ms: number,
@@ -126,13 +62,6 @@ async function withTimeout<T>(
   }
 }
 
-/**
- * Load the company, its sources, its scan history (newest first), and — when a
- * Complete scan exists — the verdict + claims of the **most recent** Complete
- * scan (Requirement 5.5). Returns `company: null` when the id is absent from the
- * active workspace so the caller can render a not-found state without leaking
- * cross-tenant existence (Requirement 1.5).
- */
 async function loadCompanyDetail(
   repo: WorkspaceRepository,
   companyId: string,
@@ -144,11 +73,9 @@ async function loadCompanyDetail(
 
   const [sources, scans] = await Promise.all([
     repo.companies.listSources(companyId),
-    repo.scans.listForCompany(companyId), // newest first
+    repo.scans.listForCompany(companyId),
   ]);
 
-  // The most recent *Complete* scan is the first completed entry in the
-  // newest-first history (Requirement 5.5).
   const mostRecentComplete = scans.find((scan) => scan.status === "completed");
   if (!mostRecentComplete) {
     return { company, sources, scans };
@@ -167,29 +94,60 @@ async function loadCompanyDetail(
   };
 }
 
-/** Map a persisted {@link ClaimRow} to the shape the {@link ClaimLedger} renders. */
-function toClaimLedgerRow(claim: ClaimRow): ClaimLedgerRow {
-  return {
-    statementText: claim.statementText,
-    claimType: claim.claimType,
-    claimStatus: claim.claimStatus ?? undefined,
-    riskLevel: claim.riskLevel ?? undefined,
-    confidence: claim.confidence,
-    evidenceText: claim.evidenceText,
-  };
-}
-
-/** Deterministic, locale-stable timestamp for the scan history (Req 5.2). */
 function formatTimestamp(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) {
     return iso;
   }
-  return `${new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-US", {
     dateStyle: "medium",
     timeStyle: "short",
     timeZone: "UTC",
-  }).format(date)} UTC`;
+  }).format(date);
+}
+
+function statusBadge(status: ScanStatus): string {
+  if (status === "completed") return "border-emerald-200 bg-emerald-100 text-emerald-700";
+  if (status === "failed") return "border-rose-200 bg-rose-100 text-rose-700";
+  return "border-amber-200 bg-amber-100 text-amber-700";
+}
+
+function verdictBadge(verdict: VerdictRow | null): { label: string; className: string } {
+  if (!verdict) {
+    return {
+      label: "Awaiting verdict",
+      className: "border-amber-200 bg-amber-100 text-amber-700",
+    };
+  }
+
+  if (
+    verdict.strategyPrediction === "moving_upmarket" ||
+    verdict.strategyPrediction === "enterprise_readiness"
+  ) {
+    return {
+      label: strategyLabel(verdict.strategyPrediction),
+      className: "border-violet-200 bg-violet-100 text-violet-700",
+    };
+  }
+
+  if (verdict.riskScore >= 70) {
+    return {
+      label: strategyLabel(verdict.strategyPrediction),
+      className: "border-rose-200 bg-rose-100 text-rose-700",
+    };
+  }
+
+  if (verdict.strategyPrediction === "self_serve_push") {
+    return {
+      label: strategyLabel(verdict.strategyPrediction),
+      className: "border-emerald-200 bg-emerald-100 text-emerald-700",
+    };
+  }
+
+  return {
+    label: strategyLabel(verdict.strategyPrediction),
+    className: "border-amber-200 bg-amber-100 text-amber-700",
+  };
 }
 
 export default async function CompanyDetailPage({
@@ -198,20 +156,13 @@ export default async function CompanyDetailPage({
   params: { id: string };
 }) {
   const companyId = params.id;
-
-  // 1) Auth + active-workspace resolution. Runs BEFORE the timeout so the
-  //    redirect signal is never caught by the race (Requirement 1.1).
   const resolution = await resolveActiveWorkspace();
   if (resolution.status === "redirect") {
     redirect(
-      `${LOGIN_PATH}?${REDIRECT_PARAM}=${encodeURIComponent(
-        `/companies/${companyId}`,
-      )}`,
+      `${LOGIN_PATH}?${REDIRECT_PARAM}=${encodeURIComponent(`/companies/${companyId}`)}`,
     );
   }
 
-  // 2) Workspace-scoped reads, bounded by a 10s timeout. A rejection/timeout
-  //    throws to the sibling error.tsx boundary (Requirement 5.8).
   const repo = resolution.insforge.scoped(resolution.workspace.id);
   const { company, sources, scans, latestComplete } = await withTimeout(
     loadCompanyDetail(repo, companyId),
@@ -219,184 +170,403 @@ export default async function CompanyDetailPage({
     "The company detail did not load within 10 seconds.",
   );
 
-  // 3) Not found within the active workspace → in-page not-found (no leak).
   if (!company) {
     return <CompanyNotFound />;
   }
 
-  const ledgerRows = (latestComplete?.claims ?? []).map(toClaimLedgerRow);
   const verdict = latestComplete?.verdict ?? null;
+  const verdictTone = verdictBadge(verdict);
+  const confidence = verdict?.confidence ?? 0;
+  const riskScore = verdict?.riskScore ?? 0;
+  const signals = latestComplete?.claims ?? [];
 
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
-      {/* Back navigation to the dashboard (coordinates with 23.3/23.4). */}
-      <nav>
-        <Link
-          href="/companies"
-          className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-        >
-          ← Back to companies
+    <div className="flex flex-col gap-6">
+      <nav className="flex items-center gap-2 text-body-sm text-on-surface-variant">
+        <Link href="/companies" className="hover:text-on-surface">
+          Companies
         </Link>
+        <span>›</span>
+        <span className="text-on-surface">{company.name}</span>
       </nav>
 
-      {/* Company header: name + domain (Requirement 5.1) + RunScanButton (5.4). */}
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-bold tracking-tight">{company.name}</h1>
-          <p className="text-muted-foreground">{company.domain}</p>
-        </div>
-        <RunScanButton companyId={company.id} />
-      </header>
+      <section className="glass-card overflow-hidden bg-[linear-gradient(135deg,rgba(91,61,245,0.08),rgba(234,237,255,0.6)_45%,rgba(255,255,255,0.95))] px-8 py-8">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+          <div className="space-y-4">
+            <Badge className={cn("border", verdictTone.className)}>
+              {verdictTone.label}
+            </Badge>
+            <div>
+              <h1 className="font-page-title text-page-title text-on-surface">
+                {company.name}
+              </h1>
+              <p className="mt-1 text-body-md text-on-surface-variant">
+                {company.domain}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 text-body-sm text-on-surface-variant">
+              <span className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-white/80 px-3 py-1">
+                <span className="material-symbols-outlined text-[16px]">language</span>
+                {sources.length} watched source{sources.length === 1 ? "" : "s"}
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-white/80 px-3 py-1">
+                <span className="material-symbols-outlined text-[16px]">radar</span>
+                {scans.length} scan{scans.length === 1 ? "" : "s"}
+              </span>
+            </div>
+          </div>
 
-      {/* Watched sources (Requirement 5.1). */}
-      <section aria-labelledby="watched-sources-heading">
-        <Card>
-          <CardHeader>
-            <CardTitle id="watched-sources-heading" className="text-xl">
-              Watched sources
-            </CardTitle>
-            <CardDescription>
-              The public URLs monitored for this company.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <WatchedSourcesTable
-              sources={sources.map((source) => ({
-                url: source.url,
-                sourceType: source.sourceType,
-              }))}
-            />
-          </CardContent>
-        </Card>
+          <RunScanButton
+            companyId={company.id}
+            label="Run scan"
+            icon="bolt"
+            buttonClassName="h-11 rounded-lg bg-primary px-5 text-on-primary hover:bg-primary-container"
+          />
+        </div>
+
+        <div className="mt-8 grid gap-4 lg:grid-cols-2">
+          <div className="rounded-2xl border border-outline-variant/80 bg-white/85 p-5">
+            <div className="mb-2 flex items-center justify-between text-body-sm text-on-surface-variant">
+              <span>Confidence</span>
+              <span className="font-mono-data text-mono-data text-on-surface">
+                {confidence}%
+              </span>
+            </div>
+            <div className="h-2 rounded-full bg-surface-variant">
+              <div
+                className="h-full rounded-full bg-primary"
+                style={{ width: `${Math.max(confidence, verdict ? 12 : 4)}%` }}
+              />
+            </div>
+          </div>
+          <div className="rounded-2xl border border-outline-variant/80 bg-white/85 p-5">
+            <div className="mb-2 flex items-center justify-between text-body-sm text-on-surface-variant">
+              <span>Risk score</span>
+              <span className="font-mono-data text-mono-data text-on-surface">
+                {riskScore}
+              </span>
+            </div>
+            <div className="h-2 rounded-full bg-surface-variant">
+              <div
+                className={cn(
+                  "h-full rounded-full",
+                  riskScore >= 70
+                    ? "bg-rose-500"
+                    : riskScore >= 40
+                      ? "bg-amber-500"
+                      : "bg-emerald-500",
+                )}
+                style={{ width: `${Math.max(riskScore, verdict ? 12 : 4)}%` }}
+              />
+            </div>
+          </div>
+        </div>
       </section>
 
-      {/* Latest complete results: claims + verdict strategy prediction (Req 5.5).
-          Rendered only when a Complete scan exists. */}
-      {latestComplete ? (
-        <section
-          aria-labelledby="latest-results-heading"
-          className="flex flex-col gap-4"
-        >
-          <h2 id="latest-results-heading" className="text-xl font-semibold">
-            Latest results
-          </h2>
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-            <div className="flex flex-col gap-3">
-              {verdict ? (
-                <>
-                  <StrategyVerdictCard
-                    strategyPrediction={verdict.strategyPrediction}
-                    confidence={verdict.confidence}
-                  />
-                  <div>
-                    <RiskBadge score={verdict.riskScore} />
-                  </div>
-                </>
-              ) : (
-                <Card>
-                  <CardHeader>
-                    <CardDescription>Strategy prediction</CardDescription>
-                    <CardTitle className="text-lg">
-                      No verdict recorded
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      The most recent complete scan did not produce a verdict.
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Claims</CardTitle>
-                <CardDescription>
-                  Extracted from the most recent complete scan.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ClaimLedger claims={ledgerRows} />
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-      ) : null}
+      <div className="flex flex-wrap gap-2">
+        {[
+          "Overview",
+          "Sources",
+          "Scans",
+          "Claims",
+          "Evidence",
+          "Settings",
+        ].map((tab, index) => (
+          <button
+            key={tab}
+            type="button"
+            className={cn(
+              "rounded-full px-4 py-2 text-body-sm transition",
+              index === 0
+                ? "bg-primary text-on-primary"
+                : "bg-surface-container-low text-on-surface-variant hover:bg-surface-container",
+            )}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
 
-      {/* Scan history, newest → oldest (Requirement 5.2) with empty state (5.3). */}
-      <section aria-labelledby="scan-history-heading">
-        <Card>
-          <CardHeader>
-            <CardTitle id="scan-history-heading" className="text-xl">
-              Scan history
-            </CardTitle>
-            <CardDescription>
-              Most recent scans first, with status and start time.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {scans.length === 0 ? (
-              <p className="text-sm text-muted-foreground" role="status">
-                No scans yet for this company. Run a scan to capture evidence.
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(300px,0.9fr)]">
+        <section className="glass-card p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+                Current verdict
               </p>
-            ) : (
-              <ul className="flex flex-col divide-y">
-                {scans.map((scan) => (
-                  <li key={scan.id}>
-                    <Link
-                      href={`/scans/${scan.id}`}
-                      className="flex items-center justify-between gap-4 py-3 transition-colors hover:bg-muted/50"
-                    >
-                      <span className="flex items-center gap-3">
-                        <Badge variant={scanStatusVariant(scan.status)}>
-                          {SCAN_STATUS_LABELS[scan.status]}
-                        </Badge>
-                        {scan.status === "failed" && scan.failureReason ? (
-                          <span className="text-sm text-muted-foreground">
-                            {scan.failureReason}
-                          </span>
-                        ) : null}
-                      </span>
-                      <time
-                        dateTime={scan.createdAt}
-                        className="text-sm text-muted-foreground"
-                      >
-                        {formatTimestamp(scan.createdAt)}
-                      </time>
-                    </Link>
+              <h2 className="mt-2 font-section-title text-[24px] font-semibold text-on-surface">
+                {verdict ? strategyLabel(verdict.strategyPrediction) : "No completed verdict yet"}
+              </h2>
+            </div>
+            {latestComplete ? (
+              <span className="rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-body-sm text-on-surface-variant">
+                Updated {formatTimestamp(latestComplete.scan.createdAt)}
+              </span>
+            ) : null}
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4">
+              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-on-surface-variant">
+                Supporting evidence
+              </p>
+              <ul className="mt-3 space-y-3 text-body-md text-on-surface">
+                {(verdict?.keyEvidence ?? []).slice(0, 4).map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-primary">
+                      check_circle
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+                {verdict?.keyEvidence.length ? null : (
+                  <li className="text-body-md text-on-surface-variant">
+                    Run a completed scan to populate supporting evidence.
+                  </li>
+                )}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4">
+              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-on-surface-variant">
+                Counterpoints
+              </p>
+              <ul className="mt-3 space-y-3 text-body-md text-on-surface">
+                {(verdict?.counterEvidence ?? []).slice(0, 4).map((item) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-amber-600">
+                      warning
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+                {verdict?.counterEvidence.length ? null : (
+                  <li className="text-body-md text-on-surface-variant">
+                    No counter-evidence was recorded for the latest complete scan.
+                  </li>
+                )}
+              </ul>
+            </div>
+          </div>
+
+          {verdict?.recommendedActions?.length ? (
+            <div className="mt-6 rounded-2xl border border-outline-variant/70 bg-white/80 p-4">
+              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+                Recommended next steps
+              </p>
+              <ul className="mt-3 grid gap-3 text-body-md text-on-surface md:grid-cols-2">
+                {verdict.recommendedActions.map((action) => (
+                  <li key={action} className="flex gap-3 rounded-xl bg-surface-container-low px-3 py-3">
+                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-primary">
+                      task_alt
+                    </span>
+                    <span>{action}</span>
                   </li>
                 ))}
               </ul>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          ) : null}
+        </section>
+
+        <aside className="glass-card p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+                Intelligence timeline
+              </p>
+              <h2 className="mt-2 font-section-title text-section-title text-on-surface">
+                Recent scan activity
+              </h2>
+            </div>
+          </div>
+
+          {scans.length === 0 ? (
+            <p className="mt-6 text-body-md text-on-surface-variant">
+              No scans yet. Trigger a scan to start building an evidence timeline.
+            </p>
+          ) : (
+            <ol className="mt-6 space-y-4">
+              {scans.slice(0, 6).map((scan) => (
+                <li key={scan.id} className="flex gap-3">
+                  <div className="mt-1 h-3 w-3 rounded-full bg-primary" />
+                  <div className="min-w-0 flex-1 rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <Badge className={cn("border", statusBadge(scan.status))}>
+                        {SCAN_STATUS_LABELS[scan.status]}
+                      </Badge>
+                      <span className="text-body-sm text-on-surface-variant">
+                        {formatTimestamp(scan.createdAt)}
+                      </span>
+                    </div>
+                    <p className="mt-3 text-body-md text-on-surface">
+                      Scan <span className="font-mono-data">{scan.id.slice(0, 8)}</span>
+                    </p>
+                    {scan.failureReason ? (
+                      <p className="mt-2 text-body-sm text-error">{scan.failureReason}</p>
+                    ) : null}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
+        </aside>
+      </div>
+
+      <section className="glass-card p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+              Strategy signals
+            </p>
+            <h2 className="mt-2 font-section-title text-section-title text-on-surface">
+              Extracted changes from the latest completed scan
+            </h2>
+          </div>
+          {latestComplete ? (
+            <span className="rounded-full border border-outline-variant bg-surface-container-low px-3 py-1 text-body-sm text-on-surface-variant">
+              {signals.length} claims captured
+            </span>
+          ) : null}
+        </div>
+
+        {signals.length === 0 ? (
+          <p className="mt-6 text-body-md text-on-surface-variant">
+            No claim signals yet. Once a scan completes, SignalVault will surface classified evidence here.
+          </p>
+        ) : (
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            {signals.slice(0, 6).map((claim) => (
+              <article
+                key={claim.id}
+                className="rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4"
+              >
+                <div className="flex flex-wrap items-center gap-2 text-body-sm text-on-surface-variant">
+                  <span className="rounded-full bg-white px-3 py-1 font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+                    {claim.claimType}
+                  </span>
+                  {claim.claimStatus ? (
+                    <span className="rounded-full bg-white px-3 py-1 text-body-sm text-on-surface-variant">
+                      {claim.claimStatus}
+                    </span>
+                  ) : null}
+                  <span className="rounded-full bg-white px-3 py-1 font-mono-data text-mono-data text-on-surface">
+                    {claim.confidence}% confidence
+                  </span>
+                </div>
+                <h3 className="mt-4 font-section-title text-body-md font-semibold text-on-surface">
+                  {claim.statementText}
+                </h3>
+                {claim.evidenceText ? (
+                  <p className="mt-3 text-body-sm text-on-surface-variant">
+                    {claim.evidenceText}
+                  </p>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        )}
       </section>
-    </main>
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <section className="glass-card p-6">
+          <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+            Watched sources
+          </p>
+          <div className="mt-4 space-y-3">
+            {sources.map((source) => (
+              <div
+                key={source.id}
+                className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4"
+              >
+                <div>
+                  <p className="text-body-md font-medium text-on-surface">{source.url}</p>
+                  <p className="mt-1 text-body-sm text-on-surface-variant">
+                    {source.sourceType}
+                  </p>
+                </div>
+                <span className="rounded-full bg-white px-3 py-1 text-body-sm text-on-surface-variant">
+                  Watching
+                </span>
+              </div>
+            ))}
+            {sources.length === 0 ? (
+              <p className="text-body-md text-on-surface-variant">
+                No watched sources have been configured for this company.
+              </p>
+            ) : null}
+          </div>
+        </section>
+
+        <section className="glass-card p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
+                Scan history
+              </p>
+              <h2 className="mt-2 font-section-title text-section-title text-on-surface">
+                Latest runs
+              </h2>
+            </div>
+            <Link
+              href="/companies"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-lg")}
+            >
+              All companies
+            </Link>
+          </div>
+          {scans.length === 0 ? (
+            <p className="mt-6 text-body-md text-on-surface-variant">
+              No scans yet for this company. Run a scan to capture evidence.
+            </p>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {scans.map((scan) => (
+                <li key={scan.id}>
+                  <Link
+                    href={`/scans/${scan.id}`}
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-outline-variant/70 bg-surface-container-low p-4 transition hover:bg-surface-container"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Badge className={cn("border", statusBadge(scan.status))}>
+                        {SCAN_STATUS_LABELS[scan.status]}
+                      </Badge>
+                      <span className="text-body-md text-on-surface">
+                        {scan.id.slice(0, 8)}
+                      </span>
+                    </div>
+                    <span className="text-body-sm text-on-surface-variant">
+                      {formatTimestamp(scan.createdAt)}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+    </div>
   );
 }
 
-/**
- * In-page not-found state for a company id that is absent from the active
- * workspace (Requirement 1.5). Distinct from the load-failure boundary
- * (`error.tsx`): this is an expected, non-error outcome, so it offers a path
- * back to the dashboard rather than a retry.
- */
 function CompanyNotFound() {
   return (
-    <main className="mx-auto flex w-full max-w-xl flex-col items-center gap-6 px-6 py-24 text-center">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold tracking-tight">Company not found</h1>
-        <p className="text-muted-foreground">
-          We couldn&rsquo;t find this company in your workspace. It may have been
-          removed, or the link may be incorrect.
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-4 rounded-[28px] border border-outline-variant bg-surface-container-lowest px-8 py-14 text-center shadow-[0_24px_60px_-34px_rgba(35,28,95,0.28)]">
+      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-container text-primary">
+        <span className="material-symbols-outlined text-[28px]">domain_disabled</span>
+      </div>
+      <div className="space-y-2">
+        <h1 className="font-section-title text-[24px] font-semibold text-on-surface">
+          Company not found
+        </h1>
+        <p className="text-body-md text-on-surface-variant">
+          We couldn&apos;t find this company in your workspace. It may have been removed, or the link may be incorrect.
         </p>
       </div>
       <Link
         href="/companies"
-        className={cn(buttonVariants({ variant: "outline" }))}
+        className={cn(buttonVariants({ variant: "outline" }), "rounded-lg px-5")}
       >
         Back to companies
       </Link>
-    </main>
+    </div>
   );
 }

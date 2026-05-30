@@ -2,10 +2,8 @@
 
 import * as React from "react";
 
-import {
-  ScanProgressTimeline,
-  type ScanStatus,
-} from "@/components/scan-progress-timeline";
+import { ScanProgressTimeline } from "@/components/scan-progress-timeline";
+import type { ScanStatus } from "@/components/company-card";
 
 /**
  * Client component wrapper for ScanProgressTimeline that re-triggers
