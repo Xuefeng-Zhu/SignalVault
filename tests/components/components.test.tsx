@@ -175,6 +175,8 @@ describe("DiffViewer — diff display and error fallback (Req 11.4)", () => {
           addedText: "Enterprise plan added",
           removedText: "Starter plan removed",
           modifiedSections: [],
+          priorSnapshotId: "prior-snap-1",
+          currentSnapshotId: "current-snap-1",
         }}
       />,
     );
@@ -192,6 +194,8 @@ describe("DiffViewer — diff display and error fallback (Req 11.4)", () => {
           addedText: "new content here",
           removedText: "old content removed",
           modifiedSections: [],
+          priorSnapshotId: "prior-snap-2",
+          currentSnapshotId: "current-snap-2",
         }}
       />,
     );
@@ -224,11 +228,13 @@ describe("ClaimLedger — renders claims and empty state (Req 14.4)", () => {
             claimType: "pricing",
             claimStatus: "strengthened",
             confidence: 0.9,
+            evidenceText: "Evidence text",
           },
           {
             statementText: "New enterprise tier added",
             claimType: "pricing",
             confidence: 0.8,
+            evidenceText: "Evidence text",
           },
         ]}
       />,

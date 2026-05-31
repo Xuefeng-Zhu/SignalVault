@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireActiveWorkspace } from "@/lib/api/workspace";
+import { getModelClient } from "@/lib/adapters/factory";
 
 interface ChatRequestBody {
   message: string;
@@ -84,8 +85,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: replace this placeholder response with a live AI backend call.
-    const reply = generateDemoReply(message, companyName);
+    // Try live model inference first; fall back to demo knowledge on failure.
+    let reply: string;
+    try {
+      const model = getModelClient();
+      const systemPrompt = [
+        "You are a competitive intelligence analyst working within SignalVault.",
+        "Your job is to answer questions about monitored companies using data from SignalVault's scans,",
+        "including pricing changes, product updates, hiring signals, and strategic moves.",
+        `The user is asking about: ${companyName} (${body.companyDomain ?? "unknown domain"}).`,
+        "Be concise, data-driven, and actionable. If you lack specific data, say so clearly.",
+      ].join(" ");
+
+      const messages = (body.history ?? [])
+        .filter((m) => m.role === "user" || m.role === "assistant")
+        .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
+      messages.push({ role: "user" as const, content: message });
+
+      const result = await model.complete({
+        system: systemPrompt,
+        messages,
+        responseSchemaName: "ai-chat",
+        timeoutMs: 30_000,
+      });
+      reply = result.text;
+    } catch {
+      // Fallback to demo knowledge when model inference fails.
+      reply = generateDemoReply(message, companyName);
+    }
     return NextResponse.json({ reply });
   } catch {
     return NextResponse.json(

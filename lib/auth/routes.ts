@@ -30,7 +30,14 @@ export const REDIRECT_PARAM = "redirectTo";
  * `/` (landing), `/login` (auth flow), and static assets are intentionally
  * absent so they remain publicly reachable.
  */
-export const PROTECTED_PREFIXES = ["/companies", "/scans"] as const;
+export const PROTECTED_PREFIXES = [
+  "/companies",
+  "/scans",
+  "/claims",
+  "/evidence-vault",
+  "/integrations",
+  "/settings",
+] as const;
 
 /**
  * True when `pathname` is a protected app route. Matches a prefix exactly or as

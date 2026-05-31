@@ -45,6 +45,7 @@ describe("signalVaultScanWorkflow — Demo Mode end-to-end", () => {
     ]);
     const scan = scanRows[0];
     expect(scan).toBeDefined();
+    if (!scan) throw new Error("scan not created");
 
     // Load the watched sources to build the URL list.
     const sources = await repo.companies.listSources(DEMO_COMPANY_ID);
