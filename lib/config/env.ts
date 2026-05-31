@@ -37,11 +37,9 @@ export type AdapterConfiguration = Record<AdapterName, boolean>;
  */
 export const CREDENTIAL_ENV_VARS = [
   "APIFY_TOKEN",
-  "BOX_CLIENT_ID",
-  "BOX_CLIENT_SECRET",
-  "BOX_DEVELOPER_TOKEN",
   "INSFORGE_API_URL",
   "INSFORGE_API_KEY",
+  "INSFORGE_STORAGE_BUCKET",
   "MODEL_API_KEY",
   "MODEL_BASE_URL",
 ] as const;
@@ -110,39 +108,20 @@ export function apifyToken(): string | undefined {
 }
 
 /**
- * Box is configured for live operation when either an OAuth client pair
- * (BOX_CLIENT_ID + BOX_CLIENT_SECRET) or a developer token is present.
+ * Storage (formerly Box) is configured when InsForge credentials are present.
+ * The evidence bucket name defaults to "evidence" if INSFORGE_STORAGE_BUCKET
+ * is not set.
  */
 export function isBoxConfigured(): boolean {
-  const hasClientPair =
-    isPresent("BOX_CLIENT_ID") && isPresent("BOX_CLIENT_SECRET");
-  const hasDeveloperToken = isPresent("BOX_DEVELOPER_TOKEN");
-  return hasClientPair || hasDeveloperToken;
+  return isInsforgeConfigured();
 }
 
 /**
- * The Box developer token, or undefined when unset/blank. A Box developer token
- * is consumed directly as an OAuth 2.0 bearer access token. Centralized here so
- * the live {@link import('@/lib/adapters/types').BoxClient} never reads
- * `process.env` directly (Requirement 22.1: credentials are read only through
- * this server-only module).
+ * The InsForge storage bucket name for evidence artifacts.
+ * Defaults to "evidence" if not explicitly set.
  */
-export function boxDeveloperToken(): string | undefined {
-  return readEnv("BOX_DEVELOPER_TOKEN");
-}
-
-/**
- * The Box OAuth 2.0 client id, or undefined when unset/blank. Used (with
- * {@link boxClientSecret}) for the client-credentials grant when no developer
- * token is supplied.
- */
-export function boxClientId(): string | undefined {
-  return readEnv("BOX_CLIENT_ID");
-}
-
-/** The Box OAuth 2.0 client secret, or undefined when unset/blank. */
-export function boxClientSecret(): string | undefined {
-  return readEnv("BOX_CLIENT_SECRET");
+export function storageBucketName(): string {
+  return readEnv("INSFORGE_STORAGE_BUCKET") ?? "evidence";
 }
 
 /**

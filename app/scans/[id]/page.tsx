@@ -119,8 +119,8 @@ export default async function ScanDetailPage({
     evidenceText: c.evidenceText,
   }));
 
-  const boxUrl = scan.boxScanFolderId
-    ? `https://app.box.com/folder/${scan.boxScanFolderId}`
+  const evidenceUrl = scan.boxScanFolderId
+    ? `${process.env.NEXT_PUBLIC_INSFORGE_API_URL ?? ""}/api/storage/buckets/evidence/objects?prefix=${encodeURIComponent(scan.boxScanFolderId + "/")}`
     : null;
   const isSimulatedBox = scan.boxScanFolderId?.startsWith("mock-") ?? false;
 
@@ -346,16 +346,16 @@ export default async function ScanDetailPage({
         </div>
 
         <aside className="space-y-6">
-          {boxUrl ? (
+          {evidenceUrl ? (
             <section className="glass-card p-6">
               <p className="font-label-caps text-label-caps uppercase tracking-[0.08em] text-primary">
                 Evidence folder
               </p>
               <h2 className="mt-2 font-section-title text-section-title text-on-surface">
-                Box artifacts
+                Evidence storage
               </h2>
               <div className="mt-6">
-                <BoxEvidenceLink url={boxUrl} simulated={isSimulatedBox} />
+                <BoxEvidenceLink url={evidenceUrl} simulated={isSimulatedBox} />
               </div>
             </section>
           ) : null}
@@ -370,12 +370,12 @@ export default async function ScanDetailPage({
             <div className="mt-6">
               <EvidenceArtifactList
                 artifacts={
-                  boxUrl
+                  evidenceUrl
                     ? [
                         {
                           type: "report",
                           name: "Scan evidence folder",
-                          boxUrl,
+                          boxUrl: evidenceUrl,
                           simulated: isSimulatedBox,
                         },
                       ]

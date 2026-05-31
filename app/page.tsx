@@ -8,7 +8,7 @@ const TAGLINE = "Turn public web changes into auditable market intelligence.";
 
 const INTEGRATIONS: { name: string; role: string }[] = [
   { name: "Apify", role: "Web capture" },
-  { name: "Box", role: "Evidence archive" },
+  { name: "InsForge Storage", role: "Evidence archive" },
   { name: "Mastra", role: "Reasoning workflows" },
   { name: "InsForge", role: "Workspace data" },
 ];

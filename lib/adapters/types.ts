@@ -132,7 +132,7 @@ export type ScanStatus =
   | "failed";
 
 /** External provider an integration record holds credentials for. */
-export type IntegrationProvider = "Apify" | "Box";
+export type IntegrationProvider = "Apify" | "Box" | "InsForge Storage";
 
 /** A workspace tenant boundary (mirrors the `workspaces` table). */
 export interface Workspace {

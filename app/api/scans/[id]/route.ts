@@ -1,4 +1,4 @@
-import { getBoxClient } from "@/lib/adapters/factory";
+import { getBoxClient as getStorageClient } from "@/lib/adapters/factory";
 import { errorResponse, jsonResponse } from "@/lib/api/errors";
 import { requireActiveWorkspace } from "@/lib/api/workspace";
 import { shapeScanDetail } from "@/lib/api/scan-detail";
@@ -74,12 +74,12 @@ export async function GET(
 
     // 5) Derive the Box evidence-folder link purely (folderWebLink makes no
     //    network call). Construction is cheap and reads no secrets at call time.
-    const box = getBoxClient();
+    const storage = getStorageClient();
     const payload = shapeScanDetail(
       { scan, snapshots, diffs, claims, verdict },
       {
-        folderWebLink: (folderId) => box.folderWebLink(folderId),
-        boxSimulated: box.mode === "demo",
+        folderWebLink: (folderId) => storage.folderWebLink(folderId),
+        boxSimulated: storage.mode === "demo",
       },
     );
 

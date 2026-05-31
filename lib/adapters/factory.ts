@@ -23,7 +23,7 @@ import {
 // point that picks between them (Requirement 23.1).
 import { createLiveApifyClient } from "./apify/live";
 import { DemoApifyClient } from "./apify/demo";
-import { createLiveBoxClient } from "./box/live";
+import { createLiveStorageClient } from "./storage/live";
 import { createDemoBoxClient } from "./box/demo";
 import { createLiveInsForgeClient } from "./insforge/live";
 import { createDemoInsForgeClient } from "./insforge/demo";
@@ -101,7 +101,7 @@ function implPairs(context: AdapterContext): AdapterImplPairs {
   };
 
   const box: AdapterImplPair<BoxClient> = {
-    live: () => createLiveBoxClient(),
+    live: () => createLiveStorageClient(),
     demo: () => createDemoBoxClient(),
   };
 

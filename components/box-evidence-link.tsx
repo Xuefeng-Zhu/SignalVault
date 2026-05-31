@@ -28,7 +28,7 @@ export function BoxEvidenceLink({
   label,
   className,
 }: BoxEvidenceLinkProps) {
-  const text = label ?? "View evidence in Box";
+  const text = label ?? "View evidence storage";
 
   return (
     <a
