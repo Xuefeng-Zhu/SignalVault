@@ -80,45 +80,9 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     // In browser mode the SDK already sets window.location.href internally
   }
 
-  async function handleDemoSignIn() {
-    setError(null);
-    const res = await fetch("/api/auth/demo", { method: "POST" });
-    if (!res.ok) {
-      setError("Demo sign-in failed.");
-      return;
-    }
-    startTransition(() => {
-      router.push(redirectTo);
-      router.refresh();
-    });
-  }
 
   return (
     <div className="space-y-6">
-      {/* Demo sign-in */}
-      <button
-        type="button"
-        onClick={handleDemoSignIn}
-        disabled={isPending}
-        className="flex w-full items-center justify-center gap-3 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary/90 disabled:opacity-50"
-      >
-        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-        </svg>
-        Sign in with demo account
-      </button>
-
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-outline-variant" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-on-surface-variant">
-            or use a real account
-          </span>
-        </div>
-      </div>
-
       {/* OAuth buttons */}
       <div className="space-y-3">
         <button

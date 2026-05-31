@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { isDemoModeEnabled } from "@/lib/auth/routes";
-
 interface ChatRequestBody {
   message: string;
   companyName: string;
@@ -79,13 +77,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (isDemoModeEnabled(process.env.DEMO_MODE)) {
-      const reply = generateDemoReply(message, companyName);
-      return NextResponse.json({ reply });
-    }
-
-    // In production mode, this would call the InsForge AI Gateway or OpenRouter.
-    // For now, fall back to the demo knowledge base.
+    // TODO: replace this placeholder response with a live AI backend call.
     const reply = generateDemoReply(message, companyName);
     return NextResponse.json({ reply });
   } catch {

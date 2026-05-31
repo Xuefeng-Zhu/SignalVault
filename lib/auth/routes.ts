@@ -4,8 +4,8 @@
  * This module is deliberately free of any `server-only` import and of every
  * Node-only API so it can be imported from BOTH the Edge middleware
  * (`middleware.ts`) and server components / route handlers. It only knows which
- * routes are protected, where the auth flow lives, and how to parse the demo
- * flag — no credentials and no I/O.
+ * routes are protected and where the auth flow lives — no credentials and no
+ * I/O.
  */
 
 /**
@@ -41,21 +41,4 @@ export function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-}
-
-/**
- * Parse a raw `DEMO_MODE` environment value the same way the server-only
- * `lib/config/env.ts#isDemoMode` does: "true", "1", and "yes" (case-insensitive,
- * surrounding whitespace ignored) are true; everything else — including an unset
- * value — is false.
- *
- * Duplicated here (rather than imported) on purpose: `lib/config/env.ts` is a
- * `server-only` module and must not be pulled into the Edge middleware bundle.
- * The parsing rule is kept identical so the two never diverge.
- */
-export function isDemoModeEnabled(rawDemoMode: string | undefined): boolean {
-  if (rawDemoMode === undefined) {
-    return false;
-  }
-  return ["true", "1", "yes"].includes(rawDemoMode.trim().toLowerCase());
 }

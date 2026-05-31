@@ -25,11 +25,10 @@ import type {
  *
  * Adapters are the sole door to external services (Requirement 23.1); the
  * factory is the single point at which a live or demo implementation is chosen.
- * The choice is made per adapter from the {@link AdapterRunModes} that
- * `resolveRunMode()` already computed from `DEMO_MODE` + per-adapter
- * `isConfigured()` (Requirements 18.1, 18.2). Because each adapter is selected
- * independently, one run can mix modes — e.g. live InsForge with demo Apify —
- * exactly as Requirement 18.2 allows.
+ * The choice is made per adapter from the supplied {@link AdapterRunModes}.
+ * Runtime code currently passes all-live modes via `resolveRunMode()`, while
+ * tests can still exercise explicit demo or mixed-mode selections by supplying
+ * their own modes.
  */
 
 /* -------------------------------------------------------------------------- */

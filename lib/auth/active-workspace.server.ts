@@ -7,7 +7,7 @@ import {
 } from "@insforge/sdk/ssr";
 
 import { getInsForgeClient } from "@/lib/adapters/factory";
-import { insforgeApiKey, insforgeApiUrl, isDemoMode } from "@/lib/config/env";
+import { insforgeApiKey, insforgeApiUrl } from "@/lib/config/env";
 import type { Session } from "@/lib/adapters/types";
 
 import {
@@ -17,7 +17,7 @@ import {
 
 /**
  * Server-only entry point for active-workspace resolution (task 8.1,
- * Requirements 1.1, 1.2, 1.3, 1.6, 1.7).
+ * Requirements 1.1, 1.2, 1.3, 1.4, 1.7).
  *
  * Pages and route handlers call {@link resolveActiveWorkspace} to obtain the
  * single active workspace for the current request, together with the InsForge
@@ -40,9 +40,6 @@ import {
  *
  * ## Guarantees
  *
- * - Demo_Mode → the demo client's single default workspace, no auth required
- *   (Requirement 1.6); if it somehow cannot provide one, a `redirect` is
- *   returned so the System falls back to the auth flow (Requirement 1.7).
  * - Authenticated → exactly one active workspace, bootstrapping a workspace +
  *   owner membership when the user has none (Requirements 1.2, 1.3).
  * - Unauthenticated (no/invalid session) → `redirect`, so the caller renders no
@@ -50,32 +47,10 @@ import {
  *   before a page renders; this is the authoritative server-side backstop.
  */
 export async function resolveActiveWorkspace(): Promise<ActiveWorkspaceResolution> {
-  // Demo_Mode: bypass auth entirely; the demo InsForge store owns the single
-  // default workspace (Requirement 1.6). `getInsForgeClient()` resolves to the
-  // demo client because `resolveRunMode()` returns demo for every adapter.
-  if (isDemoMode()) {
-    const insforge = getInsForgeClient();
-    return resolveActiveWorkspaceCore({
-      insforge,
-      demoMode: true,
-      session: null,
-    });
-  }
-
   const accessToken = readAccessTokenCookie();
   if (!accessToken) {
     // No session cookie → unauthenticated (Requirement 1.1).
     return { status: "redirect", reason: "no InsForge access-token cookie" };
-  }
-
-  // Demo session token: treat as demo mode so the app works without a live backend.
-  if (accessToken.startsWith("demo_")) {
-    const insforge = getInsForgeClient();
-    return resolveActiveWorkspaceCore({
-      insforge,
-      demoMode: true,
-      session: null,
-    });
   }
 
   const session = await readSession(accessToken);
@@ -90,7 +65,6 @@ export async function resolveActiveWorkspace(): Promise<ActiveWorkspaceResolutio
   const insforge = getInsForgeClient({ accessToken });
   return resolveActiveWorkspaceCore({
     insforge,
-    demoMode: false,
     session,
     accessToken,
   });

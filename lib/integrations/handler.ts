@@ -3,7 +3,7 @@ import "server-only";
 import type { NextResponse } from "next/server";
 
 import type { IntegrationProvider } from "@/lib/adapters/types";
-import { credentialEncryptionSecret, isDemoMode } from "@/lib/config/env";
+import { credentialEncryptionSecret } from "@/lib/config/env";
 import { jsonError, jsonOk, parseJsonBody } from "@/lib/api/errors";
 import { requireActiveWorkspace } from "@/lib/api/workspace";
 
@@ -21,14 +21,11 @@ import {
  * are thin wrappers that pass their {@link IntegrationProvider} here, so the
  * security-critical logic lives in exactly one place.
  *
- * Flow (Requirements 21.6, 22.2, 22.3, 22.4, 22.5):
+ * Flow (Requirements 21.6, 22.2, 22.3, 22.5):
  *  1. Resolve the active workspace; unauthenticated → 401 (no scoped data).
  *  2. Validate the request body with the provider's Zod schema → 400 on failure.
- *  3. Decide the persisted value SERVER-SIDE:
- *       - Demo_Mode → a clearly-mock placeholder, `isMock: true` (22.4); the
- *         plaintext is never stored.
- *       - Live → AES-256-GCM ciphertext of the canonical config, `isMock: false`;
- *         the persisted value never equals the plaintext (22.3).
+ *  3. Encrypt the canonical config SERVER-SIDE as AES-256-GCM ciphertext,
+ *     `isMock: false`; the persisted value never equals the plaintext (22.3).
  *  4. Upsert into the workspace-scoped `integrations` repo (onConflict
  *     workspace_id, provider).
  *  5. Return a browser response containing ONLY placeholders — never the
@@ -51,10 +48,8 @@ export async function handleStoreIntegration(
     return parsed.response;
   }
 
-  // 3. Decide what is persisted. The plaintext (canonical serialization of the
-  //    validated config) never leaves the server; it is either encrypted or
-  //    discarded in favor of a mock placeholder.
-  const demoMode = isDemoMode();
+  // 3. Persist an encrypted representation. The plaintext (canonical
+  //    serialization of the validated config) never leaves the server.
   const plaintext = serializeConfig(provider, parsed.data);
 
   let stored;
@@ -62,7 +57,7 @@ export async function handleStoreIntegration(
     stored = buildStoredCredential({
       provider,
       plaintext,
-      demoMode,
+      demoMode: false,
       secret: credentialEncryptionSecret(),
     });
   } catch (error) {

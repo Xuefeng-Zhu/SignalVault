@@ -41,25 +41,21 @@ import { createDemoModelClient } from "./model/demo";
  *
  * ## How selection works
  *
- * `resolveRunMode()` (in `lib/config/env.ts`) has already collapsed `DEMO_MODE`
- * + per-adapter `isConfigured()` into a per-adapter {@link AdapterRunModes}:
+ * `resolveRunMode()` (in `lib/config/env.ts`) now resolves every runtime adapter
+ * to `"live"`. Tests can still pass explicit {@link AdapterRunModes} overrides
+ * to exercise demo or mixed-mode selection.
  *
- *   - `DEMO_MODE=true` → every adapter resolves to `"demo"` and no live
- *     credentials are consulted (Requirement 18.1).
- *   - otherwise each adapter resolves to `"live"` only when ITS OWN credentials
- *     are present, and to `"demo"` when they are missing (Requirement 18.2).
- *
- * For each adapter the factory then constructs the live implementation when its
+ * For each adapter the factory constructs the live implementation when its
  * resolved mode is `"live"`, and the demo implementation otherwise. The pure
  * selection logic lives in {@link selectAdapters} / {@link selectImpl} in
  * `./factory-core` (no `server-only`, unit-tested directly); this module only
  * supplies the lazy live/demo constructor pairs and the resolved modes.
  *
- * ## Mixed modes within one run (Requirement 18.2)
+ * ## Test-only mixed modes
  *
- * Selection is per adapter and fully independent, so a single run can mix live
- * and demo — e.g. live InsForge + live Model while Apify and Box fall back to
- * demo because their tokens are absent. Construction is lazy: only the selected
+ * Selection is still per adapter and fully independent, so tests can construct
+ * mixed sets — e.g. live InsForge + live Model with demo Apify/Box — by passing
+ * explicit mode overrides. Construction is lazy: only the selected
  * implementation of each adapter is instantiated, so the demo path never builds
  * a live client (and never touches its credentials), and vice versa.
  *

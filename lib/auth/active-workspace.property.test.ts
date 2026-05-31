@@ -27,15 +27,12 @@
 //   * N === 0 -> a new workspace was created AND exactly one owner membership
 //               now exists for the user, matching the resolved workspace
 //               (Req 1.3).
-// A second property cross-checks Demo_Mode (Req 1.6): the demo client always
-// resolves the single default workspace regardless of the session.
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 
 import { pbtParams } from "../../tests/fast-check.config";
 import { FakeDatabase } from "@/lib/adapters/insforge/fake-database";
 import { LiveInsForgeClient } from "@/lib/adapters/insforge/live-repository";
-import { createDemoInsForgeClient } from "@/lib/adapters/insforge/demo-store";
 import type { DbRow } from "@/lib/adapters/insforge/mappers";
 import type { Session } from "@/lib/adapters/types";
 
@@ -184,7 +181,6 @@ describe("Property 3: authentication establishes exactly one active workspace (R
         // Exercise the REAL getActiveWorkspace logic via the pure resolution core.
         const result = await resolveActiveWorkspaceCore({
           insforge,
-          demoMode: false,
           session,
           accessToken: "token-xyz",
         });
@@ -243,34 +239,6 @@ describe("Property 3: authentication establishes exactly one active workspace (R
           }
         }
       }),
-      pbtParams(),
-    );
-  });
-
-  it("resolves exactly one default workspace in Demo_Mode regardless of session (Req 1.6)", async () => {
-    await fc.assert(
-      fc.asyncProperty(
-        fc.option(fc.hexaString({ minLength: 1, maxLength: 8 }), { nil: null }),
-        async (userSuffix) => {
-          const insforge = createDemoInsForgeClient();
-          const session: Session | null =
-            userSuffix === null ? null : { userId: `u-${userSuffix}` };
-
-          const result = await resolveActiveWorkspaceCore({
-            insforge,
-            demoMode: true,
-            session,
-          });
-
-          expect(result.status).toBe("resolved");
-          if (result.status !== "resolved") {
-            return;
-          }
-          // Exactly one default demo workspace, and it is the single default.
-          expect(result.workspace.id).toBe(insforge.defaultWorkspaceId);
-          expect(result.workspace.isDemo).toBe(true);
-        },
-      ),
       pbtParams(),
     );
   });

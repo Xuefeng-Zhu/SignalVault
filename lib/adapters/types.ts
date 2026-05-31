@@ -40,7 +40,7 @@ export type RunMode = "live" | "demo";
 export interface Adapter {
   /** True when all required credentials for live operation are present. */
   isConfigured(): boolean;
-  /** Resolved mode for this adapter given DEMO_MODE and credential presence. */
+  /** Resolved mode for this adapter in the current run. */
   readonly mode: RunMode;
 }
 

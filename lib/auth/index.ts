@@ -18,7 +18,6 @@ export {
   REDIRECT_PARAM,
   PROTECTED_PREFIXES,
   isProtectedPath,
-  isDemoModeEnabled,
 } from "./routes";
 
 export {

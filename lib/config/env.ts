@@ -10,9 +10,8 @@ import "server-only";
  * server-side code paths that are not delivered to the browser).
  *
  * Requirement 22.6 fixes the exact set of environment variables that hold
- * credentials. Requirement 18.2 / 24.x require that each adapter independently
- * falls back to demo behavior when its own credentials are missing, even when
- * the run is nominally live.
+ * credentials. Runtime code always resolves adapters in live mode; tests may
+ * still opt into demo adapters explicitly through factory overrides.
  *
  * Note: a local `RunMode` type is defined here to avoid a build-time dependency
  * on `lib/adapters/types.ts` (which is authored by a parallel task). The
@@ -37,7 +36,6 @@ export type AdapterConfiguration = Record<AdapterName, boolean>;
  * {@link readEnv} so tests can mutate `process.env` between calls.
  */
 export const CREDENTIAL_ENV_VARS = [
-  "DEMO_MODE",
   "APIFY_TOKEN",
   "BOX_CLIENT_ID",
   "BOX_CLIENT_SECRET",
@@ -93,19 +91,6 @@ function readEnv(name: CredentialEnvVar): string | undefined {
 /** True when a credential value is present and non-empty. */
 function isPresent(name: CredentialEnvVar): boolean {
   return readEnv(name) !== undefined;
-}
-
-/**
- * Parse `DEMO_MODE`. Treats "true", "1", and "yes" (case-insensitive,
- * surrounding whitespace ignored) as true; every other value, and an unset
- * variable, as false.
- */
-export function isDemoMode(): boolean {
-  const value = readEnv("DEMO_MODE");
-  if (value === undefined) {
-    return false;
-  }
-  return ["true", "1", "yes"].includes(value.toLowerCase());
 }
 
 /**
@@ -261,9 +246,7 @@ export function readModelProviderCredentials(): ModelProviderCredentials {
  *
  * This value is read ONLY by the server-only credential vault
  * (`lib/security/crypto.ts` via `lib/integrations/*`) and is never returned to
- * the browser (Requirement 22.1). In Demo_Mode a real secret is not required:
- * the vault stores a clearly-mock placeholder instead of ciphertext
- * (Requirement 22.4).
+ * the browser (Requirement 22.1).
  */
 export function credentialEncryptionSecret(): string | undefined {
   return readRawEnv("CREDENTIAL_SECRET") ?? readRawEnv("ENCRYPTION_KEY");
@@ -271,16 +254,15 @@ export function credentialEncryptionSecret(): string | undefined {
 
 /**
  * True when a server-side credential-encryption secret is configured. Live
- * credential storage (Demo_Mode inactive) requires this so the persisted value
- * is genuinely encrypted (Requirement 22.3).
+ * credential storage requires this so the persisted value is genuinely
+ * encrypted (Requirement 22.3).
  */
 export function isCredentialEncryptionConfigured(): boolean {
   return credentialEncryptionSecret() !== undefined;
 }
 
 /**
- * Aggregate per-adapter live-credential report. Independent of `DEMO_MODE`;
- * this only answers "could this adapter run live if asked?".
+ * Aggregate per-adapter live-credential report.
  */
 export function adapterConfiguration(): AdapterConfiguration {
   return {
@@ -292,28 +274,11 @@ export function adapterConfiguration(): AdapterConfiguration {
 }
 
 /**
- * Resolve the per-adapter {@link RunMode} for a scan (Requirements 18.2, 22.6).
+ * Resolve the per-adapter run mode for runtime use.
  *
- * - When `DEMO_MODE` is true, every adapter resolves to "demo" and no live
- *   credentials are consulted (Requirement 18.1).
- * - Otherwise each adapter resolves to "live" only when its own credentials are
- *   present, and to "demo" when they are missing. Adapters resolve
- *   independently, so a single run can be live for one adapter and demo for
- *   another (Requirement 18.2).
+ * Runtime code now always uses live adapters. Demo adapters remain available
+ * only for tests that explicitly override modes in the factory.
  */
 export function resolveRunMode(): AdapterRunModes {
-  if (isDemoMode()) {
-    return { apify: "demo", box: "demo", insforge: "demo", model: "demo" };
-  }
-
-  const configured = adapterConfiguration();
-  const modeFor = (configuredForLive: boolean): RunMode =>
-    configuredForLive ? "live" : "demo";
-
-  return {
-    apify: modeFor(configured.apify),
-    box: modeFor(configured.box),
-    insforge: modeFor(configured.insforge),
-    model: modeFor(configured.model),
-  };
+  return { apify: "live", box: "live", insforge: "live", model: "live" };
 }

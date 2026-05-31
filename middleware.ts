@@ -5,13 +5,12 @@ const ACCESS_TOKEN_COOKIE = "insforge_access_token";
 import {
   LOGIN_PATH,
   REDIRECT_PARAM,
-  isDemoModeEnabled,
   isProtectedPath,
 } from "@/lib/auth/routes";
 
 /**
  * Next.js Edge middleware: the first gate protecting SignalVault's app routes
- * (Requirements 1.1, 1.6, 1.7).
+ * (Requirement 1.1).
  *
  * ## What it protects
  *
@@ -30,19 +29,13 @@ import {
  *   cookie is present; the token's validity is verified server-side by
  *   `resolveActiveWorkspace` (the authoritative backstop), so a stale cookie
  *   still cannot surface scoped data.
- * - DEMO_MODE active → auth is bypassed and protected routes are allowed so the
- *   demo flow proceeds against the default demo workspace (Requirement 1.6).
- *   In practice DEMO_MODE always provides a default workspace; the
- *   cannot-provide-one fallback to the auth flow (Requirement 1.7) is handled
- *   server-side in `resolveActiveWorkspace`.
  *
  * ## Why this is Edge-safe
  *
  * This file runs in the Edge runtime, so it avoids Node-only APIs and the
- * `server-only` env module. It reads `DEMO_MODE` straight off `process.env`
- * (parsed with the same rule as `lib/config/env.ts#isDemoMode`) and the auth
- * cookie name mirrored from the InsForge SDK default (`insforge_access_token`)
- * so the middleware stays Edge-safe. It performs no network or database I/O.
+ * `server-only` env module. It reads only the auth cookie mirrored from the
+ * InsForge SDK default (`insforge_access_token`) so the middleware stays
+ * Edge-safe. It performs no network or database I/O.
  */
 export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
@@ -50,12 +43,6 @@ export function middleware(request: NextRequest): NextResponse {
   // Only the app routes are gated; everything else the matcher let through
   // (and `/`, `/login`) is public.
   if (!isProtectedPath(pathname)) {
-    return NextResponse.next();
-  }
-
-  // Demo_Mode bypasses auth so the seeded demo flow works without sign-in
-  // (Requirement 1.6).
-  if (isDemoModeEnabled(process.env.DEMO_MODE)) {
     return NextResponse.next();
   }
 
@@ -81,6 +68,6 @@ export function middleware(request: NextRequest): NextResponse {
  */
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|woff|woff2|ttf)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|map|txt|woff|woff2|ttf)$).*)",
   ],
 };

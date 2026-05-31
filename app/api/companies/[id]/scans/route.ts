@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createAdapters } from "@/lib/adapters/factory";
-import { isDemoMode, resolveRunMode } from "@/lib/config/env";
+import { resolveRunMode } from "@/lib/config/env";
 import { errorResponse, jsonResponse } from "@/lib/api/errors";
 import { requireActiveWorkspace } from "@/lib/api/workspace";
 import { withRetry, PERSISTENCE_MAX_ATTEMPTS } from "@/lib/workflow/retry";
@@ -74,7 +74,7 @@ export async function POST(
 
   // 4) Create the scan record with retry (Req 6.2/6.3).
   const modes = resolveRunMode();
-  const runMode = isDemoMode() ? "demo" : modes.insforge === "live" ? "live" : "demo";
+  const runMode = modes.insforge;
 
   const createScanResult = await withRetry(async () => {
     const rows = await repo.scans.create([
