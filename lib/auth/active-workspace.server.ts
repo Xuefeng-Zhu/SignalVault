@@ -47,6 +47,22 @@ import {
  *   before a page renders; this is the authoritative server-side backstop.
  */
 export async function resolveActiveWorkspace(): Promise<ActiveWorkspaceResolution> {
+  // Demo mode bypass: when DEMO_MODE=true, skip cookie/session verification
+  // and resolve a demo workspace using the demo InsForge client. This allows
+  // tests to exercise route handlers without a Next.js request context.
+  if (process.env.DEMO_MODE === "true") {
+    const insforge = getInsForgeClient(
+      {},
+      { apify: "demo", box: "demo", insforge: "demo", model: "demo" },
+    );
+    const demoSession: Session = { userId: "demo-user-id" };
+    return resolveActiveWorkspaceCore({
+      insforge,
+      session: demoSession,
+      accessToken: "demo-access-token",
+    });
+  }
+
   const accessToken = readAccessTokenCookie();
   if (!accessToken) {
     // No session cookie → unauthenticated (Requirement 1.1).

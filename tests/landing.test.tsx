@@ -11,7 +11,7 @@ import Home from "@/app/page";
  *   "Turn public web changes into auditable market intelligence." render
  *   on the root route.
  * - Requirement 2.6: the architecture strip shows the four integration
- *   platforms in the exact order Apify, Box, Mastra, InsForge.
+ *   platforms in the exact order Apify, InsForge Storage, Mastra, InsForge.
  */
 describe("Landing page (Home)", () => {
   it("renders the product name (Requirement 2.1)", () => {
@@ -32,7 +32,7 @@ describe("Landing page (Home)", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the four integrations in the exact order Apify, Box, Mastra, InsForge (Requirement 2.6)", () => {
+  it("shows the four integrations in the exact order Apify, InsForge Storage, Mastra, InsForge (Requirement 2.6)", () => {
     render(<Home />);
 
     // Scope to the architecture strip so unrelated lists cannot affect order.
@@ -41,7 +41,7 @@ describe("Landing page (Home)", () => {
 
     expect(items).toHaveLength(4);
 
-    const expectedOrder = ["Apify", "Box", "Mastra", "InsForge"];
+    const expectedOrder = ["Apify", "InsForge Storage", "Mastra", "InsForge"];
     expectedOrder.forEach((name, index) => {
       // textContent includes the index label and role; assert the platform
       // name appears in the list item at the expected position.

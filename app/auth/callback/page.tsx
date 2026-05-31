@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getInsForgeClientBrowser } from "@/lib/insforge/client";
 
@@ -15,6 +15,23 @@ import { getInsForgeClientBrowser } from "@/lib/insforge/client";
  * the httpOnly insforge_access_token cookie, then redirect to the target page.
  */
 export default function AuthCallbackPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-background">
+          <div className="text-center">
+            <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <p className="text-sm text-on-surface-variant">Loading...</p>
+          </div>
+        </div>
+      }
+    >
+      <AuthCallbackInner />
+    </Suspense>
+  );
+}
+
+function AuthCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
