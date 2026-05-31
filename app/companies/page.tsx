@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { RetryButton } from "@/app/companies/retry-button";
+import { MonitoringStatus } from "@/components/monitoring-status";
 import { RunScanButton } from "@/components/run-scan-button";
 import { strategyLabel } from "@/components/strategy-verdict-card";
 import { buttonVariants } from "@/components/ui/button";
@@ -601,6 +602,10 @@ export default async function CompaniesDashboardPage() {
                 ) : null}
               </div>
             </section>
+
+            <MonitoringStatus
+              companies={companies.map((c) => ({ id: c.id, name: c.name }))}
+            />
           </aside>
         </div>
       )}

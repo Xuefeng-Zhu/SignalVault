@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { AiChatBubble } from "@/components/ai-chat-bubble";
+import { MonitoringConfig } from "@/components/monitoring-config";
 import { RunScanButton } from "@/components/run-scan-button";
 import { strategyLabel } from "@/components/strategy-verdict-card";
 import { buttonVariants } from "@/components/ui/button";
@@ -448,6 +449,8 @@ export default async function CompanyDetailPage({
           </div>
         </section>
       </div>
+
+      <MonitoringConfig companyId={company.id} />
 
       <section className="grid gap-px overflow-hidden rounded-[24px] border border-outline-variant bg-outline-variant md:grid-cols-5">
         {[
