@@ -1,4 +1,4 @@
-import { guardUrl } from "@/lib/security";
+import { guardUrl, guardResolvedUrl } from "@/lib/security";
 // `import type` keeps this module free of the `server-only` runtime guard that
 // `@/lib/adapters/types` pulls in, so the live capture logic (SSRF re-check,
 // 60s timeout, result shaping, error isolation) stays unit-testable while the
@@ -172,6 +172,13 @@ export class LiveApifyClient implements ApifyClient {
     const guard = guardUrl(url);
     if (!guard.ok) {
       return this.skip(request, guard.reason ?? "rejected by SSRF guard");
+    }
+
+    // DNS-resolution SSRF check: resolve hostname and validate resolved IPs
+    // are not in blocked private/loopback ranges (prevents DNS rebinding).
+    const dnsGuard = await guardResolvedUrl(url);
+    if (!dnsGuard.ok) {
+      return this.skip(request, dnsGuard.reason ?? "DNS resolves to blocked IP");
     }
 
     // Without a token we cannot reach Apify; skip rather than throw. (The

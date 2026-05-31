@@ -207,3 +207,73 @@ export function guardUrl(url: string): GuardResult {
   // Non-IP hostname: DNS resolution is out of scope for this pure guard.
   return ADMIT;
 }
+
+/**
+ * Async DNS-resolving SSRF guard. Resolves the hostname to IP addresses and
+ * validates each resolved IP against the blocked ranges. This prevents DNS
+ * rebinding attacks where a public hostname resolves to a private/loopback IP.
+ *
+ * Should be called AFTER the pure `guardUrl` check passes, at the point where
+ * the URL will actually be fetched.
+ */
+export async function guardResolvedUrl(rawUrl: string): Promise<GuardResult> {
+  let parsed: URL;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return reject("malformed URL");
+  }
+
+  const host = parsed.hostname;
+
+  // Skip resolution for literal IPs (already handled by guardUrl)
+  if (parseIPv4(host) || host.includes(":")) {
+    return ADMIT;
+  }
+
+  try {
+    const { resolve4, resolve6 } = await import("node:dns/promises");
+
+    // Resolve IPv4 addresses
+    let v4Addrs: string[] = [];
+    try {
+      v4Addrs = await resolve4(host);
+    } catch {
+      // ENODATA / ENOTFOUND is fine — host may be IPv6 only
+    }
+
+    for (const addr of v4Addrs) {
+      const octets = parseIPv4(addr);
+      if (octets) {
+        const result = classifyIPv4(octets);
+        if (!result.ok) return result;
+      }
+    }
+
+    // Resolve IPv6 addresses
+    let v6Addrs: string[] = [];
+    try {
+      v6Addrs = await resolve6(host);
+    } catch {
+      // ENODATA / ENOTFOUND is fine
+    }
+
+    for (const addr of v6Addrs) {
+      const groups = parseIPv6(addr);
+      if (groups) {
+        const result = classifyIPv6(groups);
+        if (!result.ok) return result;
+      }
+    }
+
+    // No addresses resolved at all — reject (host doesn't exist)
+    if (v4Addrs.length === 0 && v6Addrs.length === 0) {
+      return reject("malformed URL");
+    }
+
+    return ADMIT;
+  } catch {
+    // DNS resolution failed entirely — reject defensively
+    return reject("malformed URL");
+  }
+}

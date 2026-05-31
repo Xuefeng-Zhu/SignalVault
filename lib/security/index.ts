@@ -1,2 +1,2 @@
-export { guardUrl } from './ssrf';
+export { guardUrl, guardResolvedUrl } from './ssrf';
 export type { GuardResult, GuardRejectionReason } from './ssrf';

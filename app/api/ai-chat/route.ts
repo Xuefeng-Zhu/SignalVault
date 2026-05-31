@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireActiveWorkspace } from "@/lib/api/workspace";
 
 interface ChatRequestBody {
   message: string;
@@ -66,6 +67,12 @@ function generateDemoReply(message: string, companyName: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  // Require authenticated user
+  const guard = await requireActiveWorkspace();
+  if (!guard.ok) {
+    return guard.response;
+  }
+
   try {
     const body = (await request.json()) as ChatRequestBody;
     const { message, companyName } = body;
