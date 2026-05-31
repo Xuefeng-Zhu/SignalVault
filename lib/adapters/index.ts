@@ -1,6 +1,6 @@
 /**
  * Barrel for SignalVault's adapter interfaces, shared adapter types, and the
- * demo/live selection factory.
+ * adapter factory.
  *
  * Adapters are the sole access points to external services (Requirement 23.1),
  * and the factory re-exported below is their single construction point. This
@@ -19,12 +19,7 @@ export {
   type AdapterSet,
 } from "./factory";
 
-export {
-  selectAdapters,
-  selectImpl,
-  type AdapterImplPair,
-  type AdapterImplPairs,
-} from "./factory-core";
+export type { AdapterSet as AdapterSetType } from "./factory-core";
 
 export type {
   // Base

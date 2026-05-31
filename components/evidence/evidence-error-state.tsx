@@ -6,12 +6,10 @@ import { AlertTriangle } from "lucide-react";
 
 export interface EvidenceErrorStateProps {
   onRetry: () => void;
-  onUseDemoData: () => void;
 }
 
 export function EvidenceErrorState({
   onRetry,
-  onUseDemoData,
 }: EvidenceErrorStateProps) {
   return (
     <div
@@ -25,14 +23,11 @@ export function EvidenceErrorState({
       </div>
       <h3 className="text-lg font-semibold text-on-surface">Unable to load evidence artifacts</h3>
       <p className="mt-2 max-w-md text-sm text-on-surface-variant">
-        There was a problem loading the evidence vault. Retry the request or switch to demo data to continue exploring the UI.
+        There was a problem loading the evidence vault. Please retry the request.
       </p>
       <div className="mt-5 flex items-center gap-3">
         <Button type="button" variant="outline" onClick={onRetry} className="rounded-xl">
           Retry
-        </Button>
-        <Button type="button" onClick={onUseDemoData} className="rounded-xl">
-          Use demo data
         </Button>
       </div>
     </div>

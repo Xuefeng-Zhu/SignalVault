@@ -7,4 +7,3 @@ export * from "./evidence-filter-panel";
 export * from "./evidence-table";
 export * from "./evidence-table-toolbar";
 export * from "./evidence-vault-skeleton";
-export * from "./mock-upload-dialog";

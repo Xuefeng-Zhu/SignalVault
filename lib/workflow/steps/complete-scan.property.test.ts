@@ -2,7 +2,6 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 
-import { DemoInsForgeClient } from "@/lib/adapters/insforge/demo-store";
 import type { AdapterSet } from "@/lib/adapters/factory-core";
 import type {
   ApifyClient,
@@ -73,12 +72,12 @@ class StatusTrackingRepo {
 function fakeInsForge(repo: StatusTrackingRepo): {
   scoped: () => WorkspaceRepository;
   isConfigured: () => boolean;
-  mode: "demo";
+  mode: "live";
 } {
   return {
     scoped: () => repo.asRepository(),
     isConfigured: () => true,
-    mode: "demo" as const,
+    mode: "live" as const,
   };
 }
 
@@ -96,7 +95,7 @@ function makeCtx(repo: StatusTrackingRepo): ScanWorkflowContext {
     companyName: "Dropbox",
     companySlug: "dropbox",
     scanTimestamp: "2024-01-01T00-00-00",
-    mode: "demo",
+    mode: "live",
     adapters,
   });
 }

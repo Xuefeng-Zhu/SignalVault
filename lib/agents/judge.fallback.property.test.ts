@@ -8,16 +8,11 @@ import {
   StrategyEnum,
   VerdictSchema,
 } from '@/lib/schemas';
-import { buildDemoFallbackVerdict } from '@/lib/demo';
 import { PBT_MIN_RUNS, pbtParams } from '@/tests/fast-check.config';
 
-// `import type` keeps the `server-only` runtime guard pulled in by
-// `@/lib/adapters/types` out of this test module (vitest also aliases
-// `server-only` to a no-op stub), so the injected fake `ModelClient` typechecks
-// without importing the throwing guard.
 import type { ModelClient } from '@/lib/adapters/types';
 
-import { concludeDebate } from './judge';
+import { buildFallbackVerdict, concludeDebate } from './judge';
 import type { ClaimStatusAssignment } from './debate';
 
 /**
@@ -54,7 +49,7 @@ import type { ClaimStatusAssignment } from './debate';
  * `isFallback` flag stripped — exactly what `concludeDebate` returns in its
  * `verdict` field. */
 const { isFallback: _isFallback, ...EXPECTED_FALLBACK_VERDICT } =
-  buildDemoFallbackVerdict();
+  buildFallbackVerdict();
 
 /* -------------------------------------------------------------------------- */
 /* Valid agent / verdict arbitraries                                          */

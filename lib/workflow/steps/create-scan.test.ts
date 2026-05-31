@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { describe, expect, it } from "vitest";
 
-import { createDemoInsForgeClient } from "@/lib/adapters/insforge/demo-store";
+import { createInMemoryInsForgeClient } from "@/tests/fixtures/in-memory-insforge";
 import type { InsForgeClient, Scan } from "@/lib/adapters/types";
 
 import { BaselineStateSchema, type ScanInitInput } from "../context";
@@ -48,7 +48,7 @@ async function seedQueuedScan(
 
 describe("createScanCore", () => {
   it("confirms a queued scan and returns the baseline state", async () => {
-    const insforge = createDemoInsForgeClient({ seedDemoCompany: false });
+    const insforge = createInMemoryInsForgeClient();
     const { deps } = makeStepDeps(insforge);
     const { input } = await seedQueuedScan(insforge);
 
@@ -76,7 +76,7 @@ describe("createScanCore", () => {
   });
 
   it("throws when the scan does not exist in the bound workspace", async () => {
-    const insforge = createDemoInsForgeClient({ seedDemoCompany: false });
+    const insforge = createInMemoryInsForgeClient();
     const { deps } = makeStepDeps(insforge);
     const { input } = await seedQueuedScan(insforge);
 
@@ -85,7 +85,7 @@ describe("createScanCore", () => {
   });
 
   it("treats a scan in another workspace as not found (workspace scoping)", async () => {
-    const insforge = createDemoInsForgeClient({ seedDemoCompany: false });
+    const insforge = createInMemoryInsForgeClient();
     const { deps } = makeStepDeps(insforge);
     const { input } = await seedQueuedScan(insforge);
 
@@ -96,7 +96,7 @@ describe("createScanCore", () => {
   });
 
   it("throws when the scan belongs to a different company", async () => {
-    const insforge = createDemoInsForgeClient({ seedDemoCompany: false });
+    const insforge = createInMemoryInsForgeClient();
     const { deps } = makeStepDeps(insforge);
     const { input } = await seedQueuedScan(insforge);
 
@@ -105,7 +105,7 @@ describe("createScanCore", () => {
   });
 
   it("throws when the scan is not in the queued baseline status", async () => {
-    const insforge = createDemoInsForgeClient({ seedDemoCompany: false });
+    const insforge = createInMemoryInsForgeClient();
     const { deps } = makeStepDeps(insforge);
     const { input, workspaceId, scan } = await seedQueuedScan(insforge);
 

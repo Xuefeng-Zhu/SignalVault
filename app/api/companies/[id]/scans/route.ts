@@ -1,7 +1,6 @@
 import "server-only";
 
 import { createAdapters } from "@/lib/adapters/factory";
-import { resolveRunMode } from "@/lib/config/env";
 import { errorResponse, jsonResponse } from "@/lib/api/errors";
 import { requireActiveWorkspace } from "@/lib/api/workspace";
 import { withRetry, PERSISTENCE_MAX_ATTEMPTS } from "@/lib/workflow/retry";
@@ -73,9 +72,6 @@ export async function POST(
   }
 
   // 4) Create the scan record with retry (Req 6.2/6.3).
-  const modes = resolveRunMode();
-  const runMode = modes.insforge;
-
   const createScanResult = await withRetry(async () => {
     const rows = await repo.scans.create([
       {
@@ -112,7 +108,7 @@ export async function POST(
     companySlug: company.domain.replace(/[^a-zA-Z0-9-]/g, "-").toLowerCase(),
     workspaceId: guard.workspace.id,
     urls,
-    mode: runMode as "demo" | "live",
+    mode: "live" as const,
   };
 
   // Build adapters for the workflow. Thread the user's access token so the

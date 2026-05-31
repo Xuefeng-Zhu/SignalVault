@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
 import {
-  DemoInsForgeClient,
-  DEMO_WORKSPACE_ID,
-} from "@/lib/adapters/insforge/demo-store";
+  InMemoryInsForgeClient,
+  TEST_WORKSPACE_ID,
+} from "@/tests/fixtures/in-memory-insforge";
 import type { WorkspaceRepository } from "@/lib/adapters/types";
 
 import {
@@ -14,16 +14,15 @@ import {
 
 /**
  * Unit tests for the `/api/companies` core (task 20.1). These exercise the pure
- * core against a REAL in-memory workspace repository (the demo InsForge store,
- * un-seeded) — no mocks — so the validation, atomic-create, and list-shaping
- * logic is verified end to end through the same repository surface the live
- * client implements.
+ * core against a REAL in-memory workspace repository — no mocks — so the
+ * validation, atomic-create, and list-shaping logic is verified end to end
+ * through the same repository surface the live client implements.
  */
 
-/** A fresh, empty (un-seeded) workspace repository for each test. */
+/** A fresh, empty workspace repository for each test. */
 function emptyRepo(): WorkspaceRepository {
-  const client = new DemoInsForgeClient({ seedDemoCompany: false });
-  return client.scoped(DEMO_WORKSPACE_ID);
+  const client = new InMemoryInsForgeClient();
+  return client.scoped(TEST_WORKSPACE_ID);
 }
 
 /** A valid Add Company body with `count` URLs (3–5). */
@@ -165,8 +164,8 @@ describe("createCompany — invalid input is rejected atomically (Req 4.3–4.6,
 
 describe("createCompany — atomic rollback on partial failure (Req 4.8)", () => {
   it("persists no company when source creation fails after the company row exists", async () => {
-    const client = new DemoInsForgeClient({ seedDemoCompany: false });
-    const repo = client.scoped(DEMO_WORKSPACE_ID);
+    const client = new InMemoryInsForgeClient();
+    const repo = client.scoped(TEST_WORKSPACE_ID);
 
     // Force the second step (addSources) to fail AFTER the company is created.
     const realAddSources = repo.companies.addSources.bind(repo.companies);

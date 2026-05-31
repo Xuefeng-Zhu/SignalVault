@@ -10,7 +10,6 @@ import {
   EvidenceTable,
   EvidenceTableToolbar,
   EvidenceVaultSkeleton,
-  MockUploadDialog,
 } from "@/components/evidence";
 import { MOCK_EVIDENCE_ARTIFACTS } from "@/lib/evidence";
 import type { EvidenceArtifact } from "@/lib/evidence";
@@ -113,12 +112,11 @@ export default function EvidenceVaultPage() {
   if (isLoading) return <EvidenceVaultSkeleton />;
 
   if (hasError) {
-    return (
-      <EvidenceErrorState
-        onRetry={() => setHasError(false)}
-        onUseDemoData={() => setHasError(false)}
-      />
-    );
+   return (
+     <EvidenceErrorState
+       onRetry={() => setHasError(false)}
+     />
+   );
   }
 
   return (
@@ -189,9 +187,6 @@ export default function EvidenceVaultPage() {
           onClose={() => setSelectedId(null)}
         />
       </div>
-
-      {/* Upload dialog */}
-      <MockUploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)} />
     </div>
   );
 }

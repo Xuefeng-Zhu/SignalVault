@@ -4,12 +4,11 @@ import {
   type Strategy,
   type Verdict,
 } from '@/lib/schemas';
-import { buildDemoFallbackVerdict } from '@/lib/demo';
 
 // `import type` keeps this module free of the `server-only` runtime guard that
 // `@/lib/adapters/types` pulls in, so the pure judge/debate logic stays
 // unit-testable and importable in tests with an injected `ModelClient`. This
-// mirrors the model adapter's `demo-inference` split.
+// mirrors the model adapter's split.
 import type { InferenceRequest, ModelClient } from '@/lib/adapters/types';
 
 // The defense/prosecution schemas, argument types, and the shared
@@ -199,14 +198,40 @@ export function buildInsufficientEvidenceVerdict(): Verdict {
 }
 
 /**
- * Strip the persistence-only `isFallback` flag from the deterministic
- * Demo_Company fallback so the `verdict` field of {@link DebateConclusion} is a
- * plain, schema-valid {@link Verdict}; `isFallback` is surfaced separately on
- * the conclusion for the persistence step (18.7).
+ * The deterministic fallback Verdict substituted when an agent's Zod validation
+ * fails or the model fails (Requirements 15.7, 19.3). Pure and static.
  */
 function fallbackVerdictValue(): Verdict {
-  const { isFallback: _isFallback, ...verdict } = buildDemoFallbackVerdict();
-  return verdict;
+  return {
+    strategyPrediction: 'moving_upmarket',
+    confidence: 85,
+    riskScore: 72,
+    recommendedActions: [
+      'Brief product and competitive teams on the detected strategy shift.',
+      'Evaluate AI-powered features that compete with your product.',
+      'Track hiring patterns as a leading indicator of platform investment.',
+      'Assess competitive exposure in enterprise compliance.',
+      'Re-run a scan in 30 days to confirm the shift is sustained.',
+    ],
+    keyEvidence: [
+      'Pricing added an Enterprise tier with AI features and contact-sales pricing.',
+      'Security page added SOC 2 Type II, ISO 27001, HIPAA, SAML SSO, and DLP.',
+      'Docs launched AI-powered APIs for universal search and content intelligence.',
+      'Careers shifted to AI/ML engineering and research roles.',
+    ],
+    counterEvidence: [
+      'Similar AI features have been announced before without a full platform pivot.',
+      'Free/consumer tiers still exist — the pivot may be additive rather than a full repositioning.',
+    ],
+  };
+}
+
+/**
+ * Build a fresh copy of the fallback verdict with the `isFallback` flag.
+ * Exported for tests that need to assert the exact fallback shape.
+ */
+export function buildFallbackVerdict(): Verdict & { isFallback: true } {
+  return { ...fallbackVerdictValue(), isFallback: true };
 }
 
 /* -------------------------------------------------------------------------- */

@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 
 import {
-  DemoInsForgeClient,
-  DEMO_WORKSPACE_ID,
-} from "@/lib/adapters/insforge/demo-store";
+  InMemoryInsForgeClient,
+  TEST_WORKSPACE_ID,
+} from "@/tests/fixtures/in-memory-insforge";
 import { SourceTypeEnum } from "@/lib/schemas";
 import { MIN_URLS, MAX_URLS, NAME_MAX } from "@/lib/schemas/company";
 import { PBT_MIN_RUNS, pbtParams } from "@/tests/fast-check.config";
@@ -30,8 +30,8 @@ import { createCompany } from "./companies";
 
 describe("Property 6: Invalid Add Company is rejected atomically", () => {
   function makeRepo() {
-    const client = new DemoInsForgeClient({ seedDemoCompany: false });
-    return client.scoped(DEMO_WORKSPACE_ID);
+    const client = new InMemoryInsForgeClient();
+    return client.scoped(TEST_WORKSPACE_ID);
   }
 
   const validUrl = (i: number) => `https://example${i}.com/page`;

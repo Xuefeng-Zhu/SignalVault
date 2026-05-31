@@ -1,4 +1,4 @@
-import { createDemoInsForgeClient } from "@/lib/adapters/insforge/demo-store";
+import { createInMemoryInsForgeClient } from "@/tests/fixtures/in-memory-insforge";
 import type { AdapterSet } from "@/lib/adapters/factory-core";
 import type {
   ApifyClient,
@@ -13,7 +13,7 @@ import type { StepDeps } from "../context";
  * Test-only adapter wiring for the workflow step cores.
  *
  * The create-scan / plan-targets cores only ever touch the InsForge adapter
- * (and only to read/scope), so this helper injects a real demo in-memory
+ * (and only to read/scope), so this helper injects a real in-memory
  * {@link InsForgeClient} and trivial throwing stubs for the other three. Any
  * accidental use of Apify/Box/Model from these steps would therefore fail loudly
  * rather than pass silently. Adapters are INJECTED via {@link StepDeps}, exactly
@@ -24,7 +24,7 @@ import type { StepDeps } from "../context";
 /** A stub whose every method throws — proves a core never calls this adapter. */
 function unusedAdapter<T>(name: string): T {
   return new Proxy(
-    { isConfigured: () => false, mode: "demo" as const },
+    { isConfigured: () => false, mode: "live" as const },
     {
       get(target, prop, receiver) {
         if (prop in target) {
@@ -48,11 +48,11 @@ export function makeAdapterSet(insforge: InsForgeClient): AdapterSet {
   };
 }
 
-/** Build {@link StepDeps} backed by a fresh demo InsForge store (no seed). */
+/** Build {@link StepDeps} backed by a fresh in-memory InsForge store. */
 export function makeStepDeps(insforge?: InsForgeClient): {
   deps: StepDeps;
   insforge: InsForgeClient;
 } {
-  const client = insforge ?? createDemoInsForgeClient({ seedDemoCompany: false });
+  const client = insforge ?? createInMemoryInsForgeClient();
   return { deps: { adapters: makeAdapterSet(client) }, insforge: client };
 }

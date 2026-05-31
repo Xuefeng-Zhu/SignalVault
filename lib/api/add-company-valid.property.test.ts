@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 
 import {
-  DemoInsForgeClient,
-  DEMO_WORKSPACE_ID,
-} from "@/lib/adapters/insforge/demo-store";
+  InMemoryInsForgeClient,
+  TEST_WORKSPACE_ID,
+} from "@/tests/fixtures/in-memory-insforge";
 import type { WorkspaceRepository } from "@/lib/adapters/types";
 import { SourceTypeEnum, type SourceType } from "@/lib/schemas";
 import { MIN_URLS, MAX_URLS, NAME_MAX } from "@/lib/schemas/company";
@@ -39,8 +39,8 @@ import { createCompany } from "./companies";
 
 /** A fresh, empty (un-seeded) workspace repository for each generated case. */
 function emptyRepo(): WorkspaceRepository {
-  const client = new DemoInsForgeClient({ seedDemoCompany: false });
-  return client.scoped(DEMO_WORKSPACE_ID);
+  const client = new InMemoryInsForgeClient();
+  return client.scoped(TEST_WORKSPACE_ID);
 }
 
 /** Lowercase alphanumeric DNS-label / path-segment characters. */

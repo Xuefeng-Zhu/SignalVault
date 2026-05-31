@@ -281,7 +281,7 @@ export default async function CompaniesDashboardPage() {
         {companies[0] ? (
           <RunScanButton
             companyId={companies[0].id}
-            label="Run demo scan"
+            label="Run scan"
             icon="bolt"
             buttonClassName="h-10 rounded-full bg-primary px-4 text-sm font-medium text-on-primary hover:bg-primary-container"
           />

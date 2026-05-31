@@ -18,7 +18,6 @@ import {
 } from "@/tests/arbitraries/ip";
 
 import { LiveApifyClient } from "./live-capture";
-import { captureDemoRequests } from "./demo-capture";
 
 /**
  * Property 8 (Validates: Requirements 8.3, 8.4, 8.7):
@@ -40,8 +39,6 @@ import { captureDemoRequests } from "./demo-capture";
  * Both adapter cores are exercised:
  *   - LIVE: {@link LiveApifyClient} with an injected, deterministic fake
  *     `fetchImpl` (no real network) whose response is selected per source.
- *   - DEMO: the pure {@link captureDemoRequests} core, which always yields
- *     `ok: true, simulated: true` data and never throws.
  *
  * Each property runs a minimum of PBT_MIN_RUNS (100) iterations.
  */
@@ -302,33 +299,6 @@ describe("Property 8: capture yields one result per source and never throws (Req
           // Admitted + non-"valid" behavior => an isolated upstream failure;
           // the shape invariant above already pins it to ok:false + reason.
         });
-      }),
-      pbtParams(),
-    );
-  });
-
-  it("DEMO core: never throws; one ok+simulated result per source", () => {
-    fc.assert(
-      fc.property(specsArb, (specs) => {
-        const requests: CaptureRequest[] = specs.map((s) => ({
-          url: s.url,
-          pageRole: s.pageRole,
-          timeoutMs: s.timeoutMs,
-        }));
-
-        // captureDemoRequests is pure and must never throw for any input.
-        const results = captureDemoRequests(requests);
-
-        assertCardinalityAndOrder(requests, results);
-
-        for (const result of results) {
-          assertShapeInvariant(result);
-          // Demo always succeeds with simulated data (8.6/19.1 territory),
-          // which by the shape invariant means ok:true with both artifacts.
-          expect(result.ok).toBe(true);
-          expect(result.simulated).toBe(true);
-          expect(result.skippedReason).toBeUndefined();
-        }
       }),
       pbtParams(),
     );

@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 
 import {
-  DemoInsForgeClient,
-  DEMO_WORKSPACE_ID,
-} from "@/lib/adapters/insforge/demo-store";
+  InMemoryInsForgeClient,
+  TEST_WORKSPACE_ID,
+} from "@/tests/fixtures/in-memory-insforge";
 import type { SourceType } from "@/lib/schemas";
 import type { WorkspaceRepository } from "@/lib/adapters/types";
 import { PBT_MIN_RUNS, pbtParams } from "@/tests/fast-check.config";
@@ -41,8 +41,8 @@ import { createCompany, listCompanies } from "./companies";
 
 /** A fresh, empty (un-seeded) workspace repository. */
 function emptyRepo(): WorkspaceRepository {
-  const client = new DemoInsForgeClient({ seedDemoCompany: false });
-  return client.scoped(DEMO_WORKSPACE_ID);
+  const client = new InMemoryInsForgeClient();
+  return client.scoped(TEST_WORKSPACE_ID);
 }
 
 /** Source-type roles used to build per-company URL rows (≥ 5 so count 3–5 fits). */

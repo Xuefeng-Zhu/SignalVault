@@ -10,22 +10,11 @@ import "server-only";
  * server-side code paths that are not delivered to the browser).
  *
  * Requirement 22.6 fixes the exact set of environment variables that hold
- * credentials. Runtime code always resolves adapters in live mode; tests may
- * still opt into demo adapters explicitly through factory overrides.
- *
- * Note: a local `RunMode` type is defined here to avoid a build-time dependency
- * on `lib/adapters/types.ts` (which is authored by a parallel task). The
- * adapters layer can re-export / reconcile this type later.
+ * credentials.
  */
-
-/** Resolved operating mode for a single adapter. */
-export type RunMode = "demo" | "live";
 
 /** The four external adapters whose credentials this module governs. */
 export type AdapterName = "apify" | "box" | "insforge" | "model";
-
-/** Per-adapter resolved run modes for one scan. */
-export type AdapterRunModes = Record<AdapterName, RunMode>;
 
 /** Per-adapter "are live credentials present?" report. */
 export type AdapterConfiguration = Record<AdapterName, boolean>;
@@ -250,14 +239,4 @@ export function adapterConfiguration(): AdapterConfiguration {
     insforge: isInsforgeConfigured(),
     model: isModelConfigured(),
   };
-}
-
-/**
- * Resolve the per-adapter run mode for runtime use.
- *
- * Runtime code now always uses live adapters. Demo adapters remain available
- * only for tests that explicitly override modes in the factory.
- */
-export function resolveRunMode(): AdapterRunModes {
-  return { apify: "live", box: "live", insforge: "live", model: "live" };
 }

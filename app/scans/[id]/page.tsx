@@ -122,12 +122,6 @@ export default async function ScanDetailPage({
   const evidenceUrl = scan.boxScanFolderId
     ? `${process.env.NEXT_PUBLIC_INSFORGE_API_URL ?? ""}/api/storage/buckets/evidence/objects?prefix=${encodeURIComponent(scan.boxScanFolderId + "/")}`
     : null;
-  const isSimulatedBox = scan.boxScanFolderId?.startsWith("mock-") ?? false;
-
-  const simWarnings: string[] = [];
-  if (isSimulatedBox) {
-    simWarnings.push("This scan used simulated Box storage (demo mode).");
-  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -221,15 +215,6 @@ export default async function ScanDetailPage({
           <p className="mt-2 text-body-md text-rose-700">{scan.failureReason}</p>
         </div>
       ) : null}
-
-      {simWarnings.map((warning) => (
-        <div
-          key={warning}
-          className="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-body-md text-amber-800"
-        >
-          {warning}
-        </div>
-      ))}
 
       <section className="grid gap-6 lg:grid-cols-3">
         <article className="glass-card p-6">
@@ -355,7 +340,7 @@ export default async function ScanDetailPage({
                 Evidence storage
               </h2>
               <div className="mt-6">
-                <BoxEvidenceLink url={evidenceUrl} simulated={isSimulatedBox} />
+                <BoxEvidenceLink url={evidenceUrl} simulated={false} />
               </div>
             </section>
           ) : null}
@@ -376,7 +361,7 @@ export default async function ScanDetailPage({
                           type: "report",
                           name: "Scan evidence folder",
                           boxUrl: evidenceUrl,
-                          simulated: isSimulatedBox,
+                          simulated: false,
                         },
                       ]
                     : []
