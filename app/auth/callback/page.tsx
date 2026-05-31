@@ -52,7 +52,12 @@ export default function AuthCallbackPage() {
           return;
         }
 
-        const redirectTo = searchParams.get("redirect_to") ?? "/companies";
+        const rawRedirect = searchParams.get("redirect_to") ?? "/companies";
+        // Prevent open redirect: only allow relative paths
+        const redirectTo =
+          rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")
+            ? rawRedirect
+            : "/companies";
         router.replace(redirectTo);
       } catch (err) {
         setError(

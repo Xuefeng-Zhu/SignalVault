@@ -60,6 +60,10 @@ export async function withRetry<T>(
       return { ok: true, value, attempts: attempt };
     } catch (error) {
       lastError = errorMessage(error);
+      // Exponential backoff before retrying (skip delay after final attempt)
+      if (attempt < total) {
+        await new Promise((r) => setTimeout(r, 200 * 2 ** (attempt - 1)));
+      }
     }
   }
 

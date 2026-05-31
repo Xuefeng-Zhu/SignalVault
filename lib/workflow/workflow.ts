@@ -153,17 +153,8 @@ export async function runSignalVaultScanWorkflow(
     // Step 5 — uploadSnapshotToBoxStep
     const uploadResult = await uploadSnapshotToBoxStep(ctx, normalized);
 
-    // Carry the Box folder set and uploaded snapshot ids onto the context so
-    // later steps can reference them.
+    // Carry the Box folder set onto the context so later steps can reference it.
     ctx.boxFolders = uploadResult.folderSet;
-    // Populate currentSnapshots from the uploaded snapshots.
-    for (const up of uploadResult.snapshots) {
-      ctx.currentSnapshots.push({
-        snapshotId: up.snapshotId,
-        watchedSourceId: up.watchedSourceId,
-        normalizedContent: up.normalizedContent,
-      });
-    }
 
     // Step 6 — findPreviousSnapshotStep
     const previous = await findPreviousSnapshotStep(ctx);

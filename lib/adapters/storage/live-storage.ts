@@ -181,7 +181,7 @@ export class InsForgeStorageClient implements BoxClient {
       );
     }
 
-    const result = await response.json();
+    const result = await response.json().catch(() => null);
 
     // Build the URL for the stored object
     const url =
