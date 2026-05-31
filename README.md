@@ -14,7 +14,7 @@ SignalVault continuously watches your competitors' public-facing web pages, diff
 | Language | TypeScript 5+ |
 | Database / Auth | [InsForge](https://insforge.dev) (Postgres + RLS) |
 | Scraping | [Apify](https://apify.com) |
-| Artifact storage | [Box](https://box.com) |
+| Artifact storage | InsForge Storage |
 | Workflow orchestration | [Mastra](https://mastra.ai) |
 | AI model gateway | InsForge / OpenRouter |
 | Payments | Stripe (via InsForge) |
@@ -42,19 +42,19 @@ Browser / CLI
 │  lib/workflow  (Mastra-based pipeline)               │
 │                                                      │
 │  createScan → planWatchTargets → scrapePages         │
-│    → normalizeContent → uploadSnapshotToBox          │
-│    → diffSnapshots → uploadDiffToBox                 │
+│    → normalizeContent → uploadSnapshot               │
+│    → diffSnapshots → uploadDiff                      │
 │    → extractClaims → classifyClaims                  │
-│    → judgeVerdict → uploadBriefToBox                 │
+│    → judgeVerdict → uploadBrief                      │
 │    → completeScan                                    │
 └──────────────────────────────────────────────────────┘
      │              │              │
      ▼              ▼              ▼
-┌─────────┐   ┌──────────┐   ┌──────────┐
-│ InsForge│   │   Apify  │   │   Box    │
-│ (DB/Auth│   │(scraping)│   │(artifacts│
-│  /RT)   │   └──────────┘   │ storage) │
-└─────────┘                  └──────────┘
+┌─────────┐   ┌──────────┐   ┌──────────────┐
+│ InsForge│   │   Apify  │   │  InsForge    │
+│ (DB/Auth│   │(scraping)│   │  Storage     │
+│  /RT)   │   └──────────┘   │ (artifacts)  │
+└─────────┘                  └──────────────┘
      │
      ▼
 ┌──────────────────────┐
@@ -62,24 +62,6 @@ Browser / CLI
 │  (model inference)   │
 └──────────────────────┘
 ```
-
----
-
-## Adapter / Demo Mode Design
-
-SignalVault ships with two adapter modes:
-
-| Mode | Description |
-|---|---|
-| **`demo`** | All external calls are simulated in-process. No Apify, Box, or live model calls. Data is seeded deterministically from `lib/demo/acme.ts`. |
-| **`live`** | Real Apify, Box, and model API calls. Requires credentials (see env vars below). |
-
-The active mode per adapter is resolved by `lib/config/env.ts` → `resolveRunMode()`:
-
-- `DEMO_MODE=true` forces all adapters to demo.
-- Otherwise, each adapter falls back to demo when its required credential env vars are absent.
-
-This means you can run the full app UI without any paid-tier API keys.
 
 ---
 
@@ -91,14 +73,12 @@ This means you can run the full app UI without any paid-tier API keys.
 | `INSFORGE_API_KEY` | Yes | InsForge service-role key (server-only) |
 | `NEXT_PUBLIC_INSFORGE_API_URL` | Yes | InsForge URL exposed to the browser |
 | `NEXT_PUBLIC_INSFORGE_ANON_KEY` | Yes | InsForge anon key for browser auth |
-| `DEMO_MODE` | No | Set to `true` to force demo mode for all adapters |
-| `APIFY_TOKEN` | Live mode | Apify API token for web scraping |
-| `BOX_CLIENT_ID` | Live mode | Box OAuth 2.0 app client ID |
-| `BOX_CLIENT_SECRET` | Live mode | Box OAuth 2.0 app client secret |
-| `BOX_DEVELOPER_TOKEN` | Live mode | Box developer token (alternative to OAuth) |
-| `MODEL_API_KEY` | Live mode | API key for the model inference endpoint |
-| `MODEL_BASE_URL` | Live mode | Base URL for the model inference endpoint |
-| `MODEL_NAME` | Live mode | Model name/ID to use for inference |
+| `APIFY_TOKEN` | Yes | Apify API token for web scraping |
+| `INSFORGE_STORAGE_BUCKET` | Yes | InsForge Storage bucket name for evidence artifacts |
+| `MODEL_API_KEY` | Yes | API key for the model inference endpoint |
+| `MODEL_BASE_URL` | Yes | Base URL for the model inference endpoint |
+| `MODEL_NAME` | No | Model name/ID to use for inference (defaults to provider default) |
+| `CREDENTIAL_SECRET` | Yes | Secret key for encrypting stored integration credentials |
 
 ---
 
@@ -112,25 +92,25 @@ npm install
 
 # 2. Configure environment
 cp .env.local.example .env.local
-# Edit .env.local with your InsForge credentials
+# Edit .env.local with your InsForge + Apify credentials
 
-# 3. Run in demo mode (no external API keys needed)
-DEMO_MODE=true npm run dev
+# 3. Run the dev server
+npm run dev
 
 # 4. Open http://localhost:3000
 ```
 
 ---
 
-## Demo Script
+## Features
 
-The demo shows a complete scan lifecycle against a seeded company ("Acme AI") with a pre-computed verdict: **Moving upmarket at 82% confidence**.
-
-1. Navigate to **http://localhost:3000** — the landing page describes the product.
-2. Click **Dashboard** → you see the Acme AI company card with a completed scan.
-3. Click **Acme AI** → company detail shows watch targets, scan history, claims and verdict.
-4. Click **Run Scan** → a new scan is queued; the progress timeline updates in real time.
-5. Navigate to **/scans/[new-scan-id]** → the scan detail page shows the full evidence package.
+- **Company Monitoring** — Add competitors with 3–5 public URLs (pricing, trust, docs, careers, changelog).
+- **Automated Scans** — Trigger scans that capture pages via Apify, diff against prior snapshots, and classify changes.
+- **Courtroom Verdicts** — AI-powered prosecution/defense/judge framework delivers a strategy prediction with confidence scores.
+- **Evidence Vault** — Every capture, diff, and report is stored in InsForge Storage with full audit trail.
+- **Claims Ledger** — All classified claims aggregated across companies with risk levels and evidence links.
+- **AI Chat** — Ask questions about any monitored company and get model-powered competitive analysis.
+- **Auth & Workspaces** — InsForge-backed authentication with workspace isolation via RLS.
 
 ---
 
@@ -153,18 +133,22 @@ npx tsc --noEmit
 
 ```
 app/                    Next.js App Router pages and API routes
-  api/companies/        REST endpoints (list, create, scan)
+  api/                  REST endpoints (companies, scans, auth, ai-chat)
   companies/            Company list + detail pages
-  scans/[id]/           Scan detail page
+  scans/                Scan list + detail pages
+  claims/               Claims ledger page
+  evidence-vault/       Evidence artifact browser
+  integrations/         Integration status dashboard
+  settings/             Workspace settings
 components/             Presentational React components
 lib/
-  adapters/             InsForge + demo adapter implementations
-  agents/               Claim extractor + classifier + judge
-  config/               Env var resolution + run-mode helpers
-  demo/                 Seeded demo data (Acme AI)
+  adapters/             Adapter implementations (Apify, InsForge, Model, Storage)
+  agents/               Claim extractor + classifier + debate + judge
+  auth/                 Auth helpers and workspace resolution
+  config/               Env var resolution
   schemas/              Shared Zod schemas
   workflow/             Mastra-based 12-step scan pipeline
     steps/              Individual workflow step modules
 tests/                  Cross-cutting property + integration tests
-  components/           Component unit tests
+  fixtures/             In-memory test fixtures
 ```

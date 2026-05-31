@@ -148,7 +148,6 @@ function seed(db: FakeDatabase, workspaces: WorkspaceModel[]): SeededWorld {
     workspaceRows.push({
       id: workspaceId,
       name: workspace.name,
-      is_demo: false,
       created_at: ts(),
     });
 

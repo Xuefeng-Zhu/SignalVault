@@ -858,7 +858,7 @@ export class LiveInsForgeClient implements InsForgeClient {
       "workspaces.bootstrap",
       this.db
         .from(TABLES.workspaces)
-        .insert([{ name: this.defaultWorkspaceName, is_demo: false }])
+        .insert([{ name: this.defaultWorkspaceName }])
         .select(),
     );
     const workspace = fromWorkspaceRow(firstOrThrow("workspaces.bootstrap", created));

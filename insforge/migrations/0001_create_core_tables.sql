@@ -132,7 +132,7 @@ CREATE TABLE integrations (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   provider text NOT NULL CHECK (provider IN ('Apify','Box')),
-  credential_ciphertext text,   -- encrypted (live) or mock placeholder (demo)
+  credential_ciphertext text,   -- encrypted credential value
   is_mock boolean NOT NULL DEFAULT false,
   created_at timestamptz NOT NULL DEFAULT now(),
   UNIQUE (workspace_id, provider)

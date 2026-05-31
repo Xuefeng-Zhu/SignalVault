@@ -38,8 +38,8 @@ function seedTwoTenants(db: FakeDatabase): {
   scanB: string;
 } {
   db.tables.workspaces = [
-    { id: WS_A, name: "A", is_demo: false, created_at: "2024-01-01T00:00:00Z" },
-    { id: WS_B, name: "B", is_demo: false, created_at: "2024-01-01T00:00:00Z" },
+    { id: WS_A, name: "A", created_at: "2024-01-01T00:00:00Z" },
+    { id: WS_B, name: "B", created_at: "2024-01-01T00:00:00Z" },
   ];
   db.tables.companies = [
     {

@@ -111,7 +111,6 @@ function seed(db: FakeDatabase, scenario: Scenario): SeededWorld {
     workspaceRows.push({
       id: workspaceId,
       name: `Main Workspace ${i}`,
-      is_demo: false,
       created_at: ts(),
     });
     memberRows.push({
@@ -130,7 +129,6 @@ function seed(db: FakeDatabase, scenario: Scenario): SeededWorld {
     workspaceRows.push({
       id: workspaceId,
       name: `Other Workspace ${j}`,
-      is_demo: false,
       created_at: ts(),
     });
     memberRows.push({
