@@ -12,7 +12,7 @@
  *
  * `import type` for the adapter surface keeps this module out of the
  * `server-only` runtime guard that `@/lib/adapters/types` pulls in — mirroring
- * the live/demo repository cores — so it stays importable from plain test
+ * the repository cores — so it stays importable from plain test
  * runtimes.
  */
 

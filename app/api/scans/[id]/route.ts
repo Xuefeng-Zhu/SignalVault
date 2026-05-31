@@ -79,7 +79,7 @@ export async function GET(
       { scan, snapshots, diffs, claims, verdict },
       {
         folderWebLink: (folderId) => storage.folderWebLink(folderId),
-        boxSimulated: storage.mode === "demo",
+        boxSimulated: false,
       },
     );
 

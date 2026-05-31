@@ -71,7 +71,7 @@ export interface ExtractClaimsData {
 /**
  * Boundary schema for a persisted {@link ClaimRow}. Reuses {@link ClaimSchema}
  * for the four base claim fields (Requirement 13.1) and adds the persistence
- * columns; ids are validated as non-empty strings so the demo store's
+ * columns; ids are validated as non-empty strings so the test store's
  * human-readable ids pass. Unknown columns pass through untouched.
  */
 const ClaimRowSchema = ClaimSchema.extend({

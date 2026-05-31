@@ -37,7 +37,7 @@ export interface ModelProviderConfig {
  * Resolve the single provider for an inference request from the set of
  * configured providers, applying the fixed precedence that always prefers the
  * InsForge Model Gateway (Requirement 24.2). Returns `null` when no provider is
- * configured, in which case the adapter operates in Demo_Mode (Requirement 24.3).
+ * configured, in which case the adapter is not operational (Requirement 24.3).
  *
  * Pure and deterministic — depends solely on `config`.
  */

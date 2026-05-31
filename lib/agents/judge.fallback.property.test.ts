@@ -20,7 +20,7 @@ import type { ClaimStatusAssignment } from './debate';
  *
  * *For any* agent output that fails its Zod schema validation, or *for any*
  * model invocation that errors / throws / times out, `concludeDebate` records
- * the failure cause and substitutes the deterministic Demo_Company fallback
+ * the failure cause and substitutes the deterministic fallback
  * Verdict ("moving_upmarket", confidence 85) so the workflow can continue —
  * and it NEVER throws.
  *
@@ -229,13 +229,13 @@ interface FailureScenario {
   model: ModelClient;
 }
 
-/** Build a fake demo `ModelClient` whose `complete()` runs `behavior`. */
+/** Build a fake `ModelClient` whose `complete()` runs `behavior`. */
 function makeModel(
   behavior: () => Promise<{ text: string; simulated: boolean }>,
 ): ModelClient {
   return {
     isConfigured: () => false,
-    mode: 'demo',
+    mode: 'live',
     complete: behavior,
   };
 }
@@ -318,7 +318,7 @@ describe('Property 23: model failure / invalid agent output yields the determini
           model: scenario.model,
         });
 
-        // The deterministic Demo_Company fallback was substituted...
+        // The deterministic fallback was substituted...
         expect(result.isFallback).toBe(true);
 
         // ...with a recorded, human-readable failure cause...

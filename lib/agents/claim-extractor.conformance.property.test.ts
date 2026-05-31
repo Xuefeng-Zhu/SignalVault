@@ -179,12 +179,12 @@ const scenarioArb = fc
   );
 
 /**
- * Build the inline FAKE ModelClient described by the task: demo mode, never
+ * Build the inline FAKE ModelClient described by the task: never
  * configured, returns the generated `text` and never makes a network call.
  */
 function fakeModel(text: string): ModelClient {
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     complete: async () => ({ text, simulated: true }),
   };

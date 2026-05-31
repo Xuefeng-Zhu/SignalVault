@@ -18,7 +18,7 @@ import type { DebateData } from "./run-debate";
  * Renders the final AI-authored intelligence brief as markdown and uploads it
  * to the Box `reports/` subfolder (Requirement 16.5). The brief is a pure
  * function of the evidence the prior steps produced, so it is deterministic for
- * a deterministic (demo) run.
+ * a deterministic run.
  *
  * The brief covers (design "writeBriefToBoxStep" + Requirement 16):
  *  - the company and the strategy verdict (prediction + confidence + risk),

@@ -57,7 +57,6 @@ export async function handleStoreIntegration(
     stored = buildStoredCredential({
       provider,
       plaintext,
-      demoMode: false,
       secret: credentialEncryptionSecret(),
     });
   } catch (error) {

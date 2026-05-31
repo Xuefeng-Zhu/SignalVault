@@ -113,7 +113,6 @@ export function fromWorkspaceRow(row: DbRow): Workspace {
   return {
     id: str(row.id),
     name: str(row.name),
-    isDemo: bool(row.is_demo),
     createdAt: str(row.created_at),
   };
 }

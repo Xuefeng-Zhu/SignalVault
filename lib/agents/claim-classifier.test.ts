@@ -26,7 +26,7 @@ function claim(statementText: string, overrides: Partial<Claim> = {}): Claim {
 function stubModel(text: string): ModelClient & { requests: InferenceRequest[] } {
   const requests: InferenceRequest[] = [];
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     async complete(req: InferenceRequest) {
       requests.push(req);
@@ -133,7 +133,7 @@ describe("classifyClaims", () => {
 
   it("falls back to needs_review for all claims when the model throws (14.3)", async () => {
     const model: ModelClient = {
-      mode: "demo",
+      mode: "live",
       isConfigured: () => false,
       complete: vi.fn().mockRejectedValue(new Error("boom")),
     };

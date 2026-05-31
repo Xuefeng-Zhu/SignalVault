@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 
 // Import the pure resolver directly (NOT via the barrel) so the test never
-// pulls in the server-only live/demo Model clients.
+// pulls in the server-only live Model clients.
 import {
   resolveModelProvider,
   type ModelProviderConfig,
@@ -45,7 +45,7 @@ describe('Property 30: Model routing prefers the InsForge Model Gateway', () => 
           // InsForge absent → fall back to the configured OpenAI-compatible endpoint.
           expect(provider).toBe('openai-compatible');
         } else {
-          // No provider configured → null (adapter operates in Demo Mode).
+          // No provider configured → null (adapter not operational).
           expect(provider).toBeNull();
         }
       }),

@@ -182,7 +182,7 @@ export class LiveApifyClient implements ApifyClient {
     }
 
     // Without a token we cannot reach Apify; skip rather than throw. (The
-    // selection factory routes uncredentialed runs to the demo client per
+    // selection factory routes uncredentialed runs to a fallback per
     // Requirement 8.6; this is purely defensive.)
     if (!this.isConfigured()) {
       return this.skip(request, "Apify token not configured");

@@ -23,7 +23,6 @@ export {
   buildStoredCredential,
   buildIntegrationRow,
   buildIntegrationResponse,
-  demoMockPlaceholder,
   MissingEncryptionSecretError,
   CREDENTIAL_MASK,
   type StoredCredential,

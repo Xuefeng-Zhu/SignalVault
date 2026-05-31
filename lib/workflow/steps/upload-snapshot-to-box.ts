@@ -54,7 +54,7 @@ import {
  *
  * - If `ensureScanFolders` throws, the whole step degrades: a warning is
  *   recorded and an empty (simulated) folder set is returned so the scan
- *   continues. (In practice the Box adapter falls back to a demo client that
+ *   continues. (In practice the Box adapter falls back to a simulated client that
  *   returns mock ids rather than throwing — Requirements 10.5, 19.2.)
  * - A per-artifact upload failure is recorded as a warning and skipped; the
  *   remaining artifacts and snapshots continue.

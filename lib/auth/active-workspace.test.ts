@@ -14,7 +14,6 @@ import { resolveActiveWorkspaceCore } from "./active-workspace";
 const WORKSPACE: Workspace = {
   id: "ws-1",
   name: "Test Workspace",
-  isDemo: false,
   createdAt: "2024-01-01T00:00:00.000Z",
 };
 

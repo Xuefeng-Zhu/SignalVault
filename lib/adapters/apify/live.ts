@@ -15,8 +15,8 @@ import { LiveApifyClient, type LiveApifyClientOptions } from "./live-capture";
  * `./live-capture`, which carries the capture logic (per-URL actor run, 60s
  * cap, SSRF re-check, and per-source error isolation).
  *
- * The selection factory (task 6.2) constructs this in live mode; uncredentialed
- * or `DEMO_MODE` runs are routed to the demo client (Requirements 8.6, 18.x).
+ * The selection factory (task 6.2) constructs this in live mode when
+ * credentials are present (Requirements 8.6, 18.x).
  */
 export function createLiveApifyClient(
   options: LiveApifyClientOptions = {},

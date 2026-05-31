@@ -25,7 +25,7 @@ import { createCompany, listCompanies } from "./companies";
  *     dropped.
  *
  * The property is driven against a REAL in-memory workspace repository (the
- * un-seeded demo InsForge store) — no mocks — so creation and listing flow
+ * un-seeded in-memory InsForge store) — no mocks — so creation and listing flow
  * through the same `WorkspaceRepository` surface the live client implements.
  *
  * Names are generated adversarially for case-insensitive ordering: pairs that

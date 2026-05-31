@@ -120,7 +120,7 @@ class FakeRepo {
 
 function fakeInsForge(repo: FakeRepo): InsForgeClient {
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     scoped: () => repo.asRepository(),
     getActiveWorkspace: async () => {
@@ -134,7 +134,7 @@ function fakeApify(
   handler: (requests: CaptureRequest[]) => Promise<CaptureResult[]> | CaptureResult[],
 ): ApifyClient {
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     capture: async (requests: CaptureRequest[]) => handler(requests),
   } as unknown as ApifyClient;
@@ -168,7 +168,7 @@ class FakeBox {
   asClient(): BoxClient {
     const self = this;
     return {
-      mode: "demo",
+      mode: "live",
       isConfigured: () => false,
       async ensureScanFolders(): Promise<BoxFolderSet> {
         if (self.throwOnFolders) throw new Error("box folders unavailable");
@@ -197,7 +197,7 @@ class FakeBox {
 }
 
 const noopModel = {
-  mode: "demo",
+  mode: "live",
   isConfigured: () => false,
   complete: async () => ({ text: "", simulated: true }),
 } as unknown as ModelClient;
@@ -221,7 +221,7 @@ function makeContext(parts: {
     companySlug: "dropbox",
     scanTimestamp: "2024-01-01T00-00-00",
     scanCreatedAt: "2024-01-01T00:00:00.000Z",
-    mode: "demo",
+    mode: "live",
     adapters,
     currentSnapshots: [],
     warnings: [],
@@ -309,13 +309,13 @@ describe("runApifyCaptureStep (Requirements 8.1, 8.5)", () => {
     ]);
   });
 
-  it("surfaces a single 'simulated' warning when the adapter substitutes demo data (Req 8.6)", async () => {
+  it("surfaces a single 'simulated' warning when the adapter substitutes simulated data (Req 8.6)", async () => {
     const apify = fakeApify((requests) =>
       requests.map((r) => ({
         url: r.url,
         pageRole: r.pageRole,
         ok: true,
-        rawHtml: "<html><body><main>demo</main></body></html>",
+        rawHtml: "<html><body><main>simulated</main></body></html>",
         simulated: true,
       })),
     );

@@ -44,7 +44,7 @@ import {
  *  - **15.7** — when the defense, prosecution, OR judge output fails its Zod
  *    schema validation (or the model errors / times out, per 19.3),
  *    {@link concludeDebate} records the failure cause and substitutes the
- *    deterministic Demo_Company fallback Verdict, letting the workflow continue.
+ *    deterministic fallback Verdict, letting the workflow continue.
  *
  * ## Reconciliation with `./debate` (task 17.1)
  *
@@ -109,7 +109,7 @@ export interface DebateInput extends DebateEvidence {
 
 /**
  * The conclusion of the debate. `verdict` always satisfies {@link VerdictSchema}.
- * `isFallback` records whether the deterministic Demo_Company fallback was
+ * `isFallback` records whether the deterministic fallback was
  * substituted (consumed by the persistence step 18.7, which writes the
  * `verdicts.is_fallback` column), and `failureCause` records why (Requirement
  * 15.7). For the normal and insufficient-evidence paths `isFallback` is false
@@ -142,8 +142,8 @@ export class JudgeOutputError extends Error {
 /* Constants                                                                  */
 /* -------------------------------------------------------------------------- */
 
-/** `responseSchemaName` for the judge request; the demo model client keys its
- * deterministic Verdict payload off a name containing "verdict"/"judge". */
+/** `responseSchemaName` for the judge request; the model client uses a name
+ * containing "verdict"/"judge" for tracing. */
 export const JUDGE_RESPONSE_SCHEMA_NAME = 'Verdict' as const;
 
 /** Per-request model timeout ceiling for the judge (Requirement 19.3 / 60s). */
@@ -342,7 +342,7 @@ function fallbackConclusion(failureCause: string): DebateConclusion {
  *     prosecution outputs against their Zod schemas, then run the judge. If any
  *     of the three fails Zod validation (or the model errors / times out, per
  *     19.3), record the failure cause and substitute the deterministic
- *     Demo_Company fallback verdict so the workflow can continue.
+ *     fallback verdict so the workflow can continue.
  *  3. **Normal** — otherwise return the validated judge Verdict.
  */
 export async function concludeDebate(input: DebateInput): Promise<DebateConclusion> {

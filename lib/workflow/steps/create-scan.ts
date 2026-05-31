@@ -42,7 +42,7 @@ export const CREATE_SCAN_STATUS: ScanStatus = "queued";
 /**
  * Pure core for `createScanStep`. Confirms the queued scan and returns the
  * baseline state. Adapters are injected via {@link StepDeps}, so the core is
- * fully testable offline against the demo/in-memory InsForge client.
+ * fully testable offline against the in-memory InsForge client.
  *
  * @throws if the scan does not exist in the bound workspace (a cross-tenant or
  *   unknown scan), or if it is not in the expected `queued` baseline status.

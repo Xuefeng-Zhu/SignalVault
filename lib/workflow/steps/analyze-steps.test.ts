@@ -83,7 +83,7 @@ class FakeRepo {
 
 function fakeInsForge(repo: FakeRepo): InsForgeClient {
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     scoped: () => repo.asRepository(),
     getActiveWorkspace: async () => {
@@ -120,7 +120,7 @@ class FakeBox {
   asClient(): BoxClient {
     const self = this;
     return {
-      mode: "demo",
+      mode: "live",
       isConfigured: () => false,
       async upload(
         folderId: string,
@@ -151,7 +151,7 @@ function fakeModel(
 ): ModelClient & { requests: InferenceRequest[] } {
   const requests: InferenceRequest[] = [];
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     async complete(req: InferenceRequest) {
       requests.push(req);
@@ -182,7 +182,7 @@ function makeContext(parts: {
     companySlug: "dropbox",
     scanTimestamp: "2024-01-01T00-00-00",
     scanCreatedAt: "2024-01-01T00:00:00.000Z",
-    mode: "demo",
+    mode: "live",
     adapters,
     ...(parts.boxFolders !== undefined ? { boxFolders: parts.boxFolders } : {}),
     currentSnapshots: parts.currentSnapshots ?? [],
@@ -466,7 +466,7 @@ describe("runDebateStep (Requirements 15.1, 15.2, 15.3)", () => {
 
     expect(result.isFallback).toBe(true);
     expect(result.failureCause).toBeTruthy();
-    // The deterministic fallback is the demo verdict.
+    // The deterministic fallback verdict is used.
     expect(result.verdict.strategyPrediction).toBe("moving_upmarket");
     expect(ctx.warnings.some((w) => w.includes("fallback verdict"))).toBe(true);
   });

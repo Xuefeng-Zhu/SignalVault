@@ -153,7 +153,7 @@ function buildArrayText(specs: ClaimSpec[], claims: Claim[]): string {
 function makeModel(mode: ModelMode, arrayText: string) {
   let calls = 0;
   const model: ModelClient = {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     async complete() {
       calls += 1;

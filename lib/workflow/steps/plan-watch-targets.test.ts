@@ -30,7 +30,7 @@ function baseline(urls: BaselineState["urls"]): BaselineState {
     companyId: randomUUID(),
     companyName: "Dropbox",
     companySlug: "dropbox",
-    mode: "demo",
+    mode: "live",
     warnings: [],
     skipped: [],
     urls,

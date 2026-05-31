@@ -83,7 +83,7 @@ export interface ComputeDiffData {
 /**
  * Zod schema for the canonical computed {@link Diff}, enforcing the Requirement
  * 11.2 bounds (integer `change_score` in [0, 100]) before the diff is
- * persisted. Snapshot references are validated as non-empty strings so the demo
+ * persisted. Snapshot references are validated as non-empty strings so the test
  * store's human-readable ids pass.
  */
 const DiffSchema = z.object({

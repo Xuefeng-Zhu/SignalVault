@@ -10,7 +10,7 @@ import type { InferenceRequest, ModelClient } from "@/lib/adapters/types";
  * the prior-Snapshot Claims) and performs no external side effects beyond the
  * injected {@link ModelClient} (Requirements 13.3, 15.5, 23.7). The module is
  * intentionally NOT `server-only`: the core stays importable from unit and
- * property tests, which inject a stub {@link ModelClient}. The live/demo client
+ * property tests, which inject a stub {@link ModelClient}. The client
  * selection happens in the workflow step (task 18.6), not here.
  *
  * Contract (Requirement 14):
@@ -29,9 +29,9 @@ const CLASSIFY_TIMEOUT_MS = 60_000;
 
 /**
  * `responseSchemaName` passed to the {@link ModelClient}. It deliberately
- * contains both "status" and "classification" so the demo inference router maps
- * it to the deterministic claim-status payload (see `demo-inference.ts`), and so
- * the live client traces it under a descriptive name.
+ * contains both "status" and "classification" so the inference router maps
+ * it to the deterministic claim-status payload, and so the live client
+ * traces it under a descriptive name.
  */
 export const CLAIM_STATUS_SCHEMA_NAME = "ClaimStatusClassification";
 
@@ -68,7 +68,7 @@ export interface ClassifyClaimsInput {
    * Claim is `new` deterministically (14.2); see {@link hasComparisonBasis}.
    */
   hasPriorSnapshot: boolean;
-  /** Injected model adapter (live or demo). */
+  /** Injected model adapter. */
   model: ModelClient;
 }
 

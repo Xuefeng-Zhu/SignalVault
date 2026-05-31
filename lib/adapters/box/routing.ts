@@ -2,8 +2,8 @@
 //
 // `import type` keeps this module free of the `server-only` runtime guard that
 // `@/lib/adapters/types` pulls in, so the routing logic stays unit-testable
-// while the live/demo Box *clients* remain server-only. This mirrors the apify
-// adapter's `demo-capture` split.
+// while the live Box *clients* remain server-only. This mirrors the apify
+// adapter's capture split.
 //
 // The Box folder tree for a scan is
 // `/SignalVault/{Company}/scans/{timestamp}/{raw,normalized,screenshots,diffs,claims,reports}`

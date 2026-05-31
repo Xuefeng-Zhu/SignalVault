@@ -280,7 +280,7 @@ describe("Property 8: capture yields one result per source and never throws (Req
 
         results.forEach((result, i) => {
           assertShapeInvariant(result);
-          // The live core never fabricates demo data.
+          // The live core never fabricates simulated data.
           expect(result.simulated).toBe(false);
 
           const url = requests[i]!.url;

@@ -14,7 +14,7 @@ import { parseAtBoundary } from "./artifacts";
  * {@link import('../context').WorkflowContext.adapters} (the sole door to
  * external services — Requirement 23.1). Authoring cores this way keeps them
  * importable and exercisable offline by the property tests (18.10) and the
- * integration test (18.11): a test injects demo/fake adapters and calls the core
+ * integration test (18.11): a test injects fake adapters and calls the core
  * directly, with no Mastra runtime and no `server-only` module in the import
  * graph.
  *

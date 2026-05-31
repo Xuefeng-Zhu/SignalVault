@@ -43,7 +43,7 @@ const MARKER = "\u0001";
 /** A model client that always returns a fixed `text` and performs no I/O. */
 function fakeModelReturning(text: string): ModelClient {
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     async complete() {
       return { text, simulated: true };

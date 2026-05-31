@@ -41,7 +41,7 @@ import type { ComputeDiffData } from "./compute-diff";
  *     rules in priority order:
  *       - insufficient-evidence short-circuit when no diffs AND no statuses
  *         exist (Requirement 15.6), then
- *       - the deterministic Demo_Company fallback when any agent output (defense,
+ *       - the deterministic fallback when any agent output (defense,
  *         prosecutor, or judge) fails validation or the model errors
  *         (Requirements 15.7, 19.3), else
  *       - the validated judge Verdict (Requirement 15.3).

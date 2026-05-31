@@ -66,8 +66,8 @@ export type ProsecutorArgument = z.infer<typeof ProsecutorSchema>;
 
 /**
  * One classifier assignment: a Claim's `statementText` paired with the
- * Claim_Status the classifier gave it. This mirrors the status payload the
- * demo ModelClient emits and is the shape the debate step (18.6) passes in.
+ * Claim_Status the classifier gave it. This is the shape the debate step
+ * (18.6) passes in.
  */
 export interface ClaimStatusAssignment {
   statementText: string;
@@ -106,7 +106,7 @@ export type DebateRole = "defense" | "prosecutor";
  * schema. This is how a debate agent SURFACES a validation failure: rather than
  * swallowing it or substituting a value here, it throws a typed error that the
  * judge + fallback layer (task 17.2) catches to record the failure cause and
- * substitute the deterministic Demo_Company fallback Verdict, then continue the
+ * substitute the deterministic fallback Verdict, then continue the
  * workflow (Requirement 15.7).
  *
  * The error carries everything 17.2 needs to "record the failure cause": the
@@ -138,10 +138,10 @@ export const DEBATE_TIMEOUT_MS = 60_000;
 
 /**
  * Serialize the evidence into the single user message a debate agent reasons
- * over. The payload is stable two-space JSON so demo runs stay byte-identical
- * (Requirement 18.7) and the model has an explicit, closed evidence set —
- * reinforcing the "reason only over this evidence" instruction in each agent's
- * system prompt (Requirement 15.5).
+ * over. The payload is stable two-space JSON so deterministic runs stay
+ * byte-identical (Requirement 18.7) and the model has an explicit, closed
+ * evidence set — reinforcing the "reason only over this evidence" instruction
+ * in each agent's system prompt (Requirement 15.5).
  */
 export function buildEvidenceMessages(evidence: DebateEvidence): InferenceMessage[] {
   const payload = JSON.stringify(
@@ -167,7 +167,7 @@ export function buildEvidenceMessages(evidence: DebateEvidence): InferenceMessag
 
 /**
  * Build the {@link InferenceRequest} for a debate agent from its stance
- * (`system`), the `responseSchemaName` used for tracing and demo payload
+ * (`system`), the `responseSchemaName` used for tracing and payload
  * routing, and the evidence. Bounded by {@link DEBATE_TIMEOUT_MS}.
  */
 export function buildDebateRequest(

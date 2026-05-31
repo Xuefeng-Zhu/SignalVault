@@ -30,7 +30,7 @@ import { createCompany } from "./companies";
  * domain rejection, Req 4.5).
  *
  * Each property runs against a FRESH, un-seeded in-memory workspace repository
- * (the demo InsForge store) — no mocks — so "exactly one company" is asserted
+ * (the in-memory InsForge store) — no mocks — so "exactly one company" is asserted
  * against an empty starting state, end to end through the same repository
  * surface the live client implements.
  *

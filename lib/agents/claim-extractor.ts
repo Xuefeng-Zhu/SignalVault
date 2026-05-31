@@ -3,9 +3,9 @@ import { z } from "zod";
 import { ClaimSchema, type Claim, type SourceType } from "@/lib/schemas";
 // `import type` keeps this module free of the `server-only` runtime guard that
 // `@/lib/adapters/types` pulls in, so the pure extractor logic stays directly
-// unit-/property-testable with a FAKE ModelClient, mirroring the adapter layer's
-// `demo-inference` / `demo-capture` split. The injected ModelClient is the ONLY
-// outward dependency; there is no DB, no Box, and no network here (Req 13.3).
+// unit-/property-testable with a FAKE ModelClient. The injected ModelClient is
+// the ONLY outward dependency; there is no DB, no Box, and no network here
+// (Req 13.3).
 import type { InferenceRequest, ModelClient } from "@/lib/adapters/types";
 
 /**
@@ -62,11 +62,9 @@ export interface ExtractClaimsInput {
 /**
  * Build the {@link InferenceRequest} for claim extraction.
  *
- * `responseSchemaName` contains "Claim" so the demo {@link ModelClient} maps it
- * to its seeded `Claim[]` payload (see `lib/adapters/model/demo-inference.ts`),
- * while the live client passes it through for tracing. The normalized content
- * is supplied verbatim as the user message so the model can only ground claims
- * in evidence we already persisted.
+ * `responseSchemaName` contains "Claim" so the {@link ModelClient} can route it
+ * for tracing. The normalized content is supplied verbatim as the user message
+ * so the model can only ground claims in evidence we already persisted.
  */
 function buildExtractionRequest(
   normalizedContent: string,

@@ -9,9 +9,8 @@ import type { Diff, ModifiedSection } from "@/lib/diff";
  * Adapters are the SOLE access points through which System components talk to
  * Apify, Box, InsForge, and the model provider; no other component issues
  * requests to those external services directly (Requirement 23.1). This file
- * defines only the interfaces and supporting domain types — the live and demo
- * implementations, and the selection factory, are authored by later tasks
- * (7.x / 9.x / 11.x / 13.x and 6.2 respectively).
+ * defines only the interfaces and supporting domain types — the live
+ * implementations, and the factory, are authored by later tasks.
  *
  * Every adapter:
  *  - exposes a narrow TypeScript interface,
@@ -28,14 +27,9 @@ import type { Diff, ModifiedSection } from "@/lib/diff";
 /* -------------------------------------------------------------------------- */
 
 /**
- * Resolved operating mode for a single adapter.
- *
- * This is the canonical adapter `RunMode`. It is structurally identical to the
- * local `RunMode` in `lib/config/env.ts` (`'demo' | 'live'`); that module keeps
- * a local copy only to avoid a build-time dependency on this file, and the two
- * are interchangeable by design.
+ * Resolved operating mode for a single adapter. Always "live" in production.
  */
-export type RunMode = "live" | "demo";
+export type RunMode = "live";
 
 export interface Adapter {
   /** True when all required credentials for live operation are present. */
@@ -60,7 +54,7 @@ export interface CaptureResult {
   ok: boolean;
   rawHtml?: string;
   screenshotRef?: string; // Apify key-value store ref or mock ref
-  simulated: boolean; // true when demo data was substituted
+  simulated: boolean; // true when data was substituted (e.g. fallback)
   skippedReason?: string; // SSRF rejection, timeout, or upstream failure
 }
 
@@ -113,7 +107,7 @@ export interface BoxClient extends Adapter {
     name: string,
     content: Buffer | string,
   ): Promise<BoxUploadResult>;
-  /** Web link for a folder; mock links are allowed in demo mode (Requirement 10.6). */
+  /** Web link for a folder (Requirement 10.6). */
   folderWebLink(folderId: string): string;
 }
 
@@ -138,7 +132,6 @@ export type IntegrationProvider = "Apify" | "Box" | "InsForge Storage";
 export interface Workspace {
   id: string;
   name: string;
-  isDemo: boolean;
   createdAt: string;
 }
 
@@ -252,7 +245,7 @@ export interface Integration {
   id: string;
   workspaceId: string;
   provider: IntegrationProvider;
-  credentialCiphertext?: string | null; // encrypted (live) or mock placeholder (demo)
+  credentialCiphertext?: string | null; // encrypted credential
   isMock: boolean;
   createdAt: string;
 }

@@ -132,7 +132,7 @@ class FakeRepo {
 
 function fakeInsForge(repo: FakeRepo): InsForgeClient {
   return {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     scoped: () => repo.asRepository(),
     getActiveWorkspace: async () => {
@@ -165,7 +165,7 @@ class FakeBox {
   asClient(): BoxClient {
     const self = this;
     return {
-      mode: "demo",
+      mode: "live",
       isConfigured: () => false,
       async ensureScanFolders(): Promise<BoxFolderSet> {
         return { ...self.folderSet, simulated: self.simulated };
@@ -195,13 +195,13 @@ class FakeBox {
 }
 
 const noopApify = {
-  mode: "demo",
+  mode: "live",
   isConfigured: () => false,
   capture: async () => [],
 } as unknown as ApifyClient;
 
 const noopModel = {
-  mode: "demo",
+  mode: "live",
   isConfigured: () => false,
   complete: async () => ({ text: "", simulated: true }),
 } as unknown as ModelClient;
@@ -221,7 +221,7 @@ function makeContext(repo: FakeRepo, box: FakeBox): ScanWorkflowContext {
     companySlug: "dropbox",
     scanTimestamp: "2024-01-01T00-00-00",
     scanCreatedAt: "2024-01-01T00:00:00.000Z",
-    mode: "demo",
+    mode: "live",
     adapters,
   });
 }

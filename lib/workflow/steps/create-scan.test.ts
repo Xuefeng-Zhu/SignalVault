@@ -14,7 +14,7 @@ import { makeStepDeps } from "./test-helpers";
  *
  * The core confirms a queued scan (created by the API route) in the
  * workspace-scoped InsForge repo and seeds the baseline workflow state. These
- * tests inject a real demo in-memory InsForge client and exercise the core
+ * tests inject a real in-memory InsForge client and exercise the core
  * directly — no Mastra runtime, no network.
  */
 
@@ -40,7 +40,7 @@ async function seedQueuedScan(
       { url: "https://acme.example/docs", pageRole: "docs" },
       { url: "https://acme.example/", pageRole: "homepage" },
     ],
-    mode: "demo",
+    mode: "live",
   };
 
   return { scan: scan!, workspaceId, companyId, input };
@@ -63,7 +63,7 @@ describe("createScanCore", () => {
     expect(baseline.companyId).toBe(input.companyId);
     expect(baseline.companyName).toBe("Dropbox");
     expect(baseline.companySlug).toBe("dropbox");
-    expect(baseline.mode).toBe("demo");
+    expect(baseline.mode).toBe("live");
 
     // Watch targets carried forward; diagnostics start empty.
     expect(baseline.urls).toEqual(input.urls);

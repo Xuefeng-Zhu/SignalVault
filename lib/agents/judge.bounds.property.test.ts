@@ -37,7 +37,7 @@ import { PBT_MIN_RUNS, pbtParams } from '@/tests/fast-check.config';
  *
  * The always-valid guarantee lives in {@link concludeDebate}: it applies the
  * deterministic insufficient-evidence short-circuit (15.6) and substitutes the
- * deterministic Demo_Company fallback verdict on any defense/prosecution/judge
+ * deterministic fallback verdict on any defense/prosecution/judge
  * Zod failure or model error (15.7). So we drive it adversarially — with
  * evidence that is sometimes empty, defense/prosecution inputs that are
  * sometimes structurally invalid, and a fake ModelClient whose output ranges
@@ -196,7 +196,7 @@ const modelBehaviorArb: fc.Arbitrary<ModelBehavior> = fc.oneof(
 /** Build an inline fake ModelClient from a generated behavior. */
 function makeModelClient(behavior: ModelBehavior): ModelClient {
   return {
-    mode: 'demo',
+    mode: 'live',
     isConfigured: () => false,
     complete: async () => {
       if (behavior.throws) {

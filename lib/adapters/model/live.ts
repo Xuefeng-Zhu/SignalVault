@@ -27,9 +27,7 @@ import { resolveModelProvider, type ModelProvider } from "./resolve";
  * is thrown so the calling workflow step can treat it as failed.
  *
  * `import "server-only"` keeps this module — and the credentials it reads — out
- * of the browser bundle (Requirement 22.1). The Demo implementation, which
- * never makes a network call, is a separate task (13.2); the selection factory
- * is task 6.2.
+ * of the browser bundle (Requirement 22.1). The selection factory is task 6.2.
  */
 
 /** Hard ceiling for any inference request, in milliseconds (Requirement 24.4). */
@@ -233,7 +231,7 @@ export class LiveModelClient implements ModelClient {
 
     if (provider === null) {
       // No live provider configured: the factory (task 6.2) should select the
-      // demo client instead, so reaching here is a misconfiguration.
+      // no fallback client available, so reaching here is a misconfiguration.
       throw new ModelRequestError(
         "LiveModelClient.complete invoked with no inference provider configured",
       );

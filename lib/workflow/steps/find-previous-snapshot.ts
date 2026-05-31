@@ -65,7 +65,7 @@ export interface SelectPriorSnapshotsParams {
 /**
  * Zod schema validating the selection input boundary (Requirement 23.5). Ids
  * are validated as non-empty strings rather than UUIDs so the deterministic
- * demo store's human-readable ids (e.g. `demo-company-dropbox`) pass too. Only
+ * test store's human-readable ids pass too. Only
  * the fields the selection relies on are asserted; the remaining Snapshot
  * fields pass through untouched.
  */

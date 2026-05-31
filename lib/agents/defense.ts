@@ -47,8 +47,7 @@ export const DEFENSE_SYSTEM_PROMPT = [
 
 /**
  * `responseSchemaName` for the defense request. It contains "Defense" so the
- * live client traces it and the demo ModelClient routes to its seeded
- * defense payload (the demo matches names containing "defense"/"defence").
+ * live client traces it under a descriptive name.
  */
 export const DEFENSE_RESPONSE_SCHEMA_NAME = "DefenseArgument";
 

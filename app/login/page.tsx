@@ -1,7 +1,7 @@
 import { LoginForm } from "./login-form";
 
 /**
- * Login page for non-demo mode. Renders email/password + OAuth sign-in.
+ * Login page. Renders email/password + OAuth sign-in.
  * The middleware redirects unauthenticated requests here with ?redirectTo=...
  */
 export default function LoginPage({

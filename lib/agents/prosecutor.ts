@@ -53,8 +53,7 @@ export const PROSECUTOR_SYSTEM_PROMPT = [
 
 /**
  * `responseSchemaName` for the prosecutor request. It contains "Prosecutor" so
- * the live client traces it and the demo ModelClient routes to its seeded
- * prosecutor payload (the demo matches names containing "prosecut").
+ * the live client traces it under a descriptive name.
  */
 export const PROSECUTOR_RESPONSE_SCHEMA_NAME = "ProsecutorArgument";
 

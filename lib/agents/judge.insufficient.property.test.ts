@@ -62,7 +62,7 @@ function makeModel(behavior: ModelBehavior): {
 } {
   let calls = 0;
   const client: ModelClient = {
-    mode: "demo",
+    mode: "live",
     isConfigured: () => false,
     async complete(_req: InferenceRequest): Promise<{ text: string; simulated: boolean }> {
       calls += 1;

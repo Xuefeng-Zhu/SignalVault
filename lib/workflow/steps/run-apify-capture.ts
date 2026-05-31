@@ -38,7 +38,7 @@ import {
  * - `ApifyClient.capture` returns one {@link CaptureResult} per request and
  *   never throws on a per-source skip; a skipped/failed source (`ok = false`)
  *   is recorded in `ctx.skipped` with its reason and does NOT create a snapshot.
- * - When the adapter substitutes demo data (`simulated = true`) — because Apify
+ * - When the adapter substitutes simulated data (`simulated = true`) — because Apify
  *   credentials are missing or the live call failed — a single "results are
  *   simulated" warning is surfaced (Requirement 8.6). The simulated flag is
  *   persisted on each Snapshot.

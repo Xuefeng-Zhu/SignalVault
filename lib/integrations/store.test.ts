@@ -7,24 +7,22 @@ import {
   buildIntegrationRow,
   buildStoredCredential,
   CREDENTIAL_MASK,
-  demoMockPlaceholder,
   MissingEncryptionSecretError,
 } from "./store";
 import { serializeConfig } from "./schemas";
 
-// Unit tests for the importable encrypt/mock + response-shaping logic (task
+// Unit tests for the importable encrypt + response-shaping logic (task
 // 20.9). The credential-non-leakage property test (task 20.11) builds on these
 // same functions.
 
 const SECRET = "unit-test-encryption-secret";
 
 describe("buildStoredCredential", () => {
-  it("encrypts live credentials so the persisted value != plaintext (Req 22.3)", () => {
+  it("encrypts credentials so the persisted value != plaintext (Req 22.3)", () => {
     const plaintext = serializeConfig("Apify", { apifyToken: "tok_live_123" });
     const stored = buildStoredCredential({
       provider: "Apify",
       plaintext,
-      demoMode: false,
       secret: SECRET,
     });
 
@@ -34,27 +32,11 @@ describe("buildStoredCredential", () => {
     expect(isEncryptedCredential(stored.credentialCiphertext)).toBe(true);
   });
 
-  it("stores a mock placeholder in Demo_Mode (Req 22.4)", () => {
-    const plaintext = serializeConfig("Box", { developerToken: "dev_tok" });
-    const stored = buildStoredCredential({
-      provider: "Box",
-      plaintext,
-      demoMode: true,
-    });
-
-    expect(stored.isMock).toBe(true);
-    expect(stored.credentialCiphertext).toBe(demoMockPlaceholder("Box"));
-    expect(stored.credentialCiphertext.includes("dev_tok")).toBe(false);
-    // The mock placeholder is structurally distinct from ciphertext.
-    expect(isEncryptedCredential(stored.credentialCiphertext)).toBe(false);
-  });
-
-  it("throws when live storage has no encryption secret", () => {
+  it("throws when storage has no encryption secret", () => {
     expect(() =>
       buildStoredCredential({
         provider: "Apify",
         plaintext: "x",
-        demoMode: false,
         secret: undefined,
       }),
     ).toThrow(MissingEncryptionSecretError);
@@ -79,7 +61,6 @@ describe("buildIntegrationResponse", () => {
     const stored = buildStoredCredential({
       provider: "Apify",
       plaintext,
-      demoMode: false,
       secret: SECRET,
     });
     const response = buildIntegrationResponse("Apify", stored);
@@ -97,14 +78,14 @@ describe("buildIntegrationResponse", () => {
     expect(serialized.includes(stored.credentialCiphertext)).toBe(false);
   });
 
-  it("reflects the mock flag for demo storage", () => {
+  it("reflects isMock flag correctly", () => {
     const stored = buildStoredCredential({
       provider: "Box",
       plaintext: serializeConfig("Box", { developerToken: "d" }),
-      demoMode: true,
+      secret: SECRET,
     });
     const response = buildIntegrationResponse("Box", stored);
-    expect(response.isMock).toBe(true);
+    expect(response.isMock).toBe(false);
     expect(response.configured).toBe(true);
     expect(response.credentialMask).toBe(CREDENTIAL_MASK);
   });

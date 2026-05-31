@@ -2,7 +2,7 @@
  * In-memory implementation of {@link InsForgeClient} for tests.
  *
  * Provides the same workspace-scoped repository semantics as the live client
- * but stores everything in memory. No network, no credentials, no demo seed
+ * but stores everything in memory. No network, no credentials, no seed
  * data. Each instance owns its own isolated state.
  */
 import { createHash, randomUUID } from "node:crypto";
@@ -469,7 +469,7 @@ class MemoryWorkspaceRepository implements WorkspaceRepository {
 
 /**
  * In-memory implementation of {@link InsForgeClient} for tests.
- * Each instance owns isolated state. No demo seeding, no credentials.
+ * Each instance owns isolated state. No seeding, no credentials.
  */
 export class InMemoryInsForgeClient implements InsForgeClient {
   readonly mode: RunMode = "live";
@@ -481,7 +481,6 @@ export class InMemoryInsForgeClient implements InsForgeClient {
     this.defaultWorkspace = {
       id: TEST_WORKSPACE_ID,
       name: TEST_WORKSPACE_NAME,
-      isDemo: false,
       createdAt: this.store.now(),
     };
     this.store.workspaces.set(this.defaultWorkspace.id, clone(this.defaultWorkspace));
@@ -506,7 +505,7 @@ export class InMemoryInsForgeClient implements InsForgeClient {
 
 /**
  * Construct an {@link InMemoryInsForgeClient}.
- * Drop-in replacement for the old `createDemoInsForgeClient({ seedDemoCompany: false })`.
+ * Drop-in replacement for test scenarios requiring an in-memory store.
  */
 export function createInMemoryInsForgeClient(): InMemoryInsForgeClient {
   return new InMemoryInsForgeClient();

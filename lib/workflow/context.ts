@@ -73,7 +73,7 @@ export const ScanContextSchema = z.object({
   companyId: z.string().uuid(),
   companyName: z.string().min(1).max(200),
   companySlug: z.string().min(1),
-  mode: z.enum(["demo", "live"]),
+  mode: z.enum(["live"]),
 });
 export type ScanContext = z.infer<typeof ScanContextSchema>;
 
@@ -226,8 +226,8 @@ export function appendSkip(
  *
  * ID fields are relaxed from `.uuid()` to `.min(1)` here because the workflow
  * engine receives IDs that have already been validated at the API boundary
- * (database constraints + route-level Zod parsing). This also lets the demo
- * adapter's deterministic non-UUID seeded IDs flow through the workflow in
+ * (database constraints + route-level Zod parsing). This also lets test
+ * adapters' deterministic non-UUID seeded IDs flow through the workflow in
  * integration tests without friction.
  */
 export const ScanInitInputSchema = ScanWorkflowInput.extend({
@@ -276,7 +276,7 @@ export interface CurrentSnapshot {
  * snapshot's normalized text, which lives in the Box `normalized/` subfolder
  * (Requirement 9.3) rather than on the snapshot row. This injected loader is how
  * `computeDiffStep` obtains it: the live wiring downloads the normalized
- * artifact, while the demo/integration wiring serves it from the seed. Returning
+ * artifact, while the test/integration wiring serves it from a seed. Returning
  * `null` signals the content is unavailable, which the diff step treats as a
  * recoverable per-source diff failure (Requirement 11.6).
  */
@@ -307,8 +307,8 @@ export interface ScanWorkflowContext {
   scanTimestamp: string;
   /** The current scan's `createdAt` — the cutoff for "earlier" prior scans (Req 11.1). */
   scanCreatedAt: string;
-  /** Overall resolved run mode for the scan (per-adapter modes live on adapters). */
-  mode: "demo" | "live";
+  /** Overall resolved run mode for the scan. */
+  mode: "live";
 
   /* Adapters (sole door to external services — Requirement 23.1) */
   adapters: AdapterSet;
@@ -333,7 +333,7 @@ export interface CreateScanWorkflowContextParams {
   companyName: string;
   companySlug: string;
   scanTimestamp: string;
-  mode: "demo" | "live";
+  mode: "live";
   adapters: AdapterSet;
   /** Defaults to `scanTimestamp` when omitted. */
   scanCreatedAt?: string;

@@ -105,7 +105,7 @@ class FakeBox {
   asClient(): BoxClient {
     const self = this;
     return {
-      mode: "demo",
+      mode: "live",
       isConfigured: () => false,
       async upload(
         folderId: string,

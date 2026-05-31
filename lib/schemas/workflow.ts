@@ -25,7 +25,7 @@ export const ScanWorkflowInput = z.object({
     )
     .min(3)
     .max(5),
-  mode: z.enum(['demo', 'live']),
+  mode: z.enum(['live']),
 });
 
 /** Workflow output — validated before it is returned (Requirement 23.3). */

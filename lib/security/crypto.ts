@@ -5,7 +5,7 @@ import "server-only";
  * 22.5).
  *
  * This module owns the at-rest encryption used when an Integration credential
- * is stored while Demo_Mode is INACTIVE: the persisted value must be encrypted
+ * is stored: the persisted value must be encrypted
  * such that it does not equal the plaintext credential (Requirement 22.3). It
  * also owns the masking primitive used to shape browser-facing responses so a
  * production credential value never reaches the browser in unmasked form

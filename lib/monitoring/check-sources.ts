@@ -94,7 +94,7 @@ export interface MonitoringDb {
 }
 
 /* -------------------------------------------------------------------------- */
-/* In-memory monitoring DB (for demo mode + initial deployment)               */
+/* In-memory monitoring DB (for initial deployment)               */
 /* -------------------------------------------------------------------------- */
 
 const contentHashStore = new Map<string, ContentHash>();

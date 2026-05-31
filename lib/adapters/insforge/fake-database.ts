@@ -61,6 +61,7 @@ export class FakeDatabase implements InsforgeDatabaseLike {
       base.trigger_type = base.trigger_type ?? "manual";
     }
     if (table === "workspaces") {
+      // is_demo column exists in DB schema; always false.
       base.is_demo = base.is_demo ?? false;
     }
     return base;
